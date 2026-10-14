@@ -65,6 +65,18 @@ func fqFreq(s *Session, p *ProcStep) error {
 			return fmt.Errorf("Variable %s not found.", strings.ToUpper(st.Args()[0].Text))
 		}
 	}
+	exactBinom, exactMcNemar := false, false
+	if st := p.First("EXACT"); st != nil {
+		for _, t := range st.Args() {
+			switch t.Upper() {
+			case "BINOMIAL":
+				exactBinom = true
+			case "MCNEMAR", "MCNEM", "AGREE":
+				exactMcNemar = true
+			}
+		}
+	}
+	alpha := p.Opts.Num("ALPHA", 0.05)
 	var outAll *Dataset
 	for _, g := range groups {
 		sub := d.Subset(g.Rows)
@@ -80,9 +92,11 @@ func fqFreq(s *Session, p *ProcStep) error {
 			}
 			var ds *Dataset
 			if len(req.Vars) == 1 {
-				ds, err = fqOneWay(s, req.Vars[0], dims[0], counts, nmiss, opts, !opts.Has("NOPRINT"))
+				ds, err = fqOneWay(s, req.Vars[0], dims[0], counts, nmiss, opts, !opts.Has("NOPRINT"), exactBinom, alpha)
+			} else if len(req.Vars) == 3 {
+				ds, err = fqThreeWay(s, req.Vars, dims, counts, nmiss, opts, !opts.Has("NOPRINT"))
 			} else {
-				ds, err = fqCrossTab(s, req.Vars, dims, counts, nmiss, opts, !opts.Has("NOPRINT"))
+				ds, err = fqCrossTab(s, req.Vars, dims, counts, nmiss, opts, !opts.Has("NOPRINT"), exactMcNemar, alpha)
 			}
 			if err != nil {
 				return err

@@ -277,6 +277,9 @@ func (g *glCtx) runDep(dep string) error {
 			g.ssTable(ty)
 		}
 	}
+	if err := g.contrastTable(); err != nil {
+		return err
+	}
 	if g.mopts.Has("SOLUTION") || (len(g.classes) == 0 && !g.anova) {
 		g.paramTable()
 	}
@@ -515,9 +518,28 @@ func (g *glCtx) means(st *Stmt) error {
 			g.hovtest(e, lvls, method, o)
 		}
 		if len(cs) == 1 {
-			for _, k := range []string{"TUKEY", "BON", "SCHEFFE", "LSD", "T", "SIDAK"} {
+			if o.Has("WELCH") {
+				g.welch(e, lvls)
+			}
+			for _, k := range []string{"TUKEY", "BON", "SCHEFFE", "LSD", "T", "SIDAK", "DUNNETT"} {
 				if o.Has(k) {
-					g.multComp(e, lvls, k, alpha, o.Has("CLDIFF"), o.Has("LINES"))
+					ctl := ""
+					cldiff, lines := o.Has("CLDIFF"), o.Has("LINES")
+					if k == "DUNNETT" {
+						// control level: explicit ('level') or SAS's default last level
+						if op, ok := o.Get("DUNNETT"); ok {
+							for _, t := range op.Inner() {
+								if t.Kind == TIdent || t.Kind == TString {
+									ctl = t.Text
+								}
+							}
+						}
+						if ctl == "" && len(lvls) > 0 {
+							ctl = lvls[len(lvls)-1].keys[0]
+						}
+						cldiff, lines = true, false
+					}
+					g.multComp(e, lvls, k, alpha, cldiff, lines, ctl)
 				}
 			}
 		}
@@ -546,6 +568,37 @@ func (g *glCtx) means(st *Stmt) error {
 }
 
 func (g *glCtx) hovtest(e lmTerm, lvls []*glLevel, method string, o *Opts) {
+	if method == "BARTLETT" {
+		// Bartlett's chi-square test on the group variances
+		var sl2, sldf []float64
+		ssp, dfp, n := 0.0, 0.0, 0
+		for _, lv := range lvls {
+			ss := 0.0
+			for _, y := range lv.ys {
+				ss += (y - lv.mean) * (y - lv.mean)
+			}
+			ssp += ss
+			dfp += float64(len(lv.ys) - 1)
+			n += len(lv.ys)
+			sl2 = append(sl2, ss/float64(len(lv.ys)-1))
+			sldf = append(sldf, float64(len(lv.ys)-1))
+		}
+		sp2 := ssp / dfp
+		num := dfp * math.Log(sp2)
+		invSum := 0.0
+		for i := range sl2 {
+			num -= sldf[i] * math.Log(sl2[i])
+			invSum += 1 / sldf[i]
+		}
+		corr := 1 + (invSum-1/dfp)/(3*float64(len(lvls)-1))
+		chi := num / corr
+		t := &Table{ODSName: "HOVFTest", Caption: "Bartlett's Test for Homogeneity of " + g.dep + " Variance", RowHeader: 1,
+			Cols: []Col{{Name: "Source", Label: "Source", Char: true}, {Name: "DF", Label: "DF"},
+				{Name: "ChiSq", Label: "Chi-Square", Format: lmFmtF}, {Name: "ProbChiSq", Label: "Pr > ChiSq", Format: lmFmtP}}}
+		t.AddRow(e.Name(), float64(len(lvls)-1), chi, ChiSqSF(chi, float64(len(lvls)-1)))
+		g.table(t)
+		return
+	}
 	var z [][]float64
 	caption := ""
 	absLev := false
@@ -608,7 +661,119 @@ func (g *glCtx) hovtest(e lmTerm, lvls []*glLevel, method string, o *Opts) {
 	g.table(t)
 }
 
-func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64, cldiff, lines bool) {
+// welch computes Welch's variance-weighted one-way ANOVA:
+// w_i = n_i/s_i^2; F = A/(1+2B) with
+// A = sum w_i (ybar_i - ybar_w)^2/(k-1),
+// B = 2(k-2)/(k^2-1) * sum (1-w_i/W)^2/(n_i-1), denominator df
+// = (k^2-1)/(3 sum (1-w_i/W)^2/(n_i-1)).
+func (g *glCtx) welch(e lmTerm, lvls []*glLevel) {
+	k := float64(len(lvls))
+	var w, wsum, ywNum float64
+	for _, lv := range lvls {
+		variance := Variance(lv.ys)
+		wi := float64(lv.n) / variance
+		w += wi
+		wsum += wi
+		ywNum += wi * lv.mean
+	}
+	ybarW := ywNum / wsum
+	A := 0.0
+	bSum := 0.0
+	for _, lv := range lvls {
+		variance := Variance(lv.ys)
+		wi := float64(lv.n) / variance
+		A += wi * (lv.mean - ybarW) * (lv.mean - ybarW)
+		d := 1 - wi/wsum
+		bSum += d * d / float64(lv.n-1)
+	}
+	A /= (k - 1)
+	cor := 2 * (k - 2) / (k*k - 1) * bSum
+	F := A / (1 + cor)
+	dfDen := (k*k - 1) / (3 * bSum)
+	t := &Table{ODSName: "WelchTest", Caption: "Welch's ANOVA for " + g.dep, RowHeader: 1,
+		Cols: []Col{{Name: "Source", Label: "Source", Char: true}, {Name: "DF", Label: "DF", Format: "8.4"},
+			{Name: "FValue", Label: "F Value", Format: lmFmtF}, {Name: "ProbF", Label: "Pr > F", Format: lmFmtP}}}
+	t.AddRow(e.Name(), k-1, F, FSF(F, k-1, dfDen))
+	t.AddRow("Error", dfDen, nil, nil)
+	g.table(t)
+}
+
+// contrastTable evaluates CONTRAST statements. Supported: a single
+// class effect with one coefficient per sorted level (the one-way
+// form SS = (sum c_i*ybar_i)^2 / sum c_i^2/n_i).
+func (g *glCtx) contrastTable() error {
+	cts := g.p.Stmts("CONTRAST")
+	if len(cts) == 0 {
+		return nil
+	}
+	if len(g.terms) != 1 {
+		return fmt.Errorf("CONTRAST is supported for one-way models only.")
+	}
+	ct := &Table{ODSName: "Contrasts", RowHeader: 2, Cols: []Col{
+		{Name: "Dependent", Char: true, Hidden: true},
+		{Name: "Label", Label: "Contrast", Char: true}, {Name: "DF", Label: "DF"},
+		{Name: "SS", Label: "Contrast SS"}, {Name: "MS", Label: "Mean Square"},
+		{Name: "FValue", Label: "F Value", Format: lmFmtF}, {Name: "ProbF", Label: "Pr > F", Format: lmFmtP}}}
+	for _, st := range cts {
+		label, effect, coefs, err := glParseContrast(st.Args())
+		if err != nil {
+			return err
+		}
+		c, ok := g.des.Classes[strings.ToUpper(effect)]
+		if !ok {
+			return fmt.Errorf("Effects used in the CONTRAST statement must have appeared previously in the MODEL statement.")
+		}
+		lvls := g.levelsOf([]*lmClass{c})
+		if len(coefs) != len(lvls) {
+			return fmt.Errorf("CONTRAST requires %d coefficients for %d levels of %s.", len(lvls), len(lvls), strings.ToUpper(effect))
+		}
+		lc, den := 0.0, 0.0
+		for i, lv := range lvls {
+			lc += coefs[i] * lv.mean
+			den += coefs[i] * coefs[i] / float64(lv.n)
+		}
+		ss := lc * lc / den
+		F := ss / g.fit.MSE
+		ct.AddRow(g.dep, label, 1, ss, ss, F, lmFProb(F, 1, g.fit.DFE))
+	}
+	g.table(ct)
+	return nil
+}
+
+func glParseContrast(toks []Token) (string, string, []float64, error) {
+	c := NewCursor(toks)
+	if c.AtEnd() {
+		return "", "", nil, fmt.Errorf("CONTRAST requires a label and an effect.")
+	}
+	t := c.Next()
+	if t.Kind != TString && t.Kind != TIdent {
+		return "", "", nil, fmt.Errorf("CONTRAST label must be a string.")
+	}
+	label := t.Text
+	if c.AtEnd() || c.Peek().Kind != TIdent {
+		return "", "", nil, fmt.Errorf("CONTRAST requires an effect after the label.")
+	}
+	effect := c.Next().Text
+	var coefs []float64
+	sign := 1.0
+	for !c.AtEnd() {
+		t := c.Next()
+		switch {
+		case t.IsOp("-"):
+			sign = -1
+		case t.IsOp("+"):
+			sign = 1
+		case t.Kind == TNumber:
+			coefs = append(coefs, sign*t.Num)
+			sign = 1
+		case t.Kind == TIdent:
+			return "", "", nil, fmt.Errorf("CONTRAST supports a single effect.")
+		}
+	}
+	return label, effect, coefs, nil
+}
+
+func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64, cldiff, lines bool, control string) {
 	f := g.fit
 	k := len(lvls)
 	if k < 2 {
@@ -647,6 +812,10 @@ func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64
 		name, critLabel = "Scheffe's Test for "+g.dep, "Critical Value of F"
 		crit = FInv(1-alpha, float64(k-1), dfe)
 		hw = func(ni, nj int) float64 { return math.Sqrt(float64(k-1)*crit) * se(ni, nj) }
+	case "DUNNETT":
+		name, critLabel = "Dunnett's t Tests for "+g.dep, "Critical Value of Dunnett's t"
+		crit = lmDunnettCrit(1-alpha, k-1, dfe)
+		hw = func(ni, nj int) float64 { return crit * se(ni, nj) }
 	default:
 		name, critLabel = "t Tests (LSD) for "+g.dep, "Critical Value of t"
 		crit = TInv(1-alpha/2, dfe)
@@ -686,6 +855,9 @@ func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64
 			for _, b := range sorted {
 				if a == b {
 					continue
+				}
+				if control != "" && b.keys[0] != control {
+					continue // Dunnett: comparisons against the control only
 				}
 				diff := a.mean - b.mean
 				h := hw(a.n, b.n)

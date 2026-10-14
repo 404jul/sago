@@ -514,3 +514,36 @@ proc npar1way data=doses dscf;
 	check(t, "BC dscf", dt.Rows[3][2].Num, -4.427189, 2e-5)
 	check(t, "BC p", dt.Rows[3][3].Num, 0.00945263, 2e-6)
 }
+
+// TestNpExactWilcoxon pins the exact rank-sum permutation p-value with
+// mid-rank ties (n1=7, n2=8): one-sided P(S>=80) = 12/6435 =
+// 0.0018648018648018648 (scipy.stats.mannwhitneyu exact, greater);
+// two-sided = 2 x one-sided, SAS convention. The normal approximation
+// with tie correction is pinned for contrast.
+func TestNpExactWilcoxon(t *testing.T) {
+	s := NewSession(".")
+	s.Out.SelectNone = true
+	s.RunProgram(`data drug;
+  length group $ 4;
+  input group $ relief @@;
+  datalines;
+new 4.1 new 4.7 new 3.9 new 5.2 new 4.4 new 3.6 new 5.0
+old 2.8 old 3.5 old 4.1 old 2.6 old 3.1 old 3.9 old 2.4 old 3.3
+;
+ods output WilcoxonTest=_wt_;
+proc npar1way data=drug wilcoxon;
+  class group;
+  var relief;
+  exact wilcoxon;
+run;`)
+	wt := s.Dataset("_WT_")
+	if wt == nil {
+		t.Fatal("no WilcoxonTest output")
+	}
+	cell := func(r int) float64 { return wt.Rows[r][1].Num }
+	uvClose(t, "S", cell(0), 80, 1e-12)
+	uvClose(t, "Z", cell(1), 2.7244660125909883, 1e-9)
+	uvClose(t, "normal one-sided", cell(2), 0.0032202779436714913, 1e-9)
+	uvClose(t, "exact one-sided", cell(7), 0.0018648018648018648, 1e-12)
+	uvClose(t, "exact two-sided", cell(8), 0.0037296037296037296, 1e-12)
+}

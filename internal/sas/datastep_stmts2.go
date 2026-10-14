@@ -28,7 +28,8 @@ func (p *dsParser) parseIO(s *Stmt, kw string) (dsNode, error) {
 		if n, ok := st.ioCache[s]; ok {
 			return n, nil
 		}
-		sset := &dsSetStmt{st: st, kind: kw, line: s.Line}
+
+		sset := &dsSetStmt{st: st, kind: kw, line: s.Line, endSlot: -1, nobsSlot: -1}
 		st.ioCache[s] = sset
 		c := NewCursor(s.Args())
 		for !c.AtEnd() {

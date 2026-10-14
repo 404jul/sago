@@ -611,10 +611,9 @@ func lmFitModel(X [][]float64, y, w []float64, intercept bool, colTerm []int, nt
 			}
 		}
 	}
-	f.DFE = int(math.Round(cr.SumW)) - rank
-	if w == nil {
-		f.DFE = f.N - rank
-	}
+	// SAS REG/GLM: WEIGHT= gives precision weights, so error degrees of
+	// freedom are observations minus rank (only FREQ= would duplicate rows)
+	f.DFE = f.N - rank
 	if f.DFE > 0 {
 		f.MSE = f.SSE / float64(f.DFE)
 	} else {
@@ -1328,4 +1327,81 @@ func lmFitPlot(f *lmFit, xs, ys []float64, xname, dep string, alpha float64, row
 	}
 	c.Legend = []LegendEntry{{Label: "Fit", Color: "#A23A2E", Kind: "line"}, {Label: pc + " Confidence Limits", Color: "#B9CFE7", Kind: "fill"}, {Label: pc + " Prediction Limits", Color: "#445694", Kind: "line", Dash: true}}
 	return &Graph{ODSName: "FitPlot", Caption: "Fit Plot", SVG: c.SVG()}
+}
+
+// glNodes returns Gauss-Legendre nodes and weights on [-1, 1]
+// (Newton refinement of Legendre polynomial roots).
+func glNodes(n int) (xs, ws []float64) {
+	xs = make([]float64, n)
+	ws = make([]float64, n)
+	for i := 0; i < n; i++ {
+		x := math.Cos(math.Pi * (float64(i) + 0.75) / (float64(n) + 0.5))
+		dp := 0.0
+		for it := 0; it < 100; it++ {
+			p0, p1 := 1.0, x
+			for j := 2; j <= n; j++ {
+				p0, p1 = p1, (float64(2*j-1)*x*p1-float64(j-1)*p0)/float64(j)
+			}
+			dp = float64(n) * (x*p1 - p0) / (x*x - 1)
+			dx := p1 / dp
+			x -= dx
+			if math.Abs(dx) < 1e-15 {
+				break
+			}
+		}
+		xs[i] = x
+		ws[i] = 2 / ((1 - x*x) * dp * dp)
+	}
+	return
+}
+
+// lmDunnettCrit computes the two-sided Dunnett critical value: the conf
+// quantile of max|T_i| for k equicorrelated (rho = 1/2, balanced one-way)
+// t variables comparing treatments with a control (Dunnett 1955):
+//
+//	P(max|T_i| <= d) = E_{u,s} [ (Phi(sqrt(2)*d*s - u) - Phi(-sqrt(2)*d*s - u))^k ]
+//
+// with u ~ N(0,1) shared across comparisons and s = sqrt(chi2_df/df).
+func lmDunnettCrit(conf float64, k int, df float64) float64 {
+	glU, glW := glNodes(64)
+	const uLo, uHi = -9.0, 9.0
+	glS, glSW := glNodes(96)
+	sMax := math.Sqrt(ChiSqInv(1-1e-15, df)) / math.Sqrt(df)
+	gam := math.Gamma(df / 2)
+	normK := math.Pow(2, df/2-1) * gam
+	sqDf := math.Sqrt(df)
+	pcdf := func(d float64) float64 {
+		tot := 0.0
+		for i, sq := range glS {
+			s := sMax * (sq + 1) / 2
+			// S = sqrt(chi2_df / df): density of S is sqrt(df)*chi_pdf(s*sqrt(df))
+			x := s * sqDf
+			ws := glSW[i] * sMax / 2 * sqDf * math.Pow(x, df-1) * math.Exp(-x*x/2) / normK
+			if ws == 0 {
+				continue
+			}
+			inner := 0.0
+			rt := math.Sqrt2 * d * s
+			for j, xu := range glU {
+				u := uLo + (xu+1)/2*(uHi-uLo)
+				wu := glW[j] / 2 * (uHi - uLo) * math.Exp(-u*u/2) / math.Sqrt(2*math.Pi)
+				if wu == 0 {
+					continue
+				}
+				inner += wu * math.Pow(NormCDF(rt-u)-NormCDF(-rt-u), float64(k))
+			}
+			tot += ws * inner
+		}
+		return tot
+	}
+	lo, hi := 0.0, 12.0
+	for it := 0; it < 200; it++ {
+		mid := (lo + hi) / 2
+		if pcdf(mid) < conf {
+			lo = mid
+		} else {
+			hi = mid
+		}
+	}
+	return (lo + hi) / 2
 }

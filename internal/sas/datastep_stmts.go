@@ -404,6 +404,26 @@ func (p *dsParser) embedded(toks []Token, line int) (dsNode, error) {
 	case "PUT":
 		return p.parsePut(s)
 	}
+	// sum statement: var + expr; (valid as a THEN/ELSE action in SAS)
+	if st := p.st; st != nil {
+		if len(toks) >= 3 && toks[0].Kind == TIdent && toks[1].IsOp("+") && !toks[2].IsOp("+") {
+			v := st.variable(toks[0].Text)
+			if !v.typed {
+				st.numeric(v, line)
+			}
+			v.retain = true
+			v.assigned = true
+			if v.init == nil {
+				zero := NumV(0)
+				v.init = &zero
+			}
+			e, err := p.expr(toks[2:], line)
+			if err != nil {
+				return nil, err
+			}
+			return &dsSumNode{v: v, expr: e, line: line}, nil
+		}
+	}
 	if node, ok, err := p.parseAssign(s); err != nil {
 		return nil, err
 	} else if ok {
@@ -804,6 +824,11 @@ func (n *dsOutputNode) exec(st *dsStep) dsCtl {
 
 func (p *dsParser) parseOutput(s *Stmt) (dsNode, error) {
 	n := &dsOutputNode{line: s.Line}
+	// SAS: the presence of an OUTPUT statement (compile time) suppresses
+	// the implicit end-of-iteration output for the whole step
+	if p.st != nil {
+		p.st.hasOutput = true
+	}
 	for _, t := range s.Args() {
 		if t.Kind == TIdent {
 			n.targets = append(n.targets, t.Text)

@@ -690,12 +690,16 @@ func npExactWilcoxon(x []float64, cls []int, g int) float64 {
 	for s := target; s <= maxSum; s++ {
 		ge += dp[n1][s]
 	}
+	// den = n1! (n-n1)! / n! = 1 / choose(n, n1)
 	den := 1.0
-	for i := 0; i < n1; i++ {
-		den /= float64(i + 1)
+	for i := 1; i <= n; i++ {
+		den /= float64(i)
 	}
-	for i := n1; i < n; i++ {
-		den /= float64(i - n1 + 1)
+	for i := 1; i <= n1; i++ {
+		den *= float64(i)
+	}
+	for i := 1; i <= n-n1; i++ {
+		den *= float64(i)
 	}
 	p := ge * den
 	if p < 0 {

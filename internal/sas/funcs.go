@@ -125,6 +125,7 @@ func init() {
 	F["SINH"] = num1(math.Sinh)
 	F["COSH"] = num1(math.Cosh)
 	F["TANH"] = num1(math.Tanh)
+	F["ATANH"] = num1(math.Atanh)
 	F["INT"] = num1(math.Trunc)
 	F["INTZ"] = num1(math.Trunc)
 	F["CEIL"] = num1(func(x float64) float64 { return math.Ceil(x - 1e-12*math.Max(1, math.Abs(x))) })

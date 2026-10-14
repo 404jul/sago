@@ -20,6 +20,30 @@ func ttTtest(s *Session, p *ProcStep) error {
 	h0 := p.Opts.Num("H0", p.Opts.Num("MU0", 0))
 	alpha := p.Opts.Num("ALPHA", 0.05)
 	sides := strings.ToUpper(p.Opts.Str("SIDES", "2"))
+	tostLo, tostHi := math.NaN(), math.NaN()
+	if op, ok := p.Opts.Get("TOST"); ok {
+		nums := []float64{}
+		sign := 1.0
+		for _, t := range op.Inner() {
+			switch {
+			case t.IsOp("-"):
+				sign = -1
+			case t.IsOp("+"):
+				sign = 1
+			case t.Kind == TNumber:
+				nums = append(nums, sign*t.Num)
+				sign = 1
+			}
+		}
+		switch len(nums) {
+		case 1:
+			tostLo, tostHi = -nums[0], nums[0]
+		case 2:
+			tostLo, tostHi = nums[0], nums[1]
+		default:
+			return fmt.Errorf("TOST= requires one or two margin values.")
+		}
+	}
 	by, groups, err := s.ProcBy(p, d)
 	if err != nil {
 		return err
@@ -44,6 +68,10 @@ func ttTtest(s *Session, p *ProcStep) error {
 			s.Out.SetBy(by.Vars, g.Keys)
 		}
 		if pairedStmt != nil {
+			if !math.IsNaN(tostLo) {
+				s.Log.Warn(p.Line, "TOST equivalence testing is supported for the two-sample design only; the option is ignored.")
+				tostLo, tostHi = math.NaN(), math.NaN()
+			}
 			pairs, err2 := ttParsePairs(d, pairedStmt.Args())
 			if err2 != nil {
 				return err2
@@ -59,11 +87,15 @@ func ttTtest(s *Session, p *ProcStep) error {
 				return fmt.Errorf("Variable %s not found.", strings.ToUpper(classStmt.Args()[0].Text))
 			}
 			for _, name := range vars {
-				if err2 := ttTwoSample(s, sub, d.Var(name), ci, d.Vars[ci], h0, alpha, sides, showPlots); err2 != nil {
+				if err2 := ttTwoSample(s, sub, d.Var(name), ci, d.Vars[ci], h0, alpha, sides, showPlots, tostLo, tostHi); err2 != nil {
 					return err2
 				}
 			}
 		} else {
+			if !math.IsNaN(tostLo) {
+				s.Log.Warn(p.Line, "TOST equivalence testing is supported for the two-sample design only; the option is ignored.")
+				tostLo, tostHi = math.NaN(), math.NaN()
+			}
 			for _, name := range vars {
 				ttOneSample(s, sub, d.Var(name), h0, alpha, sides, showPlots)
 			}
@@ -260,7 +292,7 @@ func ttPValue(t, df float64, sides string) float64 {
 	return TTwoSided(t, df)
 }
 
-func ttTwoSample(s *Session, d *Dataset, v *Var, ci int, cv *Var, h0, alpha float64, sides string, showPlots bool) error {
+func ttTwoSample(s *Session, d *Dataset, v *Var, ci int, cv *Var, h0, alpha float64, sides string, showPlots bool, tostLo, tostHi float64) error {
 	levels := UniqueSorted(d.Col(ci))
 	if len(levels) != 2 {
 		return fmt.Errorf("CLASS variable %s must have exactly two levels.", cv.Name)
@@ -313,6 +345,32 @@ func ttTwoSample(s *Session, d *Dataset, v *Var, ci int, cv *Var, h0, alpha floa
 	s.Out.AddTable(confTbl)
 	s.Out.AddTable(ttTbl)
 	s.Out.AddTable(eqTbl)
+
+	// TOST equivalence: two one-sided tests at the margins, plus the
+	// (1-2 alpha) confidence interval that TOST inverts
+	if !math.IsNaN(tostLo) {
+		dfP := sa.N + sb.N - 2
+		rows := []struct {
+			name   string
+			se, df float64
+		}{{"Pooled", sePool, dfP}, {"Satterthwaite", seSat, dfSat}}
+		tst := &Table{ODSName: "TOSTTests", Caption: "Equivalence Analysis for Difference: " + v.Name + " (1-2)", MissDot: true}
+		tst.Cols = []Col{{Name: "Method", Label: "Method", Char: true},
+			{Name: "TLow", Label: "Lower Bound\nt Value", Format: "8.4"}, {Name: "PLow", Label: "Lower Bound\nPr > t", Format: "PVALUE6.4"},
+			{Name: "TUp", Label: "Upper Bound\nt Value", Format: "8.4"}, {Name: "PUpp", Label: "Upper Bound\nPr < t", Format: "PVALUE6.4"},
+			{Name: "OverallP", Label: "Overall\np Value", Format: "PVALUE6.4"},
+			{Name: "LCL", Label: "Lower CL", Format: "8.4"}, {Name: "UCL", Label: "Upper CL", Format: "8.4"}}
+		tst.Spans = []Span{{Label: fmt.Sprintf("%g%% Conf Limits for Equivalence", 100*(1-2*alpha)), From: 6, To: 7}}
+		for _, rw := range rows {
+			tLow := (diff - tostLo) / rw.se
+			tUp := (diff - tostHi) / rw.se
+			pLow := TSF(tLow, rw.df)
+			pUp := TCDF(tUp, rw.df)
+			tq := TInv(1-alpha, rw.df)
+			tst.AddRow(rw.name, tLow, pLow, tUp, pUp, math.Max(pLow, pUp), diff-tq*rw.se, diff+tq*rw.se)
+		}
+		s.Out.AddTable(tst)
+	}
 	if showPlots {
 		by := make([]string, len(xa)+len(xb))
 		for i := range xa {
