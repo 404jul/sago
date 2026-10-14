@@ -1,0 +1,11 @@
+# binary
+/sago
+
+# sago report output
+*.html
+
+# macOS
+.DS_Store
+
+# editors
+*.swp
