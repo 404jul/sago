@@ -19,7 +19,7 @@ browser session), fixing every diff. Probe+golden+fix committed together.
   converts div-per-line HTML to text (strips ONE artificial leading space per
   line), writes the log file. Used from the node REPL with `agent` passed in.
 - SAS Studio session: server odamid-usw2-2, session id (SID)
-  `b5793c53-72ba-4d8f-9bf2-a3753d1f96e9`, CSRF `f9530166-d262-4168-ac3f-e400efe0a1a9`.
+  `b5793c53-72ba-4d8f-9bf2-a3753d1f96e9` (died), now `d60315db-2ff4-4524-a4b7-e256a5b091b4`, CSRF `2ea96c61-8c23-4928-b848-a57c52121bbc`.
   If a run errors with HTTP 401/404: the SAS session died — relaunch via the
   welcome.oda.sas.com tab (Launch SAS Studio button), claim the new tab, hook
   XHR (or read any asyncSubmissions URL) to get the new SID + CSRF, update here.
