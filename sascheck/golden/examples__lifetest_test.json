@@ -5,24 +5,16 @@
  "log": [
   {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
   {"level": "NOTE", "text": "The data set WORK.EXPOSED has 40 observations and 3 variables."},
-  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.90k OS Memory           29604.00k Timestamp           10/20/2026 06:00:47 AM Step Count                        1150  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        14 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.28k OS Memory           19620.00k Timestamp           10/20/2026 06:52:43 AM Step Count                        31  Switch Count  2 Page Faults                       0 Page Reclaims                     135 Page Swaps                        0 Voluntary Context Switches        10 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           264"},
   {"level": "NOTE", "text": "The LOGLOG transform is used to compute the confidence limits for the quartiles of the survivor distribution. To suppress using this transform, specify CONFTYPE=LINEAR in the PROC LIFETEST statement."},
-  {"level": "NOTE", "text": "PROCEDURE LIFETEST used (Total process time): real time           0.11 seconds user cpu time       0.11 seconds system cpu time     0.00 seconds memory              2841.37k OS Memory           30124.00k Timestamp           10/20/2026 06:00:47 AM Step Count                        1151  Switch Count  22 Page Faults                       0 Page Reclaims                     791 Page Swaps                        0 Voluntary Context Switches        162 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           2952"},
+  {"level": "NOTE", "text": "PROCEDURE LIFETEST used (Total process time): real time           0.11 seconds user cpu time       0.11 seconds system cpu time     0.00 seconds memory              2875.25k OS Memory           21676.00k Timestamp           10/20/2026 06:52:43 AM Step Count                        32  Switch Count  22 Page Faults                       0 Page Reclaims                     1373 Page Swaps                        0 Voluntary Context Switches        157 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           2952"},
   {"level": "NOTE", "text": "The LOGLOG transform is used to compute the confidence limits for the quartiles of the survivor distribution. To suppress using this transform, specify CONFTYPE=LINEAR in the PROC LIFETEST statement."},
-  {"level": "NOTE", "text": "PROCEDURE LIFETEST used (Total process time): real time           0.04 seconds user cpu time       0.05 seconds system cpu time     0.00 seconds memory              1757.21k OS Memory           30384.00k Timestamp           10/20/2026 06:00:47 AM Step Count                        1152  Switch Count  8 Page Faults                       0 Page Reclaims                     377 Page Swaps                        0 Voluntary Context Switches        68 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1088"},
-  {"level": "PUT", "text": "134          input group $ months*dead(0) @@;"},
-  {"level": "PUT", "text": "                                 _"},
-  {"level": "PUT", "text": "                                 22"},
-  {"level": "PUT", "text": "                                 76"},
-  {"level": "ERROR", "text": "Syntax error, expecting one of the following: a name, an integer constant, arrayname, #, $, &, (, +, -, /, //, :, ;, =, ?, @, @@, [, {, ~."},
-  {"level": "ERROR", "text": "Syntax error, statement will be ignored."},
-  {"level": "NOTE", "text": "The SAS System stopped processing this step because of errors."},
-  {"level": "WARNING", "text": "The data set WORK.HEAVY may be incomplete.  When this step was stopped there were 0 observations and 1 variables."},
-  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              741.65k OS Memory           29604.00k Timestamp           10/20/2026 06:00:47 AM Step Count                        1153  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           272"},
-  {"level": "ERROR", "text": "Variable MONTHS not found."},
-  {"level": "ERROR", "text": "Variable DEAD not found."},
-  {"level": "NOTE", "text": "The SAS System stopped processing this step because of errors."},
-  {"level": "NOTE", "text": "PROCEDURE LIFETEST used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              545.03k OS Memory           29604.00k Timestamp           10/20/2026 06:00:47 AM Step Count                        1154  Switch Count  0 Page Faults                       0 Page Reclaims                     49 Page Swaps                        0 Voluntary Context Switches        0 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           0"}
+  {"level": "NOTE", "text": "PROCEDURE LIFETEST used (Total process time): real time           0.04 seconds user cpu time       0.04 seconds system cpu time     0.00 seconds memory              1772.25k OS Memory           21936.00k Timestamp           10/20/2026 06:52:43 AM Step Count                        33  Switch Count  8 Page Faults                       0 Page Reclaims                     399 Page Swaps                        0 Voluntary Context Switches        56 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1088"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.HEAVY has 20 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.65k OS Memory           21412.00k Timestamp           10/20/2026 06:52:43 AM Step Count                        34  Switch Count  2 Page Faults                       0 Page Reclaims                     90 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "The LOGLOG transform is used to compute the confidence limits for the quartiles of the survivor distribution. To suppress using this transform, specify CONFTYPE=LINEAR in the PROC LIFETEST statement."},
+  {"level": "NOTE", "text": "PROCEDURE LIFETEST used (Total process time): real time           0.09 seconds user cpu time       0.10 seconds system cpu time     0.01 seconds memory              1787.78k OS Memory           22188.00k Timestamp           10/20/2026 06:52:43 AM Step Count                        35  Switch Count  22 Page Faults                       0 Page Reclaims                     809 Page Swaps                        0 Voluntary Context Switches        162 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           2968"}
  ],
  "tables": [
   {
@@ -249,7 +241,8 @@
     {"name": "0", "type": "num"},
     {"name": "1", "type": "num"}
    ],
-   "rows": []
+   "rows": [],
+   "truncated": true
   },
   {
    "name": "WilcoxonHomCov",
@@ -264,7 +257,8 @@
     {"name": "0", "type": "num"},
     {"name": "1", "type": "num"}
    ],
-   "rows": []
+   "rows": [],
+   "truncated": true
   },
   {
    "name": "HomTests",
@@ -385,6 +379,253 @@
    "rows": [
     ["Lifetest", 1.0, 20.0, 18.0, 2.0, 10.0]
    ]
+  },
+  {
+   "name": "ProductLimitEstimates",
+   "proc": "Lifetest",
+   "path": "Lifetest.Stratum1.ProductLimitEstimates",
+   "template": "Stat.Lifetest.ProductLimitEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "STRATUM", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "months", "type": "num"},
+    {"name": "Censor", "type": "num"},
+    {"name": "Survival", "type": "num"},
+    {"name": "Failure", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "Failed", "type": "num"},
+    {"name": "Left", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, 1.0, "A", 0.0, null, 1.0, 0.0, 0.0, 0.0, 10.0],
+    ["Lifetest", 1.0, 1.0, "A", 2.0, 0.0, 0.9, 0.1, 0.09486832980505, 1.0, 9.0],
+    ["Lifetest", 1.0, 1.0, "A", 4.0, 0.0, 0.8, 0.2, 0.12649110640674, 2.0, 8.0],
+    ["Lifetest", 1.0, 1.0, "A", 5.0, 0.0, 0.7, 0.3, 0.14491376746189, 3.0, 7.0],
+    ["Lifetest", 1.0, 1.0, "A", 6.0, 1.0, null, null, null, 3.0, 6.0],
+    ["Lifetest", 1.0, 1.0, "A", 7.0, 0.0, 0.58333333333333, 0.41666666666667, 0.16101529717988, 4.0, 5.0],
+    ["Lifetest", 1.0, 1.0, "A", 9.0, 0.0, 0.46666666666667, 0.53333333333333, 0.16577539468052, 5.0, 4.0],
+    ["Lifetest", 1.0, 1.0, "A", 10.0, 0.0, 0.35, 0.65, 0.16020819787597, 6.0, 3.0],
+    ["Lifetest", 1.0, 1.0, "A", 11.0, 1.0, null, null, null, 6.0, 2.0],
+    ["Lifetest", 1.0, 1.0, "A", 12.0, 1.0, null, null, null, 6.0, 1.0],
+    ["Lifetest", 1.0, 1.0, "A", 13.0, 1.0, null, null, null, 6.0, 0.0]
+   ]
+  },
+  {
+   "name": "Quartiles",
+   "proc": "Lifetest",
+   "path": "Lifetest.Stratum1.TimeSummary.Quartiles",
+   "template": "Stat.Lifetest.Quartiles",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "STRATUM", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "Percent", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "Transform", "type": "char"},
+    {"name": "LowerLimit", "type": "num"},
+    {"name": "UpperLimit", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, 1.0, "A", 75.0, null, "LOGLOG", 7.0, null],
+    ["Lifetest", 1.0, 1.0, "A", 50.0, 9.0, "LOGLOG", 2.0, null],
+    ["Lifetest", 1.0, 1.0, "A", 25.0, 5.0, "LOGLOG", 2.0, 9.0]
+   ]
+  },
+  {
+   "name": "Means",
+   "proc": "Lifetest",
+   "path": "Lifetest.Stratum1.TimeSummary.Means",
+   "template": "Stat.Lifetest.Means",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "STRATUM", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "Mean", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "Bias", "type": "char"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, 1.0, "A", 7.63333333333334, 0.992460466607, "restricted to L where L = max_event_time < max_censored_time"]
+   ]
+  },
+  {
+   "name": "ProductLimitEstimates",
+   "proc": "Lifetest",
+   "path": "Lifetest.Stratum2.ProductLimitEstimates",
+   "template": "Stat.Lifetest.ProductLimitEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "STRATUM", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "months", "type": "num"},
+    {"name": "Censor", "type": "num"},
+    {"name": "Survival", "type": "num"},
+    {"name": "Failure", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "Failed", "type": "num"},
+    {"name": "Left", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, 2.0, "B", 0.0, null, 1.0, 0.0, 0.0, 0.0, 10.0],
+    ["Lifetest", 1.0, 2.0, "B", 2.0, 0.0, 0.9, 0.1, 0.09486832980505, 1.0, 9.0],
+    ["Lifetest", 1.0, 2.0, "B", 3.0, 0.0, 0.8, 0.2, 0.12649110640674, 2.0, 8.0],
+    ["Lifetest", 1.0, 2.0, "B", 4.0, 1.0, null, null, null, 2.0, 7.0],
+    ["Lifetest", 1.0, 2.0, "B", 5.0, 0.0, 0.68571428571429, 0.31428571428571, 0.15149401743232, 3.0, 6.0],
+    ["Lifetest", 1.0, 2.0, "B", 8.0, 0.0, 0.57142857142857, 0.42857142857143, 0.16377471549175, 4.0, 5.0],
+    ["Lifetest", 1.0, 2.0, "B", 9.0, 0.0, 0.45714285714286, 0.54285714285714, 0.16617809828571, 5.0, 4.0],
+    ["Lifetest", 1.0, 2.0, "B", 10.0, 1.0, null, null, null, 5.0, 3.0],
+    ["Lifetest", 1.0, 2.0, "B", 12.0, 0.0, 0.3047619047619, 0.6952380952381, 0.16659344034391, 6.0, 2.0],
+    ["Lifetest", 1.0, 2.0, "B", 14.0, 1.0, null, null, null, 6.0, 1.0],
+    ["Lifetest", 1.0, 2.0, "B", 15.0, 1.0, null, null, null, 6.0, 0.0]
+   ]
+  },
+  {
+   "name": "Quartiles",
+   "proc": "Lifetest",
+   "path": "Lifetest.Stratum2.TimeSummary.Quartiles",
+   "template": "Stat.Lifetest.Quartiles",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "STRATUM", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "Percent", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "Transform", "type": "char"},
+    {"name": "LowerLimit", "type": "num"},
+    {"name": "UpperLimit", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, 2.0, "B", 75.0, null, "LOGLOG", 8.0, null],
+    ["Lifetest", 1.0, 2.0, "B", 50.0, 9.0, "LOGLOG", 2.0, null],
+    ["Lifetest", 1.0, 2.0, "B", 25.0, 5.0, "LOGLOG", 2.0, 9.0]
+   ]
+  },
+  {
+   "name": "Means",
+   "proc": "Lifetest",
+   "path": "Lifetest.Stratum2.TimeSummary.Means",
+   "template": "Stat.Lifetest.Means",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "STRATUM", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "Mean", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "Bias", "type": "char"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, 2.0, "B", 8.5, 1.34423941016351, "restricted to L where L = max_event_time < max_censored_time"]
+   ]
+  },
+  {
+   "name": "CensoredSummary",
+   "proc": "Lifetest",
+   "path": "Lifetest.CensoredSummary",
+   "template": "Stat.Lifetest.CensoredSummary",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "control_var", "type": "char"},
+    {"name": "Stratum", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "Total", "type": "num"},
+    {"name": "Failed", "type": "num"},
+    {"name": "Censored", "type": "num"},
+    {"name": "PctCens", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, "", 1.0, "A", 10.0, 6.0, 4.0, 40.0],
+    ["Lifetest", 1.0, "", 2.0, "B", 10.0, 6.0, 4.0, 40.0],
+    ["Lifetest", 1.0, "-", null, "", 20.0, 12.0, 8.0, 40.0]
+   ]
+  },
+  {
+   "name": "HomStats",
+   "proc": "Lifetest",
+   "path": "Lifetest.StrataHomogeneity.HomStats",
+   "template": "Stat.Lifetest.HomStats",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "LogRank", "type": "num"},
+    {"name": "Wilcoxon", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, "A", 0.049376114082, 1.0],
+    ["Lifetest", 1.0, "B", -0.049376114082, -1.0]
+   ]
+  },
+  {
+   "name": "LogrankHomCov",
+   "proc": "Lifetest",
+   "path": "Lifetest.StrataHomogeneity.LogrankHomCov",
+   "template": "Stat.Lifetest.HomCov",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "A", "type": "num"},
+    {"name": "B", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, "A", 2.86741970958739, -2.8674197095874],
+    ["Lifetest", 1.0, "B", -2.8674197095874, 2.86741970958739]
+   ]
+  },
+  {
+   "name": "WilcoxonHomCov",
+   "proc": "Lifetest",
+   "path": "Lifetest.StrataHomogeneity.WilcoxonHomCov",
+   "template": "Stat.Lifetest.HomCov",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "group", "type": "char"},
+    {"name": "A", "type": "num"},
+    {"name": "B", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, "A", 578.918128654971, -578.91812865497],
+    ["Lifetest", 1.0, "B", -578.91812865497, 578.918128654971]
+   ]
+  },
+  {
+   "name": "HomTests",
+   "proc": "Lifetest",
+   "path": "Lifetest.StrataHomogeneity.HomTests",
+   "template": "Stat.Lifetest.HomTests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Test", "type": "char"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["Lifetest", 1.0, "Log-Rank", 0.00085024199063, 1.0, 0.97673785292828],
+    ["Lifetest", 1.0, "Wilcoxon", 0.00172735996768, 1.0, 0.96684824909061],
+    ["Lifetest", 1.0, "-2Log(LR)", 0.00416722941313, 1.0, 0.94852904621552]
+   ]
   }
  ],
  "datasets": [
@@ -441,9 +682,32 @@
   {
    "name": "HEAVY",
    "columns": [
-    {"name": "group", "type": "char", "length": 8, "format": "", "label": ""}
+    {"name": "group", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "months", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "dead", "type": "num", "length": 8, "format": "", "label": ""}
    ],
-   "rows": []
+   "rows": [
+    ["A", 2.0, 1.0],
+    ["A", 4.0, 1.0],
+    ["A", 5.0, 1.0],
+    ["A", 7.0, 1.0],
+    ["A", 9.0, 1.0],
+    ["A", 10.0, 1.0],
+    ["B", 2.0, 1.0],
+    ["B", 3.0, 1.0],
+    ["B", 5.0, 1.0],
+    ["B", 8.0, 1.0],
+    ["B", 9.0, 1.0],
+    ["B", 12.0, 1.0],
+    ["A", 6.0, 0.0],
+    ["A", 11.0, 0.0],
+    ["A", 12.0, 0.0],
+    ["A", 13.0, 0.0],
+    ["B", 4.0, 0.0],
+    ["B", 10.0, 0.0],
+    ["B", 14.0, 0.0],
+    ["B", 15.0, 0.0]
+   ]
   }
  ]
 }

@@ -5,33 +5,21 @@
  "log": [
   {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
   {"level": "NOTE", "text": "The data set WORK.RATS has 40 observations and 3 variables."},
-  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.15k OS Memory           29604.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1236  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              668.56k OS Memory           23204.00k Timestamp           10/20/2026 06:52:46 AM Step Count                        104  Switch Count  2 Page Faults                       0 Page Reclaims                     89 Page Swaps                        0 Voluntary Context Switches        13 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
   {"level": "NOTE", "text": "Convergence criterion (GCONV=1E-8) satisfied."},
-  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.00 seconds memory              4249.15k OS Memory           31424.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1237  Switch Count  14 Page Faults                       0 Page Reclaims                     724 Page Swaps                        0 Voluntary Context Switches        115 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1904"},
+  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.01 seconds memory              4372.15k OS Memory           25792.00k Timestamp           10/20/2026 06:52:46 AM Step Count                        105  Switch Count  14 Page Faults                       0 Page Reclaims                     1142 Page Swaps                        0 Voluntary Context Switches        110 Involuntary Context Switches      3 Block Input Operations            0 Block Output Operations           1896"},
   {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
   {"level": "NOTE", "text": "The data set WORK.EXPOSED has 40 observations and 4 variables."},
-  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              673.81k OS Memory           29604.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1238  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           272"},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              669.40k OS Memory           23972.00k Timestamp           10/20/2026 06:52:46 AM Step Count                        106  Switch Count  2 Page Faults                       0 Page Reclaims                     89 Page Swaps                        0 Voluntary Context Switches        13 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           272"},
   {"level": "NOTE", "text": "Convergence criterion (GCONV=1E-8) satisfied."},
-  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.01 seconds memory              3225.06k OS Memory           31424.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1239  Switch Count  14 Page Faults                       0 Page Reclaims                     724 Page Swaps                        0 Voluntary Context Switches        115 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1920"},
+  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.01 seconds memory              3455.50k OS Memory           25792.00k Timestamp           10/20/2026 06:52:46 AM Step Count                        107  Switch Count  14 Page Faults                       0 Page Reclaims                     862 Page Swaps                        0 Voluntary Context Switches        111 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1912"},
   {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
   {"level": "NOTE", "text": "The data set WORK.TIES has 18 observations and 3 variables."},
-  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              672.81k OS Memory           29604.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1240  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        13 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
-  {"level": "PUT", "text": "148        proc phreg data=ties ties=efron;"},
-  {"level": "PUT", "text": "                                ____"},
-  {"level": "PUT", "text": "                                22"},
-  {"level": "PUT", "text": "                                76"},
-  {"level": "ERROR", "text": "Syntax error, expecting one of the following: ;, (, ALPHA, ATRISK, BRIEF, BRIEFSUMMARY, CONCORDANCE, COVM, COVOUT, COVS, DATA, DETAILS, EV, EXPLVAR, FAST, IN, INEST, MULTIPASS, NAMELEN, NOPRINT, NOSUMMARY, OUT, OUTEST, PLOT, PLOTS, PRINT, ROCOPTIONS, SIMPLE, SUREV, TAU, TRACE, ZPH."},
-  {"level": "ERROR", "text": "Syntax error, statement will be ignored."},
-  {"level": "NOTE", "text": "The SAS System stopped processing this step because of errors."},
-  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              364.62k OS Memory           29344.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1241  Switch Count  0 Page Faults                       0 Page Reclaims                     53 Page Swaps                        0 Voluntary Context Switches        0 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           0"},
-  {"level": "PUT", "text": "152        proc phreg data=ties ties=breslow;"},
-  {"level": "PUT", "text": "                                ____"},
-  {"level": "PUT", "text": "                                22"},
-  {"level": "PUT", "text": "                                76"},
-  {"level": "ERROR", "text": "Syntax error, expecting one of the following: ;, (, ALPHA, ATRISK, BRIEF, BRIEFSUMMARY, CONCORDANCE, COVM, COVOUT, COVS, DATA, DETAILS, EV, EXPLVAR, FAST, IN, INEST, MULTIPASS, NAMELEN, NOPRINT, NOSUMMARY, OUT, OUTEST, PLOT, PLOTS, PRINT, ROCOPTIONS, SIMPLE, SUREV, TAU, TRACE, ZPH."},
-  {"level": "ERROR", "text": "Syntax error, statement will be ignored."},
-  {"level": "NOTE", "text": "The SAS System stopped processing this step because of errors."},
-  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.00 seconds user cpu time       0.01 seconds system cpu time     0.00 seconds memory              476.75k OS Memory           29344.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1242  Switch Count  0 Page Faults                       0 Page Reclaims                     53 Page Swaps                        0 Voluntary Context Switches        0 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           0"}
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              669.34k OS Memory           23972.00k Timestamp           10/20/2026 06:52:46 AM Step Count                        108  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        13 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Convergence criterion (GCONV=1E-8) satisfied."},
+  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.00 seconds memory              3379.96k OS Memory           25792.00k Timestamp           10/20/2026 06:52:46 AM Step Count                        109  Switch Count  14 Page Faults                       0 Page Reclaims                     854 Page Swaps                        0 Voluntary Context Switches        102 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1920"},
+  {"level": "NOTE", "text": "Convergence criterion (GCONV=1E-8) satisfied."},
+  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.01 seconds memory              3395.75k OS Memory           25792.00k Timestamp           10/20/2026 06:52:46 AM Step Count                        110  Switch Count  14 Page Faults                       0 Page Reclaims                     854 Page Swaps                        0 Voluntary Context Switches        107 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1920"}
  ],
  "tables": [
   {
@@ -299,6 +287,272 @@
    "rows": [
     ["PHReg", 1.0, "treatment", 1.0, -1.1848710244907, 0.40621389704612, 8.50810036094582, 0.00353568975296, 0.30578561581103],
     ["PHReg", 1.0, "sex", 1.0, -1.0163544584953, 0.39709466605849, 6.55091985663782, 0.01048299488878, 0.36191190305676]
+   ]
+  },
+  {
+   "name": "ModelInfo",
+   "proc": "PHReg",
+   "path": "PHReg.ModelInfo",
+   "template": "Stat.Phreg.ModelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Description", "type": "char"},
+    {"name": "cValue", "type": "char"},
+    {"name": "nValue", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Data Set", "WORK.TIES", null],
+    ["PHReg", 1.0, "Dependent Variable", "months", null],
+    ["PHReg", 1.0, "Censoring Variable", "status", null],
+    ["PHReg", 1.0, "Censoring Value(s)", "0", 0.0],
+    ["PHReg", 1.0, "Ties Handling", "EFRON", null]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "PHReg",
+   "path": "PHReg.NObs",
+   "template": "Stat.Phreg.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, 18.0, 18.0, 18.0, 18.0]
+   ]
+  },
+  {
+   "name": "CensoredSummary",
+   "proc": "PHReg",
+   "path": "PHReg.CensoredSummary",
+   "template": "Stat.Phreg.CensoredSummary",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Total", "type": "num"},
+    {"name": "Event", "type": "num"},
+    {"name": "Censored", "type": "num"},
+    {"name": "PctCens", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, 18.0, 10.0, 8.0, 44.4444444444444]
+   ]
+  },
+  {
+   "name": "ConvergenceStatus",
+   "proc": "PHReg",
+   "path": "PHReg.ConvergenceStatus",
+   "template": "Stat.Phreg.ConvergenceStatus",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Reason", "type": "char"},
+    {"name": "Status", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Convergence criterion (GCONV=1E-8) satisfied.", 0.0]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "PHReg",
+   "path": "PHReg.FitStatistics",
+   "template": "Stat.Phreg.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Criterion", "type": "char"},
+    {"name": "WithoutCovariates", "type": "num"},
+    {"name": "WithCovariates", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "-2 LOG L", 39.1725690854382, 35.4202080676937],
+    ["PHReg", 1.0, "AIC", 39.1725690854382, 37.4202080676937],
+    ["PHReg", 1.0, "SBC", 39.1725690854382, 37.7227931606878]
+   ]
+  },
+  {
+   "name": "GlobalTests",
+   "proc": "PHReg",
+   "path": "PHReg.GlobalTests",
+   "template": "Stat.Phreg.GlobalTests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Test", "type": "char"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Likelihood Ratio", 3.7523610177445, 1.0, 0.05273297527897],
+    ["PHReg", 1.0, "Score", 3.16873198607519, 1.0, 0.07506070074413],
+    ["PHReg", 1.0, "Wald", 2.53366910830024, 1.0, 0.11144081496501]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "PHReg",
+   "path": "PHReg.ParameterEstimates",
+   "template": "Stat.Phreg.ParameterEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Parameter", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"},
+    {"name": "HazardRatio", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "x", 1.0, 1.70027155993134, 1.06817729481907, 2.53366910830024, 0.11144081496501, 5.47543409836089]
+   ]
+  },
+  {
+   "name": "ModelInfo",
+   "proc": "PHReg",
+   "path": "PHReg.ModelInfo",
+   "template": "Stat.Phreg.ModelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Description", "type": "char"},
+    {"name": "cValue", "type": "char"},
+    {"name": "nValue", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Data Set", "WORK.TIES", null],
+    ["PHReg", 1.0, "Dependent Variable", "months", null],
+    ["PHReg", 1.0, "Censoring Variable", "status", null],
+    ["PHReg", 1.0, "Censoring Value(s)", "0", 0.0],
+    ["PHReg", 1.0, "Ties Handling", "BRESLOW", null]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "PHReg",
+   "path": "PHReg.NObs",
+   "template": "Stat.Phreg.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, 18.0, 18.0, 18.0, 18.0]
+   ]
+  },
+  {
+   "name": "CensoredSummary",
+   "proc": "PHReg",
+   "path": "PHReg.CensoredSummary",
+   "template": "Stat.Phreg.CensoredSummary",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Total", "type": "num"},
+    {"name": "Event", "type": "num"},
+    {"name": "Censored", "type": "num"},
+    {"name": "PctCens", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, 18.0, 10.0, 8.0, 44.4444444444444]
+   ]
+  },
+  {
+   "name": "ConvergenceStatus",
+   "proc": "PHReg",
+   "path": "PHReg.ConvergenceStatus",
+   "template": "Stat.Phreg.ConvergenceStatus",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Reason", "type": "char"},
+    {"name": "Status", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Convergence criterion (GCONV=1E-8) satisfied.", 0.0]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "PHReg",
+   "path": "PHReg.FitStatistics",
+   "template": "Stat.Phreg.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Criterion", "type": "char"},
+    {"name": "WithoutCovariates", "type": "num"},
+    {"name": "WithCovariates", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "-2 LOG L", 40.1705514176762, 36.6993504924662],
+    ["PHReg", 1.0, "AIC", 40.1705514176762, 38.6993504924662],
+    ["PHReg", 1.0, "SBC", 40.1705514176762, 39.0019355854603]
+   ]
+  },
+  {
+   "name": "GlobalTests",
+   "proc": "PHReg",
+   "path": "PHReg.GlobalTests",
+   "template": "Stat.Phreg.GlobalTests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Test", "type": "char"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Likelihood Ratio", 3.47120092520998, 1.0, 0.06244595910269],
+    ["PHReg", 1.0, "Score", 2.92791982111589, 1.0, 0.08705960101468],
+    ["PHReg", 1.0, "Wald", 2.37833667990866, 1.0, 0.12302847823549]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "PHReg",
+   "path": "PHReg.ParameterEstimates",
+   "template": "Stat.Phreg.ParameterEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Parameter", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"},
+    {"name": "HazardRatio", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "x", 1.0, 1.65135637184302, 1.07078958803295, 2.37833667990866, 0.12302847823549, 5.21404721992734]
    ]
   }
  ],

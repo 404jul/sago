@@ -17,6 +17,7 @@ func bpPrint(s *Session, p *ProcStep) error {
 	if err != nil {
 		return err
 	}
+	bpObsRead(s, p.Line, d)
 	noobs := p.Opts.Has("NOOBS")
 	split := ""
 	if op, ok := p.Opts.Get("SPLIT", "S"); ok && op.Eq {

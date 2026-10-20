@@ -2,6 +2,7 @@ package sas
 
 import (
 	"fmt"
+	"sort"
 	"math"
 	"strings"
 )
@@ -345,9 +346,11 @@ func (rc *rgCtx) run() error {
 	ft := &Table{ODSName: "FitStatistics", Cols: append(rc.hidden(),
 		Col{Name: "Label1", Char: true}, Col{Name: "cValue1", Char: true}, Col{Name: "nValue1", Hidden: true},
 		Col{Name: "Label2", Char: true}, Col{Name: "cValue2", Char: true}, Col{Name: "nValue2", Hidden: true}), RowHeader: 3}
-	ft.AddRow(rc.pre("Root MSE", lmFitDec(rmse), rmse, "R-Square", lmFmtFit(r2, 4), r2)...)
-	ft.AddRow(rc.pre("Dependent Mean", lmFitDec(f.YMean), f.YMean, "Adj R-Sq", lmFmtFit(adj, 4), adj)...)
-	ft.AddRow(rc.pre("Coeff Var", lmFitDec(cv), cv, "", "", nil)...)
+	// cValue strings carry SAS's display widths: 11.5 for the fit stats,
+	// 7.4 for the R-square family
+	ft.AddRow(rc.pre("Root MSE", fmt.Sprintf("%11.5f", rmse), rmse, "R-Square", fmt.Sprintf("%7.4f", r2), r2)...)
+	ft.AddRow(rc.pre("Dependent Mean", fmt.Sprintf("%11.5f", f.YMean), f.YMean, "Adj R-Sq", fmt.Sprintf("%7.4f", adj), adj)...)
+	ft.AddRow(rc.pre("Coeff Var", fmt.Sprintf("%11.5f", cv), cv, "", "", float64(0))...)
 	rc.table(ft)
 	rc.paramTable()
 	if o.Has("COLLIN", "COLLINOINT") {
@@ -800,7 +803,7 @@ func (rc *rgCtx) outputStats() {
 	di := rc.d.Index(rc.dep)
 	pct := fmt.Sprintf("%g%%", 100*(1-rc.alpha))
 	t := &Table{ODSName: "OutputStatistics", Caption: "Output Statistics", RowHeader: 3}
-	cols := append(rc.hidden(), Col{Name: "Obs", Label: "Obs"})
+	cols := append(rc.hidden())
 	for _, i := range rc.idIdx {
 		cols = append(cols, Col{Name: rc.d.Vars[i].Name, Label: rc.d.Vars[i].Name, Char: rc.d.Vars[i].Char, Format: rc.d.Vars[i].Format})
 	}
@@ -825,7 +828,7 @@ func (rc *rgCtx) outputStats() {
 	}
 	t.Cols = cols
 	sumR, sumR2, press := 0.0, 0.0, 0.0
-	for i, r := range rc.all {
+	for _, r := range rc.all {
 		x := rc.xrow(r)
 		w := 1.0
 		if rc.wIdx >= 0 {
@@ -839,7 +842,7 @@ func (rc *rgCtx) outputStats() {
 		} else {
 			st = f.obsStats(x, math.NaN(), w, rc.alpha)
 		}
-		row := rc.pre(i + 1)
+		row := rc.pre()
 		for _, k := range rc.idIdx {
 			row = append(row, r[k])
 		}
@@ -865,10 +868,11 @@ func (rc *rgCtx) outputStats() {
 		}
 	}
 	rc.table(t)
-	rs := &Table{ODSName: "ResidualStatistics", Caption: "", RowHeader: 3, Cols: append(rc.hidden(), Col{Name: "Statistic", Char: true}, Col{Name: "Value"})}
-	rs.AddRow(rc.pre("Sum of Residuals", sumR)...)
-	rs.AddRow(rc.pre("Sum of Squared Residuals", sumR2)...)
-	rs.AddRow(rc.pre("Predicted Residual SS (PRESS)", press)...)
+	rs := &Table{ODSName: "ResidualStatistics", Caption: "", RowHeader: 3, Cols: append(rc.hidden(),
+		Col{Name: "Label1", Char: true}, Col{Name: "cValue1", Char: true}, Col{Name: "nValue1"})}
+	rs.AddRow(rc.pre("Sum of Residuals", fmt.Sprintf("%11.0f", sumR), sumR)...)
+	rs.AddRow(rc.pre("Sum of Squared Residuals", fmt.Sprintf("%11.5f", sumR2), sumR2)...)
+	rs.AddRow(rc.pre("Predicted Residual SS (PRESS)", fmt.Sprintf("%11.5f", press), press)...)
 	rc.table(rs)
 }
 
@@ -903,13 +907,43 @@ func (rc *rgCtx) output(st *Stmt) (*Dataset, error) {
 		col int
 	}
 	var ovs []outVar
-	for _, it := range sp.Items {
-		names := sp.Names[it[0]]
+	// SAS writes OUTPUT statistics in its canonical order (P, R, STUDENT,
+	// COOKD, H, PRESS, RSTUDENT, DFFITS, COVRATIO, DFBETAS), not statement
+	// order, and labels the columns.
+	rank := map[string]int{"P": 0, "R": 1, "STUDENT": 2, "COOKD": 3, "H": 4, "PRESS": 5, "RSTUDENT": 6, "DFFITS": 7, "COVRATIO": 8}
+	labels := map[string]string{
+		"P":        "Predicted Value of " + rc.dep,
+		"R":        "Residual",
+		"STUDENT":  "Studentized Residual",
+		"COOKD":    "Cook's D Influence Statistic",
+		"H":        "Leverage",
+		"PRESS":    "Residual without Current Observation",
+		"RSTUDENT": "Studentized Residual without Current Obs",
+		"DFFITS":   "Standard Influence on Predicted Value",
+		"COVRATIO": "Covariance Ratio",
+	}
+	items := make([]string, len(sp.Items))
+	for i, it := range sp.Items {
+		items[i] = it[0]
+	}
+	sort.SliceStable(items, func(a, b int) bool {
+		ra, okA := rank[items[a]]
+		if !okA {
+			ra = 99
+		}
+		rb, okB := rank[items[b]]
+		if !okB {
+			rb = 99
+		}
+		return ra < rb
+	})
+	for _, key := range items {
+		names := sp.Names[key]
 		if depIdx >= len(names) {
 			continue
 		}
-		col := od.AddVar(&Var{Name: names[depIdx], Length: 8})
-		ovs = append(ovs, outVar{it[0], col})
+		col := od.AddVar(&Var{Name: names[depIdx], Length: 8, Label: labels[key]})
+		ovs = append(ovs, outVar{key, col})
 	}
 	in := map[*Value]bool{}
 	for _, r := range rc.rows {

@@ -89,11 +89,9 @@ run;
 	if rs == nil {
 		t.Fatal("no ResidualStatistics capture")
 	}
-	valIdx := 0
-	for i, v := range rs.Vars {
-		if v.Name == "Value" {
-			valIdx = i
-		}
+	valIdx := rs.Index("nValue1")
+	if valIdx < 0 {
+		t.Fatal("no nValue1 column in ResidualStatistics")
 	}
 	if math.Abs(rs.Rows[0][valIdx].Num) > 1e-9 {
 		t.Errorf("Sum of Residuals = %v, want 0", rs.Rows[0][valIdx].Num)
