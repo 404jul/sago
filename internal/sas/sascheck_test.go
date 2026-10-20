@@ -43,20 +43,22 @@ type snapCol struct {
 // not compared; Captured=false means SAS listed the object in its ODS
 // trace but no data set could be made from it (existence-only check).
 type snapTable struct {
-	Name     string    `json:"name"`
-	Proc     string    `json:"proc"`
-	Path     string    `json:"path,omitempty"`
-	Template string    `json:"template,omitempty"`
-	Kind     string    `json:"kind,omitempty"`
-	Captured bool      `json:"captured"`
-	Columns  []snapCol `json:"columns,omitempty"`
-	Rows     [][]any   `json:"rows,omitempty"`
+	Name      string    `json:"name"`
+	Proc      string    `json:"proc"`
+	Path      string    `json:"path,omitempty"`
+	Template  string    `json:"template,omitempty"`
+	Kind      string    `json:"kind,omitempty"`
+	Captured  bool      `json:"captured"`
+	Truncated bool      `json:"truncated,omitempty"`
+	Columns   []snapCol `json:"columns,omitempty"`
+	Rows      [][]any   `json:"rows,omitempty"`
 }
 
 type snapDataset struct {
-	Name    string    `json:"name"`
-	Columns []snapCol `json:"columns"`
-	Rows    [][]any   `json:"rows"`
+	Name      string    `json:"name"`
+	Columns   []snapCol `json:"columns"`
+	Rows      [][]any   `json:"rows"`
+	Truncated bool      `json:"truncated,omitempty"`
 }
 
 // snapLog is a NOTE/WARNING/ERROR message or a PUT line (level "PUT").
@@ -329,7 +331,7 @@ func compareTables(sas, sago []snapTable) []confDiff {
 		if !st.Captured {
 			continue
 		}
-		out = append(out, compareData(where, st.Columns, st.Rows, gt.Columns, gt.Rows, false)...)
+		out = append(out, compareData(where, st.Columns, st.Rows, gt.Columns, gt.Rows, false, st.Truncated)...)
 	}
 	for _, t := range sago {
 		k := strings.ToUpper(t.Name)
@@ -357,7 +359,7 @@ func compareDatasets(sas, sago []snapDataset) []confDiff {
 			continue
 		}
 		delete(sagoBy, k)
-		out = append(out, compareData(where, sd.Columns, sd.Rows, gd.Columns, gd.Rows, true)...)
+		out = append(out, compareData(where, sd.Columns, sd.Rows, gd.Columns, gd.Rows, true, sd.Truncated)...)
 	}
 	extra := make([]string, 0, len(sagoBy))
 	for k := range sagoBy {
@@ -372,8 +374,11 @@ func compareDatasets(sas, sago []snapDataset) []confDiff {
 
 // compareData compares columns (by name, case-insensitive) and cells.
 // Data sets also compare variable order and attributes; for ODS tables,
-// SAS-only columns (often hidden ODS columns) are informational.
-func compareData(where string, sc []snapCol, sr [][]any, gc []snapCol, gr [][]any, attrs bool) []confDiff {
+// SAS-only columns (often hidden ODS columns) are informational. A
+// truncated snapshot holds only a recorded prefix of rows (large
+// simulations): the prefix cells are compared and the total row count is
+// only checked against the recorded count (SAS nobs) informationally.
+func compareData(where string, sc []snapCol, sr [][]any, gc []snapCol, gr [][]any, attrs, truncated bool) []confDiff {
 	var out []confDiff
 	gIdx := map[string]int{}
 	for i, c := range gc {
@@ -434,7 +439,7 @@ func compareData(where string, sc []snapCol, sr [][]any, gc []snapCol, gr [][]an
 			out = append(out, confDiff{msg: fmt.Sprintf("%s: %s label: SAS %q, sago %q", where, p.name, a.Label, b.Label)})
 		}
 	}
-	if len(sr) != len(gr) {
+	if len(sr) != len(gr) && !truncated {
 		out = append(out, confDiff{msg: fmt.Sprintf("%s: SAS %d rows, sago %d", where, len(sr), len(gr))})
 	}
 	n := 0

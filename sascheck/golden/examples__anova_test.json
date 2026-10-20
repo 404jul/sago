@@ -1,0 +1,592 @@
+{
+ "engine": "sas",
+ "program": "examples/anova_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.TENSILE has 42 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              669.53k OS Memory           29348.00k Timestamp           10/20/2026 06:00:30 AM Step Count                        728  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.COATING has 15 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.01 seconds system cpu time     0.00 seconds memory              669.53k OS Memory           29348.00k Timestamp           10/20/2026 06:00:30 AM Step Count                        729  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE GLM used (Total process time): real time           0.12 seconds user cpu time       0.12 seconds system cpu time     0.01 seconds memory              3550.34k OS Memory           30648.00k Timestamp           10/20/2026 06:00:30 AM Step Count                        730  Switch Count  29 Page Faults                       0 Page Reclaims                     1050 Page Swaps                        0 Voluntary Context Switches        223 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           3760"},
+  {"level": "NOTE", "text": "PROCEDURE GLM used (Total process time): real time           0.06 seconds user cpu time       0.06 seconds system cpu time     0.01 seconds memory              2484.28k OS Memory           30648.00k Timestamp           10/20/2026 06:00:31 AM Step Count                        731  Switch Count  19 Page Faults                       0 Page Reclaims                     731 Page Swaps                        0 Voluntary Context Switches        139 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           2424"}
+ ],
+ "tables": [
+  {
+   "name": "ClassLevels",
+   "proc": "GLM",
+   "path": "GLM.Data.ClassLevels",
+   "template": "STAT.GLM.ClassLevels",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Class", "type": "char"},
+    {"name": "Levels", "type": "num"},
+    {"name": "Values", "type": "char"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "machine", 4.0, "A B C D"]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "GLM",
+   "path": "GLM.Data.NObs",
+   "template": "STAT.GLM.NObsNotitle",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "Label1", "type": "char"},
+    {"name": "nvalue1", "type": "num"},
+    {"name": "DependentVariables", "type": "char"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "Number of Observations Read", 42.0, 42.0, 42.0, 42.0, 42.0, "Number of Observations Read", 42.0, "strength"],
+    ["GLM", 1.0, "Number of Observations Used", 42.0, 42.0, 42.0, 42.0, 42.0, "Number of Observations Used", 42.0, "strength"]
+   ]
+  },
+  {
+   "name": "OverallANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.strength.OverallANOVA",
+   "template": "stat.GLM.OverallANOVA",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "strength", "Model", 3.0, 178.065873015873, 59.355291005291, 76.0914333041494, 4.0109663755e-16],
+    ["GLM", 1.0, "strength", "Error", 38.0, 29.641984126984, 0.780052213868, null, null],
+    ["GLM", 1.0, "strength", "Corrected Total", 41.0, 207.707857142857, null, null, null]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.strength.FitStatistics",
+   "template": "stat.GLM.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "RSquare", "type": "num"},
+    {"name": "CV", "type": "num"},
+    {"name": "RootMSE", "type": "num"},
+    {"name": "DepMean", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "strength", 0.85729002005641, 1.63578238522009, 0.8832056464199, 53.9928571428572]
+   ]
+  },
+  {
+   "name": "ModelANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.strength.ModelANOVA",
+   "template": "stat.GLM.Tests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "HypothesisType", "type": "num"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "strength", 1.0, "machine", 3.0, 178.065873015873, 59.355291005291, 76.0914333041494, 4.0109663755e-16]
+   ]
+  },
+  {
+   "name": "ModelANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.strength.ModelANOVA",
+   "template": "stat.GLM.Tests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "HypothesisType", "type": "num"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "strength", 3.0, "machine", 3.0, 178.065873015873, 59.355291005291, 76.0914333041493, 4.0109663755e-16]
+   ]
+  },
+  {
+   "name": "HOVFTest",
+   "proc": "GLM",
+   "path": "GLM.Means.machine.strength.HOVFTest",
+   "template": "stat.GLM.HoVTest",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "machine", "strength", "LV", "machine", 3.0, 0.57041505307002, 0.19013835102334, 0.33993806166008, 0.79654845770257],
+    ["GLM", 1.0, "machine", "strength", "LV", "Error", 38.0, 21.2546288685727, 0.55933233864665, null, null]
+   ]
+  },
+  {
+   "name": "CLDiffsInfo",
+   "proc": "GLM",
+   "path": "GLM.Means.machine.strength.CLDiffs.Tukey.CLDiffsInfo",
+   "template": "stat.GLM.SquashFact",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "machine", "strength", "Tukey", "Alpha", "    0.05", 0.05],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "Error Degrees of Freedom", "      38", 38.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "Error Mean Square", "0.780052", 0.780052213868],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "Critical Value of Studentized Range", " 3.79925", 3.79925007972276]
+   ]
+  },
+  {
+   "name": "CLDiffs",
+   "proc": "GLM",
+   "path": "GLM.Means.machine.strength.CLDiffs.Tukey.CLDiffs",
+   "template": "stat.GLM.MCPairs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Comparison", "type": "char"},
+    {"name": "LowerCL", "type": "num"},
+    {"name": "Difference", "type": "num"},
+    {"name": "UpperCL", "type": "num"},
+    {"name": "Significance", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "machine", "strength", "Tukey", "B - A", 2.37595531293603, 3.42222222222222, 4.46848913150841, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "B - D", 2.96801354185982, 3.98174603174604, 4.99547852163226, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "B - C", 5.35029813541896, 6.54603174603175, 7.74176535664454, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "A - B", -4.4684891315084, -3.4222222222222, -2.375955312936, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "A - D", -0.373895441088, 0.55952380952382, 1.49294306013564, 0.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "A - C", 1.99536067520764, 3.12380952380953, 4.25225837241141, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "D - B", -4.9954785216323, -3.981746031746, -2.9680135418598, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "D - A", -1.4929430601356, -0.5595238095238, 0.373895441088, 0.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "D - C", 1.46593425892429, 2.56428571428571, 3.66263716964713, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "C - B", -7.7417653566445, -6.5460317460317, -5.350298135419, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "C - A", -4.2522583724114, -3.1238095238095, -1.9953606752076, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Tukey", "C - D", -3.6626371696471, -2.5642857142857, -1.4659342589243, 1.0]
+   ]
+  },
+  {
+   "name": "CLDiffsInfo",
+   "proc": "GLM",
+   "path": "GLM.Means.machine.strength.CLDiffs.Bon.CLDiffsInfo",
+   "template": "stat.GLM.SquashFact",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "machine", "strength", "Bon", "Alpha", "    0.05", 0.05],
+    ["GLM", 1.0, "machine", "strength", "Bon", "Error Degrees of Freedom", "      38", 38.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "Error Mean Square", "0.780052", 0.780052213868],
+    ["GLM", 1.0, "machine", "strength", "Bon", "Critical Value of t", " 2.78347", 2.7834742970294]
+   ]
+  },
+  {
+   "name": "CLDiffs",
+   "proc": "GLM",
+   "path": "GLM.Means.machine.strength.CLDiffs.Bon.CLDiffs",
+   "template": "stat.GLM.MCPairs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Comparison", "type": "char"},
+    {"name": "LowerCL", "type": "num"},
+    {"name": "Difference", "type": "num"},
+    {"name": "UpperCL", "type": "num"},
+    {"name": "Significance", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "machine", "strength", "Bon", "B - A", 2.33817844238041, 3.42222222222222, 4.50626600206403, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "B - D", 2.93141137016867, 3.98174603174604, 5.0320806933234, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "B - C", 5.30712456906968, 6.54603174603175, 7.78493892299381, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "A - B", -4.506266002064, -3.4222222222222, -2.3381784423804, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "A - D", -0.4075977955174, 0.55952380952382, 1.52664541456501, 0.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "A - C", 1.95461651546799, 3.12380952380953, 4.29300253215106, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "D - B", -5.0320806933234, -3.981746031746, -2.9314113701687, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "D - A", -1.526645414565, -0.5595238095238, 0.40759779551737, 0.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "D - C", 1.42627680594982, 2.56428571428571, 3.7022946226216, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "C - B", -7.7849389229938, -6.5460317460317, -5.3071245690697, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "C - A", -4.2930025321511, -3.1238095238095, -1.954616515468, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Bon", "C - D", -3.7022946226216, -2.5642857142857, -1.4262768059498, 1.0]
+   ]
+  },
+  {
+   "name": "CLDiffsInfo",
+   "proc": "GLM",
+   "path": "GLM.Means.machine.strength.CLDiffs.Scheffe.CLDiffsInfo",
+   "template": "stat.GLM.SquashFact",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "Alpha", "    0.05", 0.05],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "Error Degrees of Freedom", "      38", 38.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "Error Mean Square", "0.780052", 0.780052213868],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "Critical Value of F", " 2.85174", 2.8517413363299]
+   ]
+  },
+  {
+   "name": "CLDiffs",
+   "proc": "GLM",
+   "path": "GLM.Means.machine.strength.CLDiffs.Scheffe.CLDiffs",
+   "template": "stat.GLM.MCPairs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Comparison", "type": "char"},
+    {"name": "LowerCL", "type": "num"},
+    {"name": "Difference", "type": "num"},
+    {"name": "UpperCL", "type": "num"},
+    {"name": "Significance", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "B - A", 2.28308695078891, 3.42222222222222, 4.56135749365552, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "B - D", 2.87803298799208, 3.98174603174604, 5.08545907549999, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "B - C", 5.24416286439368, 6.54603174603175, 7.84790062766981, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "A - B", -4.5613574936555, -3.4222222222222, -2.2830869507889, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "A - D", -0.456747260477, 0.55952380952382, 1.57579487952468, 0.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "A - C", 1.89519770970972, 3.12380952380953, 4.35242133790934, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "D - B", -5.0854590755, -3.981746031746, -2.8780329879921, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "D - A", -1.5757948795247, -0.5595238095238, 0.45674726047704, 0.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "D - C", 1.36844278727782, 2.56428571428571, 3.7601286412936, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "C - B", -7.8479006276698, -6.5460317460317, -5.2441628643937, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "C - A", -4.3524213379093, -3.1238095238095, -1.8951977097097, 1.0],
+    ["GLM", 1.0, "machine", "strength", "Scheffe", "C - D", -3.7601286412936, -2.5642857142857, -1.3684427872778, 1.0]
+   ]
+  },
+  {
+   "name": "ClassLevels",
+   "proc": "GLM",
+   "path": "GLM.Data.ClassLevels",
+   "template": "STAT.GLM.ClassLevels",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Class", "type": "char"},
+    {"name": "Levels", "type": "num"},
+    {"name": "Values", "type": "char"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "line", 3.0, "1 2 3"]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "GLM",
+   "path": "GLM.Data.NObs",
+   "template": "STAT.GLM.NObsNotitle",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "Label1", "type": "char"},
+    {"name": "nvalue1", "type": "num"},
+    {"name": "DependentVariables", "type": "char"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "Number of Observations Read", 15.0, 15.0, 15.0, 15.0, 15.0, "Number of Observations Read", 15.0, "coat"],
+    ["GLM", 1.0, "Number of Observations Used", 15.0, 15.0, 15.0, 15.0, 15.0, "Number of Observations Used", 15.0, "coat"]
+   ]
+  },
+  {
+   "name": "OverallANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.coat.OverallANOVA",
+   "template": "stat.GLM.OverallANOVA",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "coat", "Model", 2.0, 11.7693333333333, 5.88466666666667, 72.9504132231405, 1.92655342876e-07],
+    ["GLM", 1.0, "coat", "Error", 12.0, 0.968, 0.08066666666667, null, null],
+    ["GLM", 1.0, "coat", "Corrected Total", 14.0, 12.7373333333333, null, null, null]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.coat.FitStatistics",
+   "template": "stat.GLM.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "RSquare", "type": "num"},
+    {"name": "CV", "type": "num"},
+    {"name": "RootMSE", "type": "num"},
+    {"name": "DepMean", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "coat", 0.92400293101643, 2.47259528777026, 0.28401877872188, 11.4866666666667]
+   ]
+  },
+  {
+   "name": "ModelANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.coat.ModelANOVA",
+   "template": "stat.GLM.Tests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "HypothesisType", "type": "num"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "coat", 1.0, "line", 2.0, 11.7693333333333, 5.88466666666667, 72.9504132231405, 1.92655342876e-07]
+   ]
+  },
+  {
+   "name": "ModelANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.coat.ModelANOVA",
+   "template": "stat.GLM.Tests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "HypothesisType", "type": "num"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "coat", 3.0, "line", 2.0, 11.7693333333333, 5.88466666666667, 72.9504132231405, 1.92655342876e-07]
+   ]
+  },
+  {
+   "name": "MCLinesInfo",
+   "proc": "GLM",
+   "path": "GLM.Means.line.coat.MCLines.Tukey.MCLinesInfo",
+   "template": "stat.GLM.SquashFact",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "line", "coat", "Tukey", "Alpha", "    0.05", 0.05],
+    ["GLM", 1.0, "line", "coat", "Tukey", "Error Degrees of Freedom", "      12", 12.0],
+    ["GLM", 1.0, "line", "coat", "Tukey", "Error Mean Square", "0.080667", 0.08066666666667],
+    ["GLM", 1.0, "line", "coat", "Tukey", "Critical Value of Studentized Range", " 3.77289", 3.77288547881831],
+    ["GLM", 1.0, "line", "coat", "Tukey", "Minimum Significant Difference", "0.4792", 0.47922081829982]
+   ]
+  },
+  {
+   "name": "MCLines",
+   "proc": "GLM",
+   "path": "GLM.Means.line.coat.MCLines.Tukey.MCLines",
+   "template": "stat.GLM.MCLines",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Method", "type": "char"},
+    {"name": "Line1", "type": "char"},
+    {"name": "Mean", "type": "num"},
+    {"name": "N", "type": "num"},
+    {"name": "Level", "type": "char"},
+    {"name": "Eq3", "type": "num"},
+    {"name": "Eq2", "type": "num"},
+    {"name": "Eq1", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "line", "coat", "Tukey", "A", 12.72, 5.0, "3", 1.0, 0.0, 0.0],
+    ["GLM", 1.0, "line", "coat", "Tukey", "", null, null, "", 1.0, 0.0, 0.0],
+    ["GLM", 1.0, "line", "coat", "Tukey", "B", 11.06, 5.0, "2", 0.0, 1.0, 1.0],
+    ["GLM", 1.0, "line", "coat", "Tukey", "B", null, null, "", 0.0, 1.0, 1.0],
+    ["GLM", 1.0, "line", "coat", "Tukey", "B", 10.68, 5.0, "1", 0.0, 1.0, 1.0]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "COATING",
+   "columns": [
+    {"name": "line", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "coat", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["1", 10.2],
+    ["1", 10.8],
+    ["1", 10.5],
+    ["1", 11.0],
+    ["1", 10.9],
+    ["2", 11.1],
+    ["2", 10.9],
+    ["2", 11.3],
+    ["2", 10.8],
+    ["2", 11.2],
+    ["3", 12.3],
+    ["3", 12.9],
+    ["3", 12.6],
+    ["3", 13.1],
+    ["3", 12.7]
+   ]
+  },
+  {
+   "name": "TENSILE",
+   "columns": [
+    {"name": "machine", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "strength", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["A", 52.3],
+    ["A", 54.1],
+    ["A", 53.8],
+    ["A", 55.0],
+    ["A", 52.9],
+    ["A", 54.6],
+    ["A", 53.2],
+    ["A", 55.3],
+    ["A", 54.8],
+    ["A", 53.5],
+    ["A", 54.2],
+    ["A", 53.9],
+    ["B", 56.8],
+    ["B", 58.2],
+    ["B", 57.5],
+    ["B", 55.9],
+    ["B", 57.9],
+    ["B", 58.6],
+    ["B", 56.4],
+    ["B", 57.2],
+    ["B", 58.0],
+    ["C", 50.1],
+    ["C", 51.8],
+    ["C", 49.6],
+    ["C", 52.4],
+    ["C", 50.9],
+    ["C", 51.2],
+    ["C", 49.9],
+    ["D", 53.4],
+    ["D", 52.8],
+    ["D", 54.5],
+    ["D", 53.1],
+    ["D", 52.2],
+    ["D", 54.0],
+    ["D", 53.7],
+    ["D", 52.5],
+    ["D", 54.3],
+    ["D", 53.6],
+    ["D", 52.9],
+    ["D", 54.8],
+    ["D", 53.3],
+    ["D", 52.6]
+   ]
+  }
+ ]
+}

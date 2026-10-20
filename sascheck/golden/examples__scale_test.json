@@ -1,0 +1,284 @@
+{
+ "engine": "sas",
+ "program": "examples/scale_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.SPREAD has 24 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.01 seconds system cpu time     0.00 seconds memory              668.18k OS Memory           23204.00k Timestamp           10/20/2026 06:07:38 AM Step Count                        112  Switch Count  2 Page Faults                       0 Page Reclaims                     101 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              2110.31k OS Memory           23980.00k Timestamp           10/20/2026 06:07:38 AM Step Count                        113  Switch Count  6 Page Faults                       0 Page Reclaims                     379 Page Swaps                        0 Voluntary Context Switches        48 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           1056"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              1292.31k OS Memory           23980.00k Timestamp           10/20/2026 06:07:38 AM Step Count                        114  Switch Count  6 Page Faults                       0 Page Reclaims                     321 Page Swaps                        0 Voluntary Context Switches        47 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           1056"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              1305.43k OS Memory           23980.00k Timestamp           10/20/2026 06:07:38 AM Step Count                        115  Switch Count  6 Page Faults                       0 Page Reclaims                     308 Page Swaps                        0 Voluntary Context Switches        41 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           1072"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.01 seconds memory              1311.78k OS Memory           23980.00k Timestamp           10/20/2026 06:07:38 AM Step Count                        116  Switch Count  6 Page Faults                       0 Page Reclaims                     309 Page Swaps                        0 Voluntary Context Switches        38 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           1056"}
+ ],
+ "tables": [
+  {
+   "name": "MoodScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Mood.MoodScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", "A", 12.0, 143.0, 575.0, 106.957935656968, 11.9166666666667],
+    ["Npar1way", 1.0, "resp", "B", 12.0, 1007.0, 575.0, 106.957935656968, 83.9166666666667]
+   ]
+  },
+  {
+   "name": "MoodTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Mood.MoodTest",
+   "template": "Stat.Npar1way.TwoSampleTest",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Statistic", "type": "num"},
+    {"name": "Z", "type": "num"},
+    {"name": "Prob1", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", 143.0, -4.0389709968365, 2.684310111e-05]
+   ]
+  },
+  {
+   "name": "MoodAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Mood.MoodAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", 16.3132867132867, 1.0, 5.368620223e-05]
+   ]
+  },
+  {
+   "name": "KlotzScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Klotz.KlotzScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", "A", 12.0, 1.55286187275961, 9.39228880013017, 2.25646691745223, 0.1294051560633],
+    ["Npar1way", 1.0, "resp", "B", 12.0, 17.2317157275007, 9.39228880013017, 2.25646691745223, 1.43597631062506]
+   ]
+  },
+  {
+   "name": "KlotzTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Klotz.KlotzTest",
+   "template": "Stat.Npar1way.TwoSampleTest",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Statistic", "type": "num"},
+    {"name": "Z", "type": "num"},
+    {"name": "Prob1", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", 1.55286187275961, -3.4742042379341, 0.0002561854369]
+   ]
+  },
+  {
+   "name": "KlotzAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Klotz.KlotzAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", 12.0700950868791, 1.0, 0.00051237087379]
+   ]
+  },
+  {
+   "name": "ABScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.AB.ABScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", "A", 12.0, 114.0, 78.0, 8.63763252588196, 9.5],
+    ["Npar1way", 1.0, "resp", "B", 12.0, 42.0, 78.0, 8.63763252588196, 3.5]
+   ]
+  },
+  {
+   "name": "ABTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.AB.ABTest",
+   "template": "Stat.Npar1way.TwoSampleTest",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Statistic", "type": "num"},
+    {"name": "Z", "type": "num"},
+    {"name": "Prob1", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", 114.0, 4.16780870129969, 1.537709303e-05]
+   ]
+  },
+  {
+   "name": "ABAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.AB.ABAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", 17.3706293706294, 1.0, 3.075418605e-05]
+   ]
+  },
+  {
+   "name": "WilcoxonScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Wilcoxon.WilcoxonScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", "A", 12.0, 150.0, 150.0, 17.3205080756888, 12.5],
+    ["Npar1way", 1.0, "resp", "B", 12.0, 150.0, 150.0, 17.3205080756888, 12.5]
+   ]
+  },
+  {
+   "name": "WilcoxonTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Wilcoxon.WilcoxonTest",
+   "template": "Stat.Npar1way.TwoSampleTest",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Statistic", "type": "num"},
+    {"name": "Z", "type": "num"},
+    {"name": "Prob1", "type": "num"},
+    {"name": "tProb1", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", 150.0, 0.0, 0.5, 0.5]
+   ]
+  },
+  {
+   "name": "KruskalWallisTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.resp.Wilcoxon.KruskalWallisTest",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "resp", 0.0, 1.0, 1.0]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "SPREAD",
+   "columns": [
+    {"name": "group", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "resp", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["A", 9.2],
+    ["A", 10.1],
+    ["A", 9.8],
+    ["A", 10.3],
+    ["A", 9.5],
+    ["A", 10.6],
+    ["A", 9.9],
+    ["A", 10.2],
+    ["A", 9.4],
+    ["A", 10.5],
+    ["A", 9.7],
+    ["A", 10.0],
+    ["B", 5.1],
+    ["B", 15.2],
+    ["B", 7.3],
+    ["B", 12.9],
+    ["B", 6.0],
+    ["B", 14.1],
+    ["B", 8.2],
+    ["B", 11.5],
+    ["B", 4.9],
+    ["B", 13.6],
+    ["B", 7.0],
+    ["B", 12.0]
+   ]
+  }
+ ]
+}

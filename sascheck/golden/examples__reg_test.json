@@ -1,0 +1,291 @@
+{
+ "engine": "sas",
+ "program": "examples/reg_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "The data set WORK.PROCESS has 13 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.40k OS Memory           19620.00k Timestamp           10/20/2026 06:07:35 AM Step Count                        31  Switch Count  2 Page Faults                       0 Page Reclaims                     136 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE REG used (Total process time): real time           0.03 seconds user cpu time       0.03 seconds system cpu time     0.00 seconds memory              3956.37k OS Memory           22720.00k Timestamp           10/20/2026 06:07:35 AM Step Count                        32  Switch Count  10 Page Faults                       0 Page Reclaims                     1010 Page Swaps                        0 Voluntary Context Switches        74 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1104"},
+  {"level": "NOTE", "text": "The data set WORK.PRED has 13 observations and 9 variables."},
+  {"level": "NOTE", "text": "PROCEDURE REG used (Total process time): real time           0.04 seconds user cpu time       0.04 seconds system cpu time     0.01 seconds memory              2972.56k OS Memory           23232.00k Timestamp           10/20/2026 06:07:35 AM Step Count                        33  Switch Count  14 Page Faults                       0 Page Reclaims                     739 Page Swaps                        0 Voluntary Context Switches        103 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1656"},
+  {"level": "ERROR", "text": "PROC PRINT does not support the ODS OUTPUT statement."},
+  {"level": "NOTE", "text": "There were 13 observations read from the data set WORK.PRED."},
+  {"level": "NOTE", "text": "PROCEDURE PRINT used (Total process time): real time           0.01 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              693.75k OS Memory           21412.00k Timestamp           10/20/2026 06:07:35 AM Step Count                        34  Switch Count  0 Page Faults                       0 Page Reclaims                     90 Page Swaps                        0 Voluntary Context Switches        0 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           16"}
+ ],
+ "tables": [
+  {
+   "name": "NObs",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.yield.NObs",
+   "template": "Stat.Reg.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"},
+    {"name": "NObsMiss", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "yield", "Number of Observations Read", 13.0, 13.0, 13.0, 13.0, 13.0, 0.0],
+    ["Reg", 1.0, "MODEL1", "yield", "Number of Observations Used", 13.0, 13.0, 13.0, 13.0, 13.0, 0.0]
+   ]
+  },
+  {
+   "name": "ANOVA",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.yield.ANOVA",
+   "template": "Stat.REG.ANOVA",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "yield", "Model", 1.0, 21.6714065934066, 21.6714065934066, 181.10465679379, 3.55126289155e-08],
+    ["Reg", 1.0, "MODEL1", "yield", "Error", 11.0, 1.31628571428124, 0.11966233766193, null, null],
+    ["Reg", 1.0, "MODEL1", "yield", "  Lack of Fit", 7.0, 0.64128571428287, 0.09161224489755, 0.542887377172, 0.77441552138153],
+    ["Reg", 1.0, "MODEL1", "yield", "  Pure Error", 4.0, 0.67499999999836, 0.16874999999959, null, null],
+    ["Reg", 1.0, "MODEL1", "yield", "Corrected Total", 12.0, 22.9876923076878, null, null, null]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.yield.FitStatistics",
+   "template": "Stat.REG.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "yield", "Root MSE", "    0.34592", 0.34592244457672, "R-Square", " 0.9427", 0.94273954528959],
+    ["Reg", 1.0, "MODEL1", "yield", "Dependent Mean", "   55.53077", 55.5307692307692, "Adj R-Sq", " 0.9375", 0.93753404940682],
+    ["Reg", 1.0, "MODEL1", "yield", "Coeff Var", "    0.62294", 0.6229383265684, "", "", 0.0]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.yield.ParameterEstimates",
+   "template": "Stat.REG.ParameterEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Variable", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "tValue", "type": "num"},
+    {"name": "LowerCL", "type": "num"},
+    {"name": "UpperCL", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "yield", "Intercept", 1.0, 39.49, 1.19581141283234, 33.0236018624927, 36.8580368260878, 42.1219631739122],
+    ["Reg", 1.0, "MODEL1", "yield", "temp", 1.0, 0.09457142857143, 0.00702740754566, 13.4575130240989, 0.07910420884951, 0.11003864829335]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.yield.NObs",
+   "template": "Stat.Reg.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"},
+    {"name": "NObsMiss", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "yield", "Number of Observations Read", 13.0, 13.0, 13.0, 13.0, 13.0, 0.0],
+    ["Reg", 1.0, "MODEL1", "yield", "Number of Observations Used", 13.0, 13.0, 13.0, 13.0, 13.0, 0.0]
+   ]
+  },
+  {
+   "name": "ANOVA",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.yield.ANOVA",
+   "template": "Stat.REG.ANOVA",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "yield", "Model", 2.0, 21.6728911294892, 10.8364455647446, 82.4188914980388, 6.12101643749e-07],
+    ["Reg", 1.0, "MODEL1", "yield", "Error", 10.0, 1.31480117819863, 0.13148011781986, null, null],
+    ["Reg", 1.0, "MODEL1", "yield", "Corrected Total", 12.0, 22.9876923076878, null, null, null]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.yield.FitStatistics",
+   "template": "Stat.REG.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "yield", "Root MSE", "    0.36260", 0.36260187233364, "R-Square", " 0.9428", 0.94280412489431],
+    ["Reg", 1.0, "MODEL1", "yield", "Dependent Mean", "   55.53077", 55.5307692307692, "Adj R-Sq", " 0.9314", 0.93136494987317],
+    ["Reg", 1.0, "MODEL1", "yield", "Coeff Var", "    0.65297", 0.65297469737323, "", "", 0.0]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.yield.ParameterEstimates",
+   "template": "Stat.REG.ParameterEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Variable", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "tValue", "type": "num"},
+    {"name": "VarianceInflation", "type": "num"},
+    {"name": "LowerCL", "type": "num"},
+    {"name": "UpperCL", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "yield", "Intercept", 1.0, 38.6438144329508, 8.06147857996555, 4.79363854280886, 0.0, 20.6817208044745, 56.6059080614272],
+    ["Reg", 1.0, "MODEL1", "yield", "temp", 1.0, 0.10166421207691, 0.06715523905534, 1.51386866470874, 83.1126090403748, -0.0479669851767, 0.25129540933055],
+    ["Reg", 1.0, "MODEL1", "yield", "conc", 1.0, -0.1855670103178, 1.74636667036605, -0.1062589051124, 83.1126090403748, -4.0767144383743, 3.70558041773871]
+   ]
+  },
+  {
+   "name": "TestANOVA",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Test1.TestANOVA",
+   "template": "Stat.REG.TestANOVA",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Test", "type": "char"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"},
+    {"name": "Control", "type": "char"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "Test1", "Numerator", 2.0, 10.8364455647446, 82.4188914980391, 6.12101643749e-07, ""],
+    ["Reg", 1.0, "MODEL1", "Test1", "Denominator", 10.0, 0.13148011781986, null, null, ""]
+   ]
+  },
+  {"name": "Print", "proc": "Print", "path": "Print.Print", "template": "", "captured": false}
+ ],
+ "datasets": [
+  {
+   "name": "PRED",
+   "columns": [
+    {"name": "temp", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "conc", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "yield", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "yhat", "type": "num", "length": 8, "format": "", "label": "Predicted Value of yield"},
+    {"name": "lo95m", "type": "num", "length": 8, "format": "", "label": "Lower Bound of 95% C.I. for Mean"},
+    {"name": "hi95m", "type": "num", "length": 8, "format": "", "label": "Upper Bound of 95% C.I. for Mean"},
+    {"name": "lo95", "type": "num", "length": 8, "format": "", "label": "Lower Bound of 95% C.I.(Individual Pred)"},
+    {"name": "hi95", "type": "num", "length": 8, "format": "", "label": "Upper Bound of 95% C.I.(Individual Pred)"},
+    {"name": "resid", "type": "num", "length": 8, "format": "", "label": "Residual"}
+   ],
+   "rows": [
+    [150.0, 1.1, 54.0, 53.6893225331376, 53.2042588535931, 54.1743862126821, 52.7469673310573, 54.6316777352179, 0.31067746686241],
+    [150.0, 1.2, 53.5, 53.6707658321058, 53.2650212805534, 54.0765103836583, 52.7666777861783, 54.5748538780333, -0.1707658321058],
+    [155.0, 1.4, 53.9, 54.1419734904268, 53.7857485092161, 54.4981984716375, 53.2589996567754, 55.0249473240782, -0.2419734904268],
+    [160.0, 1.5, 54.6, 54.6317378497796, 54.2826687623442, 54.980806937215, 53.7516266173336, 55.5118490822255, -0.0317378497796],
+    [160.0, 1.6, 55.2, 54.6131811487478, 54.2891042087821, 54.9372580887135, 53.7426799042386, 55.483682393257, 0.58681885125222],
+    [165.0, 1.8, 55.1, 55.0843888070688, 54.7697183152026, 55.3990592989349, 54.2173455139595, 55.9514321001781, 0.01561119293124],
+    [170.0, 1.9, 55.4, 55.5741531664215, 55.30608638181, 55.8422199510331, 54.7229150359983, 56.4253912968448, -0.1741531664215],
+    [175.0, 2.1, 56.0, 56.0453608247425, 55.77954485062, 56.3111767988651, 55.1948288231263, 56.8958928263587, -0.0453608247425],
+    [175.0, 2.2, 55.3, 56.0268041237107, 55.6599432259807, 56.3936650214408, 55.1394859891289, 56.9141222582926, -0.7268041237107],
+    [180.0, 2.3, 56.6, 56.5165684830635, 56.2244751883094, 56.8086617778176, 55.6574613613873, 57.3756756047397, 0.08343151693651],
+    [185.0, 2.5, 57.0, 56.9877761413845, 56.6474220856766, 57.3281301970924, 56.1110849546424, 57.8644673281266, 0.01222385861552],
+    [190.0, 2.6, 57.4, 57.4775405007373, 56.9115326100936, 58.0435483913809, 56.4910763676106, 58.464004633864, -0.0775405007372],
+    [190.0, 2.8, 57.9, 57.4404270986737, 56.8864359070085, 57.9944182903389, 56.460808400344, 58.4200457970034, 0.45957290132631]
+   ]
+  },
+  {
+   "name": "PROCESS",
+   "columns": [
+    {"name": "temp", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "conc", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "yield", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [150.0, 1.1, 54.0],
+    [150.0, 1.2, 53.5],
+    [155.0, 1.4, 53.9],
+    [160.0, 1.5, 54.6],
+    [160.0, 1.6, 55.2],
+    [165.0, 1.8, 55.1],
+    [170.0, 1.9, 55.4],
+    [175.0, 2.1, 56.0],
+    [175.0, 2.2, 55.3],
+    [180.0, 2.3, 56.6],
+    [185.0, 2.5, 57.0],
+    [190.0, 2.6, 57.4],
+    [190.0, 2.8, 57.9]
+   ]
+  }
+ ]
+}

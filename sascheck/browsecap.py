@@ -32,6 +32,12 @@ import capture  # noqa: E402  (dumps, golden_path, split_trace, is_graph, ...)
 REPO = capture.REPO
 BEGIN, END, PREFIX = capture.BEGIN, capture.END, capture.PREFIX
 
+# Table names SAS rejects in ODS OUTPUT (PROC PRINT's output is not a real
+# ODS table): routing them makes SAS error and stop the step, which would
+# pollute the golden with harness artifacts.
+UNSUPPORTED_ODS = {"PRINT"}
+
+
 # ---------------------------------------------------------------- code generation
 
 
@@ -71,30 +77,39 @@ def submission(src, files, names, run_id, pass2=False):
     parts.append(capture.wrap_program(src))
     parts.append(f'data _null_; put "@SGORUN {run_id}"; run;\n')
     if pass2:
-        parts.append(DUMP_HARNESS)
+        parts.append(DUMP_HARNESS.replace('DUMPROWS', str(DUMP_ROWS)))
         parts.append('data _null_; put "@SGOVER &sysvlong"; run;\n')
     return "\n".join(parts)
 
+
+# Per-dataset row cap for the dump: bigger data sets are recorded as their
+# first DUMP_ROWS rows and prefix-compared (the golden carries nobs, so the
+# full row count is still known; sim loops with millions of rows would
+# otherwise blow the log up).
+DUMP_ROWS = 1000
 
 DUMP_HARNESS = """\
 ods trace off;
 proc sql;
   create table work._SGOMETA as
-    select memname, name, type, length, format, label, varnum
-    from dictionary.columns
-    where libname = 'WORK' and memtype = 'DATA'
-    order by memname, varnum;
+    select c.memname, c.name, c.type, c.length, c.format, c.label, c.varnum, t.nobs
+    from dictionary.columns c, dictionary.tables t
+    where c.libname = 'WORK' and c.memtype = 'DATA'
+      and t.libname = 'WORK' and t.memname = c.memname and t.memtype = 'DATA'
+    order by c.memname, c.varnum;
 quit;
 data _null_;
   set work._SGOMETA;
-  put "@SGOCOL|" memname "|" name "|" type "|" length "|" format "|" label "|" varnum "|";
+  put "@SGOCOL|" memname "|" name "|" type "|" length "|" format "|" label "|" varnum "|" nobs "|";
 run;
 data _null_;
   set work._SGOMETA;
   by memname;
   if first.memname then do;
-    call execute('data _null_; put "@SGODS|' || trim(memname) || '|"; run;');
-    call execute('data _null_; length _c $32767; set work.' || trim(memname) || ';');
+    call execute('data _null_; put "@SGODS|' || trim(memname) || '|' ||
+                 trim(left(put(nobs, best32.))) || '|"; run;');
+    call execute('data _null_; length _c $32767; set work.' || trim(memname) ||
+                 '; if _n_ > DUMPROWS then stop;');
   end;
   if type = 'char' then do;
     call execute('_c = putc(trimn(' || trim(name) || '), cats("$hex", 2 * max(lengthn(' || trim(name) || '), 1)));');
@@ -110,16 +125,17 @@ run;
 # ---------------------------------------------------------------- log parsing
 
 SGOCOL = re.compile(r"^@SGOCOL\|(.*)$")
-SGODS = re.compile(r"^@SGODS\|([^|]+)\|?\s*$")
+SGODS = re.compile(r"^@SGODS\|([^|]+)\|([^|]*)\|?\s*$")
 SGOC = re.compile(r"^@SGOC\|([^|]*)\|([^|]*)\|([CN])\|(.*)$")
 SGOVER = re.compile(r"^@SGOVER (.*)$")
 
 
 def parse_members(raw):
-    """(meta, rows, exists) from the dump-harness lines anywhere in the log.
-    meta: member -> [column dict]; rows: member -> [row][colname -> value];
-    exists: ordered member names (a header alone means an empty data set)."""
-    meta, rowmap, exists = {}, {}, []
+    """(meta, rows, exists, nobs) from the dump-harness lines anywhere in the
+    log. meta: member -> [column dict]; rows: member -> [row][colname -> val];
+    exists: ordered member names (a header alone means an empty data set);
+    nobs: member -> SAS's row count (the dump itself may be capped)."""
+    meta, rowmap, exists, nobs = {}, {}, [], {}
     last = None  # member for @SGOC lines, set by each @SGODS header
     for line in raw.splitlines():
         line = line.strip()
@@ -129,13 +145,16 @@ def parse_members(raw):
                 parts.pop()  # the emitter terminates every line with a pipe
             if len(parts) < 7:
                 continue
-            mem, name, typ, length, fmt, label = parts[:6]
-            varnum = parts[-1]
+            mem, name, typ, length, fmt = parts[:5]
+            # the row-count column was added later; old logs have 7 fields
+            label = "|".join(parts[5:-2]) if len(parts) >= 8 else parts[5]
+            varnum = parts[-2] if len(parts) >= 8 else parts[-1]
+            snobs = parts[-1] if len(parts) >= 8 else ""
             try:
                 length, varnum = int(length), int(varnum)
+                snobs = int(float(snobs)) if snobs else -1
             except ValueError:
                 continue
-            label = "|".join(parts[5:-1])  # labels may contain pipes
             meta.setdefault(mem.strip(), []).append(
                 {
                     "name": name.strip(),
@@ -145,8 +164,10 @@ def parse_members(raw):
                     "label": label.strip(),
                 }
             )
+            nobs[mem.strip()] = snobs
         elif m := SGODS.match(line):
-            last = m.group(1).strip()
+            parts = m.group(1).split("|")
+            last = parts[0].strip()
             if last not in rowmap:
                 exists.append(last)
             rowmap.setdefault(last, {})
@@ -168,7 +189,7 @@ def parse_members(raw):
                     rows[col.strip()] = float(val)
                 except ValueError:
                     rows[col.strip()] = None
-    return meta, rowmap, exists
+    return meta, rowmap, exists, nobs
 
 
 def frame_rows(rows_by_mem, mem, cols):
@@ -217,7 +238,7 @@ def build_snapshot(raw, program):
     lines = raw.splitlines()
     region = capture.program_log(raw)
     trace, rest = capture.split_trace(region)
-    meta, rowmap, exists = parse_members(raw)
+    meta, rowmap, exists, nobs = parse_members(raw)
 
     names = []
     for e in trace:
@@ -266,13 +287,21 @@ def build_snapshot(raw, program):
             mem = mems[i]
             t["columns"] = [{"name": c["name"], "type": c["type"]} for c in meta.get(mem, [])]
             t["rows"] = frame_rows(rowmap, mem, meta.get(mem, []))
+            if nobs.get(mem, -1) > len(t["rows"]):
+                t["truncated"] = True
         tables.append(t)
 
-    datasets = [
-        {"name": mem, "columns": meta[mem], "rows": frame_rows(rowmap, mem, meta[mem])}
-        for mem in sorted(exists)
-        if not mem.startswith(PREFIX)
-    ]
+    datasets = []
+    for mem in sorted(exists):
+        if mem.startswith(PREFIX):
+            continue
+        cols = meta.get(mem, [])
+        rows = frame_rows(rowmap, mem, cols)
+        truncated = nobs.get(mem, -1) > len(rows)
+        d = {"name": mem, "columns": cols, "rows": rows}
+        if truncated:
+            d["truncated"] = True
+        datasets.append(d)
 
     version = ""
     for line in lines:
@@ -323,7 +352,7 @@ def main():
         names = []
         for e in trace:
             n = e.get("name", "")
-            if n and not capture.is_graph(e) and n.upper() not in (x.upper() for x in names):
+            if n and not capture.is_graph(e) and n.upper() not in UNSUPPORTED_ODS and n.upper() not in (x.upper() for x in names):
                 names.append(n)
         print(submission(src, files, names, args.run_id, pass2=True))
         return 0

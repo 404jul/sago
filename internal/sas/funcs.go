@@ -539,16 +539,16 @@ func init() {
 		return NormInv(p)
 	})
 	F["PROBT"] = func(c *EvalCtx, call *Call, args []Value) Value {
-		// SAS PROBT is the UPPER tail: P(T > t)
-		return NumV(TSF(argNum(c, args, 0), argNum(c, args, 1)))
+		// SAS PROBT is the CDF: P(T <= t) (p-values are written 1-probt)
+		return NumV(1 - TSF(argNum(c, args, 0), argNum(c, args, 1)))
 	}
 	F["PROBCHI"] = func(c *EvalCtx, call *Call, args []Value) Value {
-		// SAS PROBCHI is the UPPER tail: P(X > x)
-		return NumV(ChiSqSF(argNum(c, args, 0), argNum(c, args, 1)))
+		// SAS PROBCHI is the CDF: P(X <= x)
+		return NumV(1 - ChiSqSF(argNum(c, args, 0), argNum(c, args, 1)))
 	}
 	F["PROBF"] = func(c *EvalCtx, call *Call, args []Value) Value {
-		// SAS PROBF is the UPPER tail: P(F > f)
-		return NumV(FSF(argNum(c, args, 0), argNum(c, args, 1), argNum(c, args, 2)))
+		// SAS PROBF is the CDF: P(F <= f)
+		return NumV(1 - FSF(argNum(c, args, 0), argNum(c, args, 1), argNum(c, args, 2)))
 	}
 	F["PROBBNML"] = func(c *EvalCtx, call *Call, args []Value) Value {
 		return NumV(BinomCDF(int(argNum(c, args, 2)), int(argNum(c, args, 1)), argNum(c, args, 0)))

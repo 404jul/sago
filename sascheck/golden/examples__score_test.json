@@ -1,0 +1,556 @@
+{
+ "engine": "sas",
+ "program": "examples/score_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.MICE has 15 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.84k OS Memory           23204.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        155  Switch Count  2 Page Faults                       0 Page Reclaims                     138 Page Swaps                        0 Voluntary Context Switches        10 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.01 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              2068.65k OS Memory           23724.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        156  Switch Count  4 Page Faults                       0 Page Reclaims                     253 Page Swaps                        0 Voluntary Context Switches        32 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           792"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.G2 has 27 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.68k OS Memory           23204.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        157  Switch Count  2 Page Faults                       0 Page Reclaims                     91 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              1387.50k OS Memory           23724.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        158  Switch Count  6 Page Faults                       0 Page Reclaims                     317 Page Swaps                        0 Voluntary Context Switches        37 Involuntary Context Switches      3 Block Input Operations            0 Block Output Operations           1064"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.GOSSYPOL has 5 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.68k OS Memory           23204.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        159  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        14 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "There were 5 observations read from the data set WORK.GOSSYPOL."},
+  {"level": "NOTE", "text": "The data set WORK.GOSSYPOL has 67 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              951.68k OS Memory           23464.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        160  Switch Count  2 Page Faults                       0 Page Reclaims                     124 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.01 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              1261.53k OS Memory           23724.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        161  Switch Count  4 Page Faults                       0 Page Reclaims                     244 Page Swaps                        0 Voluntary Context Switches        29 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           808"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.01 seconds user cpu time       0.02 seconds system cpu time     0.01 seconds memory              1319.62k OS Memory           23724.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        162  Switch Count  4 Page Faults                       0 Page Reclaims                     244 Page Swaps                        0 Voluntary Context Switches        25 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           800"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.01 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              1261.53k OS Memory           23724.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        163  Switch Count  4 Page Faults                       0 Page Reclaims                     244 Page Swaps                        0 Voluntary Context Switches        32 Involuntary Context Switches      4 Block Input Operations            0 Block Output Operations           808"},
+  {"level": "NOTE", "text": "There were 67 observations read from the data set WORK.GOSSYPOL."},
+  {"level": "NOTE", "text": "The data set WORK.G4 has 33 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              939.68k OS Memory           23464.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        164  Switch Count  2 Page Faults                       0 Page Reclaims                     121 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              1420.15k OS Memory           23724.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        165  Switch Count  6 Page Faults                       0 Page Reclaims                     309 Page Swaps                        0 Voluntary Context Switches        39 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           1056"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              1306.15k OS Memory           23724.00k Timestamp           10/20/2026 06:07:39 AM Step Count                        166  Switch Count  6 Page Faults                       0 Page Reclaims                     308 Page Swaps                        0 Voluntary Context Switches        49 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           1056"}
+ ],
+ "tables": [
+  {
+   "name": "SavageScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.days.Savage.SavageScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "days", "1", 5.0, -3.3679801679802, 0.0, 1.63455486646275, -0.673596033596],
+    ["Npar1way", 1.0, "days", "2", 5.0, 0.09561827061827, 0.0, 1.63455486646275, 0.01912365412365],
+    ["Npar1way", 1.0, "days", "3", 5.0, 3.2723618973619, 0.0, 1.63455486646275, 0.65447237947238]
+   ]
+  },
+  {
+   "name": "SavageAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.days.Savage.SavageAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "days", 5.50466266705126, 2.0, 0.0637789976334]
+   ]
+  },
+  {
+   "name": "SavageScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Savage.SavageScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", "0", 16.0, 1.83455385708751, 0.0, 2.40183886464427, 0.11465961606797],
+    ["Npar1way", 1.0, "gain", ".04", 11.0, -1.8345538570875, 0.0, 2.40183886464427, -0.1667776233716]
+   ]
+  },
+  {
+   "name": "SavageTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Savage.SavageTest",
+   "template": "Stat.Npar1way.TwoSampleTest",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Statistic", "type": "num"},
+    {"name": "Z", "type": "num"},
+    {"name": "Prob1", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", -1.8345538570875, -0.763812212423, 0.22248957903095]
+   ]
+  },
+  {
+   "name": "SavageAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Savage.SavageAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", 0.58340909584654, 1.0, 0.4449791580619]
+   ]
+  },
+  {
+   "name": "SavageScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Savage.SavageScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", "0", 16.0, 16.0743905028844, 0.0, 3.38527520047538, 1.00464940643027],
+    ["Npar1way", 1.0, "gain", ".04", 11.0, 7.69309916833511, 0.0, 2.94129954953126, 0.69937265166683],
+    ["Npar1way", 1.0, "gain", ".07", 12.0, -3.5849577800571, 0.0, 3.04453427826106, -0.2987464816714],
+    ["Npar1way", 1.0, "gain", ".10", 17.0, -11.979488185473, 0.0, 3.45508203335946, -0.7046757756161],
+    ["Npar1way", 1.0, "gain", ".13", 11.0, -8.2030437056894, 0.0, 2.94129954953126, -0.7457312459718]
+   ]
+  },
+  {
+   "name": "SavageAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Savage.SavageAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", 39.490798093044, 4.0, 5.51574200557e-08]
+   ]
+  },
+  {
+   "name": "ConoverScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Conover.ConoverScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", "0", 16.0, 10962.0, 24478.6865671642, 4770.8674049826, 685.125],
+    ["Npar1way", 1.0, "gain", ".04", 11.0, 14210.5, 16829.0970149254, 4145.17264273764, 1291.86363636364],
+    ["Npar1way", 1.0, "gain", ".07", 12.0, 23276.0, 18359.0149253731, 4290.66131742206, 1939.66666666667],
+    ["Npar1way", 1.0, "gain", ".10", 17.0, 39039.0, 26008.6044776119, 4869.24615528478, 2296.41176470588],
+    ["Npar1way", 1.0, "gain", ".13", 11.0, 15017.0, 16829.0970149254, 4145.17264273764, 1365.18181818182]
+   ]
+  },
+  {
+   "name": "ConoverAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Conover.ConoverAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", 13.0255822401446, 4.0, 0.01115146868037]
+   ]
+  },
+  {
+   "name": "STScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.ST.STScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", "0", 16.0, 386.166666666667, 544.0, 67.9137852371479, 24.1354166666667],
+    ["Npar1way", 1.0, "gain", ".04", 11.0, 380.333333333333, 374.0, 59.0069563316258, 34.5757575757576],
+    ["Npar1way", 1.0, "gain", ".07", 12.0, 651.5, 408.0, 61.0780024891098, 54.2916666666667],
+    ["Npar1way", 1.0, "gain", ".10", 17.0, 542.5, 578.0, 69.314216804989, 31.9117647058824],
+    ["Npar1way", 1.0, "gain", ".13", 11.0, 317.5, 374.0, 59.0069563316258, 28.8636363636364]
+   ]
+  },
+  {
+   "name": "STAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.ST.STAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", 18.1301342913088, 4.0, 0.00116387954887]
+   ]
+  },
+  {
+   "name": "STScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.ST.STScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", "0", 16.0, 264.0, 272.0, 27.7144530721952, 16.5],
+    ["Npar1way", 1.0, "gain", ".10", 17.0, 297.0, 289.0, 27.7144530721952, 17.4705882352941]
+   ]
+  },
+  {
+   "name": "STTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.ST.STTest",
+   "template": "Stat.Npar1way.TwoSampleTest",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Statistic", "type": "num"},
+    {"name": "Z", "type": "num"},
+    {"name": "Prob1", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", 264.0, -0.27061692253, 0.39334283951771]
+   ]
+  },
+  {
+   "name": "STAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.ST.STAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", 0.08332347023317, 1.0, 0.77284306740607]
+   ]
+  },
+  {
+   "name": "ConoverScores",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Conover.ConoverScores",
+   "template": "Stat.Npar1way.ClassScores",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SumOfScores", "type": "num"},
+    {"name": "ExpectedSum", "type": "num"},
+    {"name": "StdDevOfSum", "type": "num"},
+    {"name": "MeanScore", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", "0", 16.0, 3119.0, 6073.69696969697, 972.839599032319, 194.9375],
+    ["Npar1way", 1.0, "gain", ".10", 17.0, 9408.0, 6453.30303030303, 972.839599032319, 553.411764705882]
+   ]
+  },
+  {
+   "name": "ConoverTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Conover.ConoverTest",
+   "template": "Stat.Npar1way.TwoSampleTest",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Statistic", "type": "num"},
+    {"name": "Z", "type": "num"},
+    {"name": "Prob1", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", 3119.0, -3.0371882195544, 0.00119398148026]
+   ]
+  },
+  {
+   "name": "ConoverAnalysis",
+   "proc": "Npar1way",
+   "path": "Npar1way.gain.Conover.ConoverAnalysis",
+   "template": "Stat.Npar1way.OneWayAnalysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ChiSquare", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "gain", 9.22451228099993, 1.0, 0.00238796296051]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "G2",
+   "columns": [
+    {"name": "dose", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "gain", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["0", 228.0],
+    ["0", 229.0],
+    ["0", 218.0],
+    ["0", 216.0],
+    ["0", 224.0],
+    ["0", 208.0],
+    ["0", 235.0],
+    ["0", 229.0],
+    ["0", 233.0],
+    ["0", 219.0],
+    ["0", 224.0],
+    ["0", 220.0],
+    ["0", 232.0],
+    ["0", 200.0],
+    ["0", 208.0],
+    ["0", 232.0],
+    [".04", 186.0],
+    [".04", 229.0],
+    [".04", 220.0],
+    [".04", 208.0],
+    [".04", 228.0],
+    [".04", 198.0],
+    [".04", 222.0],
+    [".04", 273.0],
+    [".04", 216.0],
+    [".04", 198.0],
+    [".04", 213.0]
+   ]
+  },
+  {
+   "name": "G4",
+   "columns": [
+    {"name": "dose", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "gain", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["0", 228.0],
+    ["0", 229.0],
+    ["0", 218.0],
+    ["0", 216.0],
+    ["0", 224.0],
+    ["0", 208.0],
+    ["0", 235.0],
+    ["0", 229.0],
+    ["0", 233.0],
+    ["0", 219.0],
+    ["0", 224.0],
+    ["0", 220.0],
+    ["0", 232.0],
+    ["0", 200.0],
+    ["0", 208.0],
+    ["0", 232.0],
+    [".10", 130.0],
+    [".10", 87.0],
+    [".10", 135.0],
+    [".10", 116.0],
+    [".10", 118.0],
+    [".10", 165.0],
+    [".10", 151.0],
+    [".10", 59.0],
+    [".10", 126.0],
+    [".10", 64.0],
+    [".10", 78.0],
+    [".10", 94.0],
+    [".10", 150.0],
+    [".10", 160.0],
+    [".10", 122.0],
+    [".10", 110.0],
+    [".10", 178.0]
+   ]
+  },
+  {
+   "name": "GOSSYPOL",
+   "columns": [
+    {"name": "dose", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "gain", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["0", 228.0],
+    ["0", 229.0],
+    ["0", 218.0],
+    ["0", 216.0],
+    ["0", 224.0],
+    ["0", 208.0],
+    ["0", 235.0],
+    ["0", 229.0],
+    ["0", 233.0],
+    ["0", 219.0],
+    ["0", 224.0],
+    ["0", 220.0],
+    ["0", 232.0],
+    ["0", 200.0],
+    ["0", 208.0],
+    ["0", 232.0],
+    [".04", 186.0],
+    [".04", 229.0],
+    [".04", 220.0],
+    [".04", 208.0],
+    [".04", 228.0],
+    [".04", 198.0],
+    [".04", 222.0],
+    [".04", 273.0],
+    [".04", 216.0],
+    [".04", 198.0],
+    [".04", 213.0],
+    [".07", 179.0],
+    [".07", 193.0],
+    [".07", 183.0],
+    [".07", 180.0],
+    [".07", 143.0],
+    [".07", 204.0],
+    [".07", 114.0],
+    [".07", 188.0],
+    [".07", 178.0],
+    [".07", 134.0],
+    [".07", 208.0],
+    [".07", 196.0],
+    [".10", 130.0],
+    [".10", 87.0],
+    [".10", 135.0],
+    [".10", 116.0],
+    [".10", 118.0],
+    [".10", 165.0],
+    [".10", 151.0],
+    [".10", 59.0],
+    [".10", 126.0],
+    [".10", 64.0],
+    [".10", 78.0],
+    [".10", 94.0],
+    [".10", 150.0],
+    [".10", 160.0],
+    [".10", 122.0],
+    [".10", 110.0],
+    [".10", 178.0],
+    [".13", 154.0],
+    [".13", 130.0],
+    [".13", 130.0],
+    [".13", 118.0],
+    [".13", 118.0],
+    [".13", 104.0],
+    [".13", 112.0],
+    [".13", 134.0],
+    [".13", 98.0],
+    [".13", 100.0],
+    [".13", 104.0]
+   ]
+  },
+  {
+   "name": "MICE",
+   "columns": [
+    {"name": "treatment", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "days", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["1", 1.0],
+    ["1", 1.0],
+    ["1", 3.0],
+    ["1", 3.0],
+    ["1", 4.0],
+    ["2", 3.0],
+    ["2", 4.0],
+    ["2", 4.0],
+    ["2", 4.0],
+    ["2", 15.0],
+    ["3", 4.0],
+    ["3", 4.0],
+    ["3", 10.0],
+    ["3", 10.0],
+    ["3", 26.0]
+   ]
+  }
+ ]
+}

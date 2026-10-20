@@ -1,0 +1,242 @@
+{
+ "engine": "sas",
+ "program": "examples/corr_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.DOSE has 24 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              676.25k OS Memory           29348.00k Timestamp           10/20/2026 06:00:35 AM Step Count                        830  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE CORR used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.01 seconds memory              2542.87k OS Memory           29608.00k Timestamp           10/20/2026 06:00:35 AM Step Count                        831  Switch Count  10 Page Faults                       0 Page Reclaims                     372 Page Swaps                        0 Voluntary Context Switches        80 Involuntary Context Switches      4 Block Input Operations            0 Block Output Operations           1336"},
+  {"level": "NOTE", "text": "PROCEDURE CORR used (Total process time): real time           0.03 seconds user cpu time       0.04 seconds system cpu time     0.00 seconds memory              1594.62k OS Memory           29608.00k Timestamp           10/20/2026 06:00:35 AM Step Count                        832  Switch Count  8 Page Faults                       0 Page Reclaims                     308 Page Swaps                        0 Voluntary Context Switches        68 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1056"}
+ ],
+ "tables": [
+  {
+   "name": "VarInformation",
+   "proc": "Corr",
+   "path": "Corr.VarInformation",
+   "template": "base.corr.VarInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "NVars", "type": "num"},
+    {"name": "Variables", "type": "char"},
+    {"name": "VarNames", "type": "char"}
+   ],
+   "rows": [
+    ["Corr", 1.0, 3.0, " Variables:", "dose     effect   temp"]
+   ]
+  },
+  {
+   "name": "SimpleStats",
+   "proc": "Corr",
+   "path": "Corr.SimpleStats",
+   "template": "base.corr.UniStat",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "NObs", "type": "num"},
+    {"name": "Mean", "type": "num"},
+    {"name": "StdDev", "type": "num"},
+    {"name": "Median", "type": "num"},
+    {"name": "Min", "type": "num"},
+    {"name": "Max", "type": "num"}
+   ],
+   "rows": [
+    ["Corr", 1.0, "dose", 24.0, 9.55, 10.9579829943447, 4.85, 0.5, 40.0],
+    ["Corr", 1.0, "effect", 24.0, 31.8541666666667, 19.3005965027592, 29.4, 6.1, 68.9],
+    ["Corr", 1.0, "temp", 24.0, 22.9458333333333, 3.59189657625227, 22.75, 17.0, 29.3]
+   ]
+  },
+  {
+   "name": "PearsonCorr",
+   "proc": "Corr",
+   "path": "Corr.PearsonCorr",
+   "template": "base.corr.StackedMatrix",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "dose", "type": "num"},
+    {"name": "effect", "type": "num"},
+    {"name": "temp", "type": "num"},
+    {"name": "Pdose", "type": "num"},
+    {"name": "Peffect", "type": "num"},
+    {"name": "Ptemp", "type": "num"}
+   ],
+   "rows": [
+    ["Corr", 1.0, "dose", 1.0, 0.93202778172247, 0.85454903215571, null, 3.5930377148e-11, 1.0668367805e-07],
+    ["Corr", 1.0, "effect", 0.93202778172247, 1.0, 0.96079519612427, 3.5930377148e-11, null, 9.6639783715e-14],
+    ["Corr", 1.0, "temp", 0.85454903215571, 0.96079519612427, 1.0, 1.0668367805e-07, 9.6639783715e-14, null]
+   ]
+  },
+  {
+   "name": "SpearmanCorr",
+   "proc": "Corr",
+   "path": "Corr.SpearmanCorr",
+   "template": "base.corr.StackedMatrix",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "dose", "type": "num"},
+    {"name": "effect", "type": "num"},
+    {"name": "temp", "type": "num"},
+    {"name": "Pdose", "type": "num"},
+    {"name": "Peffect", "type": "num"},
+    {"name": "Ptemp", "type": "num"}
+   ],
+   "rows": [
+    ["Corr", 1.0, "dose", 1.0, 0.99913043478261, 0.95652173913044, null, 7.3742482378e-32, 2.9563631531e-13],
+    ["Corr", 1.0, "effect", 0.99913043478261, 1.0, 0.95913043478261, 7.3742482378e-32, null, 1.5151387526e-13],
+    ["Corr", 1.0, "temp", 0.95652173913044, 0.95913043478261, 1.0, 2.9563631531e-13, 1.5151387526e-13, null]
+   ]
+  },
+  {
+   "name": "KendallCorr",
+   "proc": "Corr",
+   "path": "Corr.KendallCorr",
+   "template": "base.corr.StackedMatrix",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "dose", "type": "num"},
+    {"name": "effect", "type": "num"},
+    {"name": "temp", "type": "num"},
+    {"name": "Pdose", "type": "num"},
+    {"name": "Peffect", "type": "num"},
+    {"name": "Ptemp", "type": "num"}
+   ],
+   "rows": [
+    ["Corr", 1.0, "dose", 1.0, 0.99275362318841, 0.82608695652174, null, 1.0726086686e-11, 1.554802187e-08],
+    ["Corr", 1.0, "effect", 0.99275362318841, 1.0, 0.83333333333333, 1.0726086686e-11, null, 1.16334419875e-08],
+    ["Corr", 1.0, "temp", 0.82608695652174, 0.83333333333333, 1.0, 1.554802187e-08, 1.16334419875e-08, null]
+   ]
+  },
+  {
+   "name": "VarInformation",
+   "proc": "Corr",
+   "path": "Corr.VarInformation",
+   "template": "base.corr.VarInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "NVars", "type": "num"},
+    {"name": "Variables", "type": "char"},
+    {"name": "VarNames", "type": "char"}
+   ],
+   "rows": [
+    ["Corr", 1.0, 1.0, "Partial Variables:", "temp"],
+    ["Corr", 1.0, 2.0, "        Variables:", "dose     effect"]
+   ]
+  },
+  {
+   "name": "SimpleStats",
+   "proc": "Corr",
+   "path": "Corr.SimpleStats",
+   "template": "base.corr.UniStat",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "NObs", "type": "num"},
+    {"name": "Mean", "type": "num"},
+    {"name": "StdDev", "type": "num"},
+    {"name": "Median", "type": "num"},
+    {"name": "Min", "type": "num"},
+    {"name": "Max", "type": "num"},
+    {"name": "PartialVariance", "type": "num"},
+    {"name": "PartialStdDev", "type": "num"}
+   ],
+   "rows": [
+    ["Corr", 1.0, "temp", 24.0, 22.9458333333333, 3.59189657625227, 22.75, 17.0, 29.3, null, null],
+    ["Corr", 1.0, "dose", 24.0, 9.55, 10.9579829943447, 4.85, 0.5, 40.0, 33.8626806511423, 5.81916494448665],
+    ["Corr", 1.0, "effect", 24.0, 31.8541666666667, 19.3005965027592, 29.4, 6.1, 68.9, 29.9376797288714, 5.47153358107866]
+   ]
+  },
+  {
+   "name": "PartialPearsonCorr",
+   "proc": "Corr",
+   "path": "Corr.PartialPearsonCorr",
+   "template": "base.corr.StackedMatrix",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "dose", "type": "num"},
+    {"name": "effect", "type": "num"},
+    {"name": "Pdose", "type": "num"},
+    {"name": "Peffect", "type": "num"}
+   ],
+   "rows": [
+    ["Corr", 1.0, "dose", 1.0, 0.77070131112626, null, 1.684172301e-05],
+    ["Corr", 1.0, "effect", 0.77070131112626, 1.0, 1.684172301e-05, null]
+   ]
+  },
+  {
+   "name": "PartialSpearmanCorr",
+   "proc": "Corr",
+   "path": "Corr.PartialSpearmanCorr",
+   "template": "base.corr.StackedMatrix",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "dose", "type": "num"},
+    {"name": "effect", "type": "num"},
+    {"name": "Pdose", "type": "num"},
+    {"name": "Peffect", "type": "num"}
+   ],
+   "rows": [
+    ["Corr", 1.0, "dose", 1.0, 0.98996305032959, null, 2.4794200846e-19],
+    ["Corr", 1.0, "effect", 0.98996305032959, 1.0, 2.4794200846e-19, null]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "DOSE",
+   "columns": [
+    {"name": "dose", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "effect", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "temp", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [0.5, 6.1, 18.4],
+    [0.8, 7.9, 17.0],
+    [1.0, 8.9, 19.6],
+    [1.2, 11.1, 18.3],
+    [1.5, 12.6, 20.1],
+    [1.8, 14.4, 18.9],
+    [2.0, 15.7, 20.9],
+    [2.4, 18.0, 19.5],
+    [2.8, 20.3, 21.6],
+    [3.2, 22.1, 20.3],
+    [3.8, 24.9, 22.9],
+    [4.5, 27.2, 21.4],
+    [5.2, 31.7, 24.0],
+    [6.0, 31.6, 22.6],
+    [7.0, 34.7, 25.0],
+    [8.5, 38.0, 23.8],
+    [10.0, 41.6, 26.1],
+    [12.0, 44.9, 24.7],
+    [15.0, 49.1, 27.2],
+    [18.0, 52.6, 25.9],
+    [22.0, 56.7, 28.2],
+    [27.0, 60.7, 26.9],
+    [33.0, 64.8, 29.3],
+    [40.0, 68.9, 28.1]
+   ]
+  }
+ ]
+}

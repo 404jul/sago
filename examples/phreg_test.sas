@@ -60,12 +60,12 @@ data ties;
 1 1 1 2 0 0 3 0 0 4 0 0 5 1 1 6 1 1
 ;
 
-proc phreg data=ties ties=efron;
-  model months*status(0) = x;
+proc phreg data=ties;
+  model months*status(0) = x / ties=efron;
 run;
 
-proc phreg data=ties ties=breslow;
-  model months*status(0) = x;
+proc phreg data=ties;
+  model months*status(0) = x / ties=breslow;
 run;
 
 title;

@@ -1,0 +1,236 @@
+{
+ "engine": "sas",
+ "program": "examples/diag_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.CALIB has 15 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              659.71k OS Memory           29348.00k Timestamp           10/20/2026 06:00:36 AM Step Count                        865  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "The data set WORK.DIAGOUT has 15 observations and 10 variables."},
+  {"level": "NOTE", "text": "PROCEDURE REG used (Total process time): real time           0.07 seconds user cpu time       0.08 seconds system cpu time     0.00 seconds memory              4141.00k OS Memory           31168.00k Timestamp           10/20/2026 06:00:36 AM Step Count                        866  Switch Count  16 Page Faults                       0 Page Reclaims                     716 Page Swaps                        0 Voluntary Context Switches        116 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           1928"},
+  {"level": "ERROR", "text": "PROC PRINT does not support the ODS OUTPUT statement."},
+  {"level": "NOTE", "text": "There were 15 observations read from the data set WORK.DIAGOUT."},
+  {"level": "NOTE", "text": "PROCEDURE PRINT used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              694.71k OS Memory           29348.00k Timestamp           10/20/2026 06:00:36 AM Step Count                        867  Switch Count  0 Page Faults                       0 Page Reclaims                     61 Page Swaps                        0 Voluntary Context Switches        0 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           16"}
+ ],
+ "tables": [
+  {
+   "name": "NObs",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.y.NObs",
+   "template": "Stat.Reg.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"},
+    {"name": "NObsMiss", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "y", "Number of Observations Read", 15.0, 15.0, 15.0, 15.0, 15.0, 0.0],
+    ["Reg", 1.0, "MODEL1", "y", "Number of Observations Used", 15.0, 15.0, 15.0, 15.0, 15.0, 0.0]
+   ]
+  },
+  {
+   "name": "ANOVA",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.y.ANOVA",
+   "template": "Stat.REG.ANOVA",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "y", "Model", 1.0, 1463.31432142857, 1463.31432142857, 274.888124880338, 3.9900281442e-10],
+    ["Reg", 1.0, "MODEL1", "y", "Error", 13.0, 69.203011904761, 5.32330860805854, null, null],
+    ["Reg", 1.0, "MODEL1", "y", "Corrected Total", 14.0, 1532.51733333333, null, null, null]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.y.FitStatistics",
+   "template": "Stat.REG.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "y", "Root MSE", "    2.30723", 2.30722963921204, "R-Square", " 0.9548", 0.95484356985755],
+    ["Reg", 1.0, "MODEL1", "y", "Dependent Mean", "   19.95333", 19.9533333333333, "Adj R-Sq", " 0.9514", 0.95136999830813],
+    ["Reg", 1.0, "MODEL1", "y", "Coeff Var", "   11.56313", 11.5631288299969, "", "", 0.0]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.Fit.y.ParameterEstimates",
+   "template": "Stat.REG.ParameterEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Variable", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "tValue", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "y", "Intercept", 1.0, 1.6647619047619, 1.25365206249891, 1.32792977777545],
+    ["Reg", 1.0, "MODEL1", "y", "x", 1.0, 2.28607142857143, 0.13788334365453, 16.5797504468655]
+   ]
+  },
+  {
+   "name": "OutputStatistics",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.ObswiseStats.y.OutputStatistics",
+   "template": "Stat.Reg.OutputStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Observation", "type": "num"},
+    {"name": "DepVar", "type": "num"},
+    {"name": "PredictedValue", "type": "num"},
+    {"name": "StdErrMeanPredict", "type": "num"},
+    {"name": "Residual", "type": "num"},
+    {"name": "StdErrResidual", "type": "num"},
+    {"name": "StudentResidual", "type": "num"},
+    {"name": "Picture", "type": "char"},
+    {"name": "CooksD", "type": "num"},
+    {"name": "RStudent", "type": "num"},
+    {"name": "HatDiagonal", "type": "num"},
+    {"name": "CovRatio", "type": "num"},
+    {"name": "DFFITS", "type": "num"},
+    {"name": "DFB_Intercept", "type": "num"},
+    {"name": "DFB_x", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "y", 1.0, 5.1, 3.95083333333333, 1.13422495429587, 1.14916666666667, 2.00918947864831, 0.57195534760603, "|      |*     |", 0.05212557510988, 0.55656425167236, 0.24166666666667, 1.47071025674074, 0.31419090614614, 0.31366623407483, -0.2673648182826],
+    ["Reg", 1.0, "MODEL1", "y", 2.0, 6.9, 6.23690476190476, 1.01946683761754, 0.66309523809524, 2.06978162496835, 0.32036966127061, "|      |      |", 0.0124500163147, 0.30902352251505, 0.1952380952381, 1.43539676659128, 0.15220892361177, 0.15094625617484, -0.1235179480915],
+    ["Reg", 1.0, "MODEL1", "y", 3.0, 8.8, 8.52297619047619, 0.91114359569227, 0.27702380952381, 2.11969949664746, 0.13069013318254, "|      |      |", 0.00157790432255, 0.12564558466451, 0.15595238095238, 1.38680476995492, 0.05400820728369, 0.05273645605333, -0.0408653050972],
+    ["Reg", 1.0, "MODEL1", "y", 4.0, 11.2, 10.8090476190476, 0.81183514573765, 0.39095238095238, 2.15968338054532, 0.1810230075733, "|      |      |", 0.00231522435066, 0.17414089849714, 0.12380952380952, 1.33270323695118, 0.06546038321349, 0.06195546505724, -0.0444715731354],
+    ["Reg", 1.0, "MODEL1", "y", 5.0, 12.9, 13.0951190476191, 0.72525415452337, -0.195119047619, 2.19027738412401, -0.0890841721845, "|      |      |", 0.00043506416638, -0.0856154405733, 0.09880952380952, 1.30070023197708, -0.028349356304, -0.0252922977223, 0.01616910711895],
+    ["Reg", 1.0, "MODEL1", "y", 6.0, 15.1, 15.3811904761905, 0.65645602013131, -0.2811904761905, 2.21187117655886, -0.1271278721702, "|      |      |", 0.0007117757254, -0.1222165017205, 0.08095238095238, 1.27381307869929, -0.0362723467642, -0.0290488334916, 0.01523743343245],
+    ["Reg", 1.0, "MODEL1", "y", 7.0, 16.8, 17.6672619047619, 0.61147285875547, -0.8672619047619, 2.22472684864096, -0.3898284885139, "|      |      |", 0.00574008244364, -0.3767435820146, 0.0702380952381, 1.23293192339498, -0.1035491054792, -0.0684832704822, 0.023349682151],
+    ["Reg", 1.0, "MODEL1", "y", 8.0, 19.2, 19.9533333333333, 0.59572413123629, -0.7533333333333, 2.22899559611976, -0.3379698616923, "|      |      |", 0.00407941526473, -0.3261469353237, 0.06666666666667, 1.23544071967514, -0.0871664349805, -0.0414207022068, 0.0],
+    ["Reg", 1.0, "MODEL1", "y", 9.0, 21.1, 22.2394047619048, 0.61147285875547, -1.1394047619048, 2.22472684864096, -0.5121549023426, "|     *|      |", 0.00990771830706, -0.4971031259998, 0.0702380952381, 1.21184649758055, -0.1366302877754, -0.0361447408376, -0.0308092839334],
+    ["Reg", 1.0, "MODEL1", "y", 10.0, 22.8, 24.5254761904762, 0.65645602013131, -1.7254761904762, 2.21187117655886, -0.7800979590324, "|     *|      |", 0.0268015493178, -0.7676773900715, 0.08095238095238, 1.16022856381326, -0.227837158679, -0.0140357054681, -0.0957107507099],
+    ["Reg", 1.0, "MODEL1", "y", 11.0, 25.0, 26.8115476190476, 0.72525415452337, -1.8115476190476, 2.19027738412401, -0.8270859354064, "|     *|      |", 0.03750191875654, -0.8164087919233, 0.09880952380952, 1.16884051630125, -0.270332822876, 0.03014767851767, -0.1541848190124],
+    ["Reg", 1.0, "MODEL1", "y", 12.0, 33.9, 29.0976190476191, 0.81183514573765, 4.80238095238095, 2.15968338054532, 2.22365046452705, "|      |****  |", 0.34934825026678, 2.71402701223289, 0.12380952380952, 0.51429333337243, 1.0202155255071, -0.2541027759583, 0.69309996564567],
+    ["Reg", 1.0, "MODEL1", "y", 13.0, 29.2, 31.3836904761905, 0.91114359569227, -2.1836904761905, 2.11969949664746, -1.0301887034668, "|    **|      |", 0.09804571804114, -1.0328296153014, 0.15595238095238, 1.17269602927914, -0.4439573113602, 0.15763755795062, -0.335920259],
+    ["Reg", 1.0, "MODEL1", "y", 14.0, 30.7, 33.6697619047619, 1.01946683761754, -2.9697619047619, 2.06978162496835, -1.4348189533315, "|    **|      |", 0.24972462302489, -1.5026345577916, 0.1952380952381, 1.03301712062422, -0.7401196736153, 0.32295116560284, -0.600609092147],
+    ["Reg", 1.0, "MODEL1", "y", 15.0, 40.6, 35.9558333333333, 1.13422495429587, 4.64416666666667, 2.00918947864831, 2.31146276447309, "|      |****  |", 0.85133485293858, 2.89363823361925, 0.24166666666667, 0.53692116548864, 1.63351278122539, -0.8153924769575, 1.39005884438779]
+   ]
+  },
+  {
+   "name": "ResidualStatistics",
+   "proc": "Reg",
+   "path": "Reg.MODEL1.ObswiseStats.y.ResidualStatistics",
+   "template": "Stat.Reg.ResidualStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Model", "type": "char"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Reg", 1.0, "MODEL1", "y", "Sum of Residuals", "          0", 0.0],
+    ["Reg", 1.0, "MODEL1", "y", "Sum of Squared Residuals", "   69.20301", 69.203011904762],
+    ["Reg", 1.0, "MODEL1", "y", "Predicted Residual SS (PRESS)", "  101.86954", 101.869537379392]
+   ]
+  },
+  {"name": "Print", "proc": "Print", "path": "Print.Print", "template": "", "captured": false}
+ ],
+ "datasets": [
+  {
+   "name": "CALIB",
+   "columns": [
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "y", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 5.1],
+    [2.0, 6.9],
+    [3.0, 8.8],
+    [4.0, 11.2],
+    [5.0, 12.9],
+    [6.0, 15.1],
+    [7.0, 16.8],
+    [8.0, 19.2],
+    [9.0, 21.1],
+    [10.0, 22.8],
+    [11.0, 25.0],
+    [12.0, 33.9],
+    [13.0, 29.2],
+    [14.0, 30.7],
+    [15.0, 40.6]
+   ]
+  },
+  {
+   "name": "DIAGOUT",
+   "columns": [
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "y", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "yhat", "type": "num", "length": 8, "format": "", "label": "Predicted Value of y"},
+    {"name": "resid", "type": "num", "length": 8, "format": "", "label": "Residual"},
+    {"name": "stud", "type": "num", "length": 8, "format": "", "label": "Studentized Residual"},
+    {"name": "cook", "type": "num", "length": 8, "format": "", "label": "Cook's D Influence Statistic"},
+    {"name": "lev", "type": "num", "length": 8, "format": "", "label": "Leverage"},
+    {"name": "delres", "type": "num", "length": 8, "format": "", "label": "Residual without Current Observation"},
+    {"name": "rstud", "type": "num", "length": 8, "format": "", "label": "Studentized Residual without Current Obs"},
+    {"name": "dffits", "type": "num", "length": 8, "format": "", "label": "Standard Influence on Predicted Value"}
+   ],
+   "rows": [
+    [1.0, 5.1, 3.95083333333333, 1.14916666666667, 0.57195534760603, 0.05212557510988, 0.24166666666667, 1.51538461538462, 0.55656425167236, 0.31419090614614],
+    [2.0, 6.9, 6.23690476190476, 0.66309523809524, 0.32036966127061, 0.0124500163147, 0.1952380952381, 0.82396449704142, 0.30902352251505, 0.15220892361177],
+    [3.0, 8.8, 8.52297619047619, 0.27702380952381, 0.13069013318254, 0.00157790432255, 0.15595238095238, 0.32820874471086, 0.12564558466451, 0.05400820728369],
+    [4.0, 11.2, 10.8090476190476, 0.39095238095238, 0.1810230075733, 0.00231522435066, 0.12380952380952, 0.44619565217391, 0.17414089849714, 0.06546038321349],
+    [5.0, 12.9, 13.0951190476191, -0.195119047619, -0.0890841721845, 0.00043506416638, 0.09880952380952, -0.2165125495376, -0.0856154405733, -0.028349356304],
+    [6.0, 15.1, 15.3811904761905, -0.2811904761905, -0.1271278721702, 0.0007117757254, 0.08095238095238, -0.3059585492228, -0.1222165017205, -0.0362723467642],
+    [7.0, 16.8, 17.6672619047619, -0.8672619047619, -0.3898284885139, 0.00574008244364, 0.0702380952381, -0.9327784891165, -0.3767435820146, -0.1035491054792],
+    [8.0, 19.2, 19.9533333333333, -0.7533333333333, -0.3379698616923, 0.00407941526473, 0.06666666666667, -0.8071428571429, -0.3261469353237, -0.0871664349805],
+    [9.0, 21.1, 22.2394047619048, -1.1394047619048, -0.5121549023426, 0.00990771830706, 0.0702380952381, -1.2254801536492, -0.4971031259998, -0.1366302877754],
+    [10.0, 22.8, 24.5254761904762, -1.7254761904762, -0.7800979590324, 0.0268015493178, 0.08095238095238, -1.8774611398964, -0.7676773900715, -0.227837158679],
+    [11.0, 25.0, 26.8115476190476, -1.8115476190476, -0.8270859354064, 0.03750191875654, 0.09880952380952, -2.0101717305152, -0.8164087919233, -0.270332822876],
+    [12.0, 33.9, 29.0976190476191, 4.80238095238095, 2.22365046452705, 0.34934825026678, 0.12380952380952, 5.48097826086956, 2.71402701223289, 1.0202155255071],
+    [13.0, 29.2, 31.3836904761905, -2.1836904761905, -1.0301887034668, 0.09804571804114, 0.15595238095238, -2.5871650211566, -1.0328296153014, -0.4439573113602],
+    [14.0, 30.7, 33.6697619047619, -2.9697619047619, -1.4348189533315, 0.24972462302489, 0.1952380952381, -3.6902366863905, -1.5026345577916, -0.7401196736153],
+    [15.0, 40.6, 35.9558333333333, 4.64416666666667, 2.31146276447309, 0.85133485293858, 0.24166666666667, 6.12417582417583, 2.89363823361925, 1.63351278122539]
+   ]
+  }
+ ]
+}

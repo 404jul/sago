@@ -45,7 +45,7 @@ run;
 
 title2 'Q3: Heavy late censoring';
 data heavy;
-  input group $ months*dead(0) @@;
+  input group $ months dead @@;
   datalines;
 A 2 1 A 4 1 A 5 1 A 7 1 A 9 1 A 10 1
 B 2 1 B 3 1 B 5 1 B 8 1 B 9 1 B 12 1

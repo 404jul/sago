@@ -19,6 +19,19 @@ import (
 
 func init() { RegisterProc("NPAR1WAY", npNpar1way) }
 
+// npEmit prepends the _Proc_/_Run_ columns SAS's ODS OUTPUT tables carry
+// (_Run_ is 1 for each captured procedure run in the observed sessions).
+func npEmit(s *Session, t *Table) {
+	t.Cols = append([]Col{
+		{Name: "_Proc_", Label: "", Char: true, Hidden: true},
+		{Name: "_Run_", Label: "", Format: "4.", Hidden: true},
+	}, t.Cols...)
+	for i := range t.Rows {
+		t.Rows[i] = append([]Value{StrV("Npar1way"), NumV(1)}, t.Rows[i]...)
+	}
+	s.Out.AddTable(t)
+}
+
 func npNpar1way(s *Session, p *ProcStep) error {
 	d, err := s.ProcData(p)
 	if err != nil {
@@ -221,23 +234,24 @@ func npOneVar(s *Session, d *Dataset, v *Var, ci int, want map[string]bool, exac
 			MissDot: true,
 		}
 		t.Cols = []Col{
-			{Name: "Class", Label: classVar.Name, Char: classVar.Char},
+			{Name: "Variable", Label: "Variable", Char: true},
+			{Name: "Class", Label: classVar.Name, Char: true},
 			{Name: "N", Label: "N", Format: "6."},
 			{Name: "SumOfScores", Label: "Sum of\nScores", Format: "12.4"},
-			{Name: "ExpectedUnderH0", Label: "Expected\nUnder H0", Format: "12.4"},
-			{Name: "StdDevUnderH0", Label: "Std Dev\nUnder H0", Format: "10.4"},
+			{Name: "ExpectedSum", Label: "Expected\nSum", Format: "12.4"},
+			{Name: "StdDevOfSum", Label: "Std Dev\nof Sum", Format: "10.4"},
 			{Name: "MeanScore", Label: "Mean\nScore", Format: "10.4"},
 		}
-		t.RowHeader = 1
+		t.RowHeader = 2
 		sds := make([]float64, k)
 		for i := range k {
 			e := nip[i] * (float64(n) + 1) / 2
 			sds[i] = math.Sqrt(npVarScore(nip[i], float64(n), tieF))
-			t.AddRow(classes[i], nip[i], sums[i], e, sds[i], e/nip[i])
+			t.AddRow(v.Name, FormatValue(classes[i], nil), nip[i], sums[i], e, sds[i], sums[i]/nip[i])
 		}
-		s.Out.AddTable(t)
+		npEmit(s, t)
 		if k == 2 {
-			npWilcoxonTest(s, v, classVar, classes, nip, sums, sds, float64(n), exact, x, cls)
+			npWilcoxonTest(s, v, classVar, classes, nip, sums, sds, float64(n), tieF, exact, x, cls)
 		} else {
 			npKWTest(s, v, classes, nip, sums, float64(n), tieF)
 		}
@@ -337,18 +351,19 @@ func npDSCF(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls
 	}
 	t := &Table{ODSName: "DSCF", Caption: "Pairwise Two-Sided Multiple Comparison Analysis", MissDot: true}
 	t.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
 		{Name: "Comparison", Label: "Comparison", Char: true},
 		{Name: "WilcoxonZ", Label: "Two-Sample\nWilcoxon Z", Format: "8.4"},
-		{Name: "DSCF", Label: "DSCF\nStatistic", Format: "8.4"},
-		{Name: "ProbDSCF", Label: "Two-Sided\nDSCF Pr > DSCF", Format: "PVALUE6.4"},
+		{Name: "DSCFValue", Label: "DSCF\nStatistic", Format: "8.4"},
+		{Name: "PValue", Label: "Two-Sided\nDSCF Pr > DSCF", Format: "PVALUE6.4"},
 	}
-	t.RowHeader = 1
+	t.RowHeader = 2
 	for _, c := range cmps {
 		d := math.Sqrt2 * math.Abs(c.z)
 		p := 1 - lmPTukey(d, 1, float64(k), 1e15)
-		t.AddRow(fmt.Sprintf("%s - %s", classes[c.i].Str, classes[c.j].Str), c.z, math.Sqrt2*c.z, p)
+		t.AddRow(v.Name, fmt.Sprintf("%s vs. %s", classes[c.i].Str, classes[c.j].Str), c.z, math.Sqrt2*math.Abs(c.z), p)
 	}
-	s.Out.AddTable(t)
+	npEmit(s, t)
 }
 
 // npFP: Fligner-Policello test of equal medians (Fligner and Policello
@@ -366,7 +381,6 @@ func npFP(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls [
 	if ni[0] > ni[1] {
 		xi = 0
 	}
-	yi := 1 - xi
 	var X, Y []float64
 	for i, c := range cls {
 		if c == xi {
@@ -414,35 +428,39 @@ func npFP(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls [
 		MissDot: true,
 	}
 	tp.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
 		{Name: "Class", Label: classVar.Name, Char: true},
 		{Name: "N", Label: "N", Format: "6."},
-		{Name: "SumOfPlacements", Label: "Sum of\nPlacements", Format: "12.4"},
-		{Name: "AvgPlacement", Label: "Average\nPlacement", Format: "12.4"},
+		{Name: "Sum", Label: "Sum of\nPlacements", Format: "12.4"},
+		{Name: "Mean", Label: "Average\nPlacement", Format: "12.4"},
 		{Name: "StdDev", Label: "Std Dev\nof Placements", Format: "12.4"},
 	}
-	tp.RowHeader = 1
+	tp.RowHeader = 2
 	sdX := math.Sqrt(vx / (nx - 1))
 	sdY := math.Sqrt(vy / (ny - 1))
+	yi := 1 - xi
 	stats := map[int][3]float64{xi: {nx, sumX, sdX}, yi: {ny, sumY, sdY}}
 	means := map[int]float64{xi: meanX, yi: meanY}
 	for ci := 0; ci < 2; ci++ {
 		st := stats[ci]
-		tp.AddRow(classes[ci], st[0], st[1], means[ci], st[2])
+		tp.AddRow(v.Name, classes[ci], st[0], st[1], means[ci], st[2])
 	}
-	s.Out.AddTable(tp)
+	npEmit(s, tp)
 
-	t2 := &Table{ODSName: "FPTest", Caption: "Fligner-Policello Test", MissDot: true}
-	t2.Cols = []Col{{Name: "Label", Label: "", Char: true}, {Name: "Value", Label: "", Format: "12.4"}}
-	t2.RowHeader = 1
-	t2.AddRow("Difference", diff)
-	t2.AddRow("Statistic (Z)", z)
+	one := NormCDF(z)
 	if z > 0 {
-		t2.AddRow("One-Sided Pr > Z", npPStr(NormSF(z)))
-	} else {
-		t2.AddRow("One-Sided Pr < Z", npPStr(NormCDF(z)))
+		one = NormSF(z)
 	}
-	t2.AddRow("Two-Sided Pr > |Z|", npPStr(2*NormSF(math.Abs(z))))
-	s.Out.AddTable(t2)
+	t2 := &Table{ODSName: "FPTest", Caption: "Fligner-Policello Test", MissDot: true}
+	t2.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
+		{Name: "Statistic", Label: "Statistic", Format: "12.4"},
+		{Name: "Z", Label: "Z", Format: "9.4"},
+		{Name: "Prob1", Label: "One-Sided\nPr > Z", Format: "PVALUE6.4"},
+	}
+	t2.RowHeader = 1
+	t2.AddRow(v.Name, diff, z, one)
+	npEmit(s, t2)
 }
 
 // npHL: Hodges-Lehmann estimation of the location shift between two
@@ -459,7 +477,6 @@ func npHL(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls [
 	if ni[0] > ni[1] {
 		xi = 0
 	}
-	yi := 1 - xi
 	var X, Y []float64
 	for i, c := range cls {
 		if c == xi {
@@ -499,15 +516,16 @@ func npHL(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls [
 	L, U := diffs[C-1], diffs[m-C]
 	t := &Table{ODSName: "HodgesLehmann", Caption: "Hodges-Lehmann Estimation", MissDot: true}
 	t.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
 		{Name: "Type", Label: "Type", Char: true},
+		{Name: "Shift", Label: "Location Shift", Format: "8.4"},
 		{Name: "LowerCL", Label: fmt.Sprintf("%.0f%% Confidence\nLimits", 100*(1-alpha)), Format: "8.4"},
 		{Name: "UpperCL", Label: "", Format: "8.4"},
 		{Name: "Midpoint", Label: "Interval\nMidpoint", Format: "8.4"},
-		{Name: "ASE", Label: "Asymptotic\nStandard Error", Format: "8.4"},
+		{Name: "StdErr", Label: "Asymptotic\nStandard Error", Format: "8.4"},
 	}
-	t.RowHeader = 1
-	t.AddRow(fmt.Sprintf("Location Shift (%d - %d)", yi+1, xi+1), est, Missing, Missing, Missing)
-	t.AddRow("Asymptotic (Moses)", L, U, (L+U)/2, (U-L)/(2*z))
+	t.RowHeader = 2
+	t.AddRow(v.Name, "Asymptotic (Moses)", est, L, U, (L+U)/2, (U-L)/(2*z))
 	if exactHL {
 		// exact conditional distribution of the Mann-Whitney statistic
 		N := n1 + n2
@@ -517,6 +535,9 @@ func npHL(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls [
 		nComb := 1
 		for i := 0; i < n1; i++ {
 			nComb = nComb * (N - i) / (i + 1)
+		}
+		if nComb > 10000 {
+			s.Log.Warn(0, "Computing exact confidence limits for this problem may require much time and memory. Press the system interrupt key to terminate exact computations.")
 		}
 		if nComb <= 5000000 {
 			dist := map[float64]float64{}
@@ -577,10 +598,10 @@ func npHL(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls [
 				Cl = 1
 			}
 			eL, eU := diffs[Cl], diffs[m-Cl-1]
-			t.AddRow("Exact", eL, eU, (eL+eU)/2, Missing)
+			t.AddRow(v.Name, "Exact", est, eL, eU, (eL+eU)/2, Missing)
 		}
 	}
-	s.Out.AddTable(t)
+	npEmit(s, t)
 }
 
 // npTieFactor returns 1 - sum(t^3-t)/(N^3-N).
@@ -606,7 +627,7 @@ func npVarScore(n1, N, tieFactor float64) float64 {
 	return (n1 * n2 / 12) * (N + 1) * tieFactor
 }
 
-func npWilcoxonTest(s *Session, v *Var, classVar *Var, classes []Value, nip, sums, sd []float64, N float64, exact bool, x []float64, cls []int) {
+func npWilcoxonTest(s *Session, v *Var, classVar *Var, classes []Value, nip, sums, sd []float64, N float64, tieF float64, exact bool, x []float64, cls []int) {
 	i, j := 0, 1
 	if nip[1] < nip[0] || (nip[1] == nip[0] && Compare(classes[1], classes[0]) < 0) {
 		i, j = 1, 0
@@ -618,34 +639,38 @@ func npWilcoxonTest(s *Session, v *Var, classVar *Var, classes []Value, nip, sum
 	if sdi == 0 {
 		return
 	}
-	zc := (math.Abs(si-ei) - 0.5) / sdi
-	zt := (si - ei) / sdi
-	one := NormSF(zc)
-	two := 2 * NormSF(zc)
-	oneT := TSF(zt, N-1)
-	twoT := TTwoSided(zt, N-1)
+	sign := 1.0
+	if si < ei {
+		sign = -1
+	}
+	zc := sign * (math.Abs(si-ei) - 0.5) / sdi
+	one := NormSF(math.Abs(zc))
+	oneT := TSF(math.Abs(zc), N-1)
 	t := &Table{
 		ODSName: "WilcoxonTest",
 		Caption: fmt.Sprintf("Wilcoxon Two-Sample Test\nStatistic (S) for Variable %s", v.Name),
 		MissDot: true,
 	}
-	t.Cols = []Col{{Name: "Statistic", Label: "Statistic", Char: true}, {Name: "Value", Label: "Value", Format: "12.4"}}
+	t.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
+		{Name: "Statistic", Label: "Statistic", Format: "12."},
+		{Name: "Z", Label: "Z", Format: "9.4"},
+		{Name: "Prob1", Label: "One-Sided\nPr > Z", Format: "PVALUE6.4"},
+		{Name: "tProb1", Label: "One-Sided\nPr > Z (t)", Format: "PVALUE6.4"},
+	}
 	t.RowHeader = 1
-	t.AddRow("Statistic (S)", si)
-	t.AddRow("Normal Approximation Z", zc)
-	t.AddRow("One-Sided Pr > Z", one)
-	t.AddRow("Two-Sided Pr > |Z|", two)
-	t.AddRow("t Approximation", zt)
-	t.AddRow("One-Sided Pr > Z (t)", oneT)
-	t.AddRow("Two-Sided Pr > |Z| (t)", twoT)
+	t.AddRow(v.Name, si, zc, one, oneT)
+	npKWTest(s, v, classes, nip, sums, N, tieF)
 	if exact {
 		pe := npExactWilcoxon(x, cls, i)
 		if !math.IsNaN(pe) {
-			t.AddRow("Exact Test One-Sided Pr > S", pe)
-			t.AddRow("Exact Test Two-Sided Pr > |S|", math.Min(1, 2*pe))
+			t.Cols = append(t.Cols,
+				Col{Name: "Prob1E", Label: "One-Sided\nPr > S (Exact)", Format: "PVALUE6.4"},
+				Col{Name: "Prob2E", Label: "Two-Sided\nPr > |S| (Exact)", Format: "PVALUE6.4"})
+			t.Rows[0] = append(t.Rows[0], NumV(pe), NumV(math.Min(1, 2*pe)))
 		}
 	}
-	s.Out.AddTable(t)
+	npEmit(s, t)
 }
 
 // npExactWilcoxon computes P(S >= obs) for the rank sum of group g by
@@ -723,9 +748,13 @@ func npKWTest(s *Session, v *Var, classes []Value, nip []float64, sums []float64
 	h /= tieFactor
 	df := float64(len(classes)) - 1
 	tt := &Table{ODSName: "KruskalWallisTest", Caption: fmt.Sprintf("Kruskal-Wallis Test\nChi-Square Approximation for Variable %s", v.Name), MissDot: true}
-	tt.Cols = []Col{{Name: "ChiSquare", Label: "Chi-Square", Format: "10.4"}, {Name: "DF", Label: "DF", Format: "3."}, {Name: "Prob", Label: "Pr > ChiSq", Format: "PVALUE6.4"}}
-	tt.AddRow(h, df, ChiSqSF(h, df))
-	s.Out.AddTable(tt)
+	tt.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
+		{Name: "ChiSquare", Label: "Chi-Square", Format: "10.4"},
+		{Name: "DF", Label: "DF", Format: "3."},
+		{Name: "Prob", Label: "Pr > ChiSq", Format: "PVALUE6.4"}}
+	tt.AddRow(v.Name, h, df, ChiSqSF(h, df))
+	npEmit(s, tt)
 }
 
 // npMedianTest: scores = 1 above median, 0.5 at median, 0 below.
@@ -772,12 +801,12 @@ func npMedianTest(s *Session, v *Var, classVar *Var, classes []Value, x []float6
 		}
 		t.AddRow(classes[i], nip[i], sums[i], e, sd, sums[i]/nip[i])
 	}
-	s.Out.AddTable(t)
+	npEmit(s, t)
 	df := float64(k - 1)
 	tt := &Table{ODSName: "MedianTest", Caption: fmt.Sprintf("Median One-Way Analysis\nChi-Square Test for Variable %s", v.Name), MissDot: true}
 	tt.Cols = []Col{{Name: "Statistic", Label: "Chi-Square", Char: true}, {Name: "DF", Label: "DF", Format: "3."}, {Name: "Value", Label: "Value", Format: "8.4"}, {Name: "Prob", Label: "Pr > ChiSq", Format: "PVALUE6.4"}}
 	tt.AddRow("Chi-Square", df, chi2, ChiSqSF(chi2, df))
-	s.Out.AddTable(tt)
+	npEmit(s, tt)
 }
 
 // npAnova: raw values, one-way F test.
@@ -809,7 +838,7 @@ func npAnova(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cl
 		}
 		t.AddRow(classes[i], nip[i], s, s/nip[i], meanAll, sdAll)
 	}
-	s.Out.AddTable(t)
+	npEmit(s, t)
 	gm := Mean(x)
 	ssb, ssw := 0.0, 0.0
 	for i := range k {
@@ -828,7 +857,7 @@ func npAnova(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cl
 	t2.Cols = []Col{{Name: "Source", Label: "Source", Char: true}, {Name: "DF", Label: "DF", Format: "4."}, {Name: "SumOfSquares", Label: "Sum of\nSquares", Format: "14.4"}, {Name: "MeanSquare", Label: "Mean\nSquare", Format: "14.4"}, {Name: "FValue", Label: "F Value", Format: "8.4"}, {Name: "ProbF", Label: "Pr > F", Format: "PVALUE6.4"}}
 	t2.AddRow("Between Groups", dfb, ssb, ssb/dfb, f, FSF(f, dfb, dfw))
 	t2.AddRow("Within Groups", dfw, ssw, ssw/dfw, Missing, Missing)
-	s.Out.AddTable(t2)
+	npEmit(s, t2)
 }
 
 // npScaleScores returns the per-observation scores for the named linear
@@ -977,7 +1006,7 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 		vg := css / (N - 1) * (nip[i] * (N - nip[i]) / N)
 		t.AddRow(classes[i], nip[i], sums[i], e, math.Sqrt(vg), sums[i]/nip[i])
 	}
-	s.Out.AddTable(t)
+	npEmit(s, t)
 	// one-way ANOVA statistic: chi-square with k-1 df
 	Q := (N - 1) / css * func() float64 {
 		q := 0.0
@@ -992,7 +1021,7 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 	ta.AddRow("Chi-Square", Q)
 	ta.AddRow("DF", float64(k-1))
 	ta.AddRow("Pr > Chi-Square", npPStr(ChiSqSF(Q, float64(k-1))))
-	s.Out.AddTable(ta)
+	npEmit(s, ta)
 	if k != 2 {
 		return
 	}
@@ -1026,7 +1055,7 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 		t2.AddRow("One-Sided Pr > Z", npPStr(NormSF(z)))
 	}
 	t2.AddRow("Two-Sided Pr > |Z|", npPStr(2*NormSF(math.Abs(z))))
-	s.Out.AddTable(t2)
+	npEmit(s, t2)
 }
 
 // npVW: van der Waerden (normal) scores.
@@ -1060,14 +1089,14 @@ func npVW(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls [
 		e := 0.0
 		t.AddRow(classes[i], nip[i], sums[i], e, math.Sqrt(npVarScore(nip[i], N, tieF)))
 	}
-	s.Out.AddTable(t)
+	npEmit(s, t)
 	if k == 2 {
 		varr := npVarScore(nip[0], N, tieF)
 		z := sums[0] / math.Sqrt(varr)
 		t2 := &Table{ODSName: "VWTest", Caption: fmt.Sprintf("Van der Waerden Two-Sample Test\nStatistic (S) = Z for Variable %s", v.Name), MissDot: true}
 		t2.Cols = []Col{{Name: "Statistic", Label: "Statistic", Char: true}, {Name: "Z", Label: "Z", Format: "8.4"}, {Name: "OneSidedPr", Label: "One-Sided Pr > Z", Format: "PVALUE6.4"}, {Name: "TwoSidedPr", Label: "Two-Sided Pr > |Z|", Format: "PVALUE6.4"}}
 		t2.AddRow("Z", z, NormSF(z), 2*NormSF(math.Abs(z)))
-		s.Out.AddTable(t2)
+		npEmit(s, t2)
 	}
 }
 

@@ -1,0 +1,277 @@
+{
+ "engine": "sas",
+ "program": "examples/cat_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "The data set WORK.PEAS has 4 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.12k OS Memory           29348.00k Timestamp           10/20/2026 06:00:33 AM Step Count                        790  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "The data set WORK.TRIAL has 4 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              668.12k OS Memory           29348.00k Timestamp           10/20/2026 06:00:33 AM Step Count                        791  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        10 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "The data set WORK.SEVERITY has 9 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              668.12k OS Memory           29348.00k Timestamp           10/20/2026 06:00:33 AM Step Count                        792  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        10 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "There were 4 observations read from the data set WORK.PEAS."},
+  {"level": "NOTE", "text": "PROCEDURE FREQ used (Total process time): real time           0.02 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              2400.53k OS Memory           29868.00k Timestamp           10/20/2026 06:00:33 AM Step Count                        793  Switch Count  8 Page Faults                       0 Page Reclaims                     312 Page Swaps                        0 Voluntary Context Switches        60 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           1072"},
+  {"level": "NOTE", "text": "There were 4 observations read from the data set WORK.TRIAL."},
+  {"level": "NOTE", "text": "PROCEDURE FREQ used (Total process time): real time           0.03 seconds user cpu time       0.03 seconds system cpu time     0.00 seconds memory              2087.25k OS Memory           30128.00k Timestamp           10/20/2026 06:00:33 AM Step Count                        794  Switch Count  10 Page Faults                       0 Page Reclaims                     377 Page Swaps                        0 Voluntary Context Switches        72 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1336"},
+  {"level": "NOTE", "text": "There were 9 observations read from the data set WORK.SEVERITY."},
+  {"level": "NOTE", "text": "PROCEDURE FREQ used (Total process time): real time           0.03 seconds user cpu time       0.04 seconds system cpu time     0.00 seconds memory              1653.34k OS Memory           30128.00k Timestamp           10/20/2026 06:00:33 AM Step Count                        795  Switch Count  8 Page Faults                       0 Page Reclaims                     311 Page Swaps                        0 Voluntary Context Switches        54 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           1056"}
+ ],
+ "tables": [
+  {
+   "name": "OneWayFreqs",
+   "proc": "Freq",
+   "path": "Freq.Table1.OneWayFreqs",
+   "template": "Base.Freq.OneWayFreqs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Table", "type": "char"},
+    {"name": "F_phenotype", "type": "char"},
+    {"name": "phenotype", "type": "char"},
+    {"name": "Frequency", "type": "num"},
+    {"name": "Percent", "type": "num"},
+    {"name": "TestPercent", "type": "num"}
+   ],
+   "rows": [
+    ["Freq", 1.0, "Table phenotype", "round_green", "round_green", 108.0, 19.4244604316547, 18.75],
+    ["Freq", 1.0, "Table phenotype", "round_yellow", "round_yellow", 315.0, 56.6546762589928, 56.25],
+    ["Freq", 1.0, "Table phenotype", "wrinkled_green", "wrinkled_green", 32.0, 5.75539568345324, 6.25],
+    ["Freq", 1.0, "Table phenotype", "wrinkled_yellow", "wrinkled_yellow", 101.0, 18.1654676258993, 18.75]
+   ]
+  },
+  {
+   "name": "OneWayChiSq",
+   "proc": "Freq",
+   "path": "Freq.Table1.OneWayChiSq",
+   "template": "Base.Freq.StatFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Table", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Freq", 1.0, "Table phenotype", "_PCHI_", "Chi-Square", "0.4700", 0.47002398081535],
+    ["Freq", 1.0, "Table phenotype", "DF_PCHI", "DF", "3", 3.0],
+    ["Freq", 1.0, "Table phenotype", "P_PCHI", "Pr > ChiSq", "0.9254", 0.92542589510362]
+   ]
+  },
+  {
+   "name": "OneWayLRChiSq",
+   "proc": "Freq",
+   "path": "Freq.Table1.OneWayLRChiSq",
+   "template": "Base.Freq.StatFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Table", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Freq", 1.0, "Table phenotype", "_LRCHI_", "Chi-Square", "0.4754", 0.4754452389983],
+    ["Freq", 1.0, "Table phenotype", "DF_LRCHI", "DF", "3", 3.0],
+    ["Freq", 1.0, "Table phenotype", "P_LRCHI", "Pr > ChiSq", "0.9243", 0.92425190397452]
+   ]
+  },
+  {
+   "name": "CrossTabFreqs",
+   "proc": "Freq",
+   "path": "Freq.Table1.CrossTabFreqs",
+   "template": "Base.Freq.CrossTabFreqs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Table", "type": "char"},
+    {"name": "treatment", "type": "char"},
+    {"name": "outcome", "type": "char"},
+    {"name": "_TYPE_", "type": "char"},
+    {"name": "_TABLE_", "type": "num"},
+    {"name": "Frequency", "type": "num"},
+    {"name": "Expected", "type": "num"},
+    {"name": "RowPercent", "type": "num"},
+    {"name": "ColPercent", "type": "num"},
+    {"name": "Missing", "type": "num"}
+   ],
+   "rows": [
+    ["Freq", 1.0, "Table treatment * outcome", "control", "healed", "11", 1.0, 3.0, 6.21739130434783, 27.2727272727273, 23.0769230769231, null],
+    ["Freq", 1.0, "Table treatment * outcome", "control", "not_healed", "11", 1.0, 8.0, 4.78260869565218, 72.7272727272728, 80.0, null],
+    ["Freq", 1.0, "Table treatment * outcome", "control", "", "10", 1.0, 11.0, null, null, null, null],
+    ["Freq", 1.0, "Table treatment * outcome", "new", "healed", "11", 1.0, 10.0, 6.78260869565218, 83.3333333333333, 76.9230769230769, null],
+    ["Freq", 1.0, "Table treatment * outcome", "new", "not_healed", "11", 1.0, 2.0, 5.21739130434783, 16.6666666666667, 20.0, null],
+    ["Freq", 1.0, "Table treatment * outcome", "new", "", "10", 1.0, 12.0, null, null, null, null],
+    ["Freq", 1.0, "Table treatment * outcome", "", "healed", "01", 1.0, 13.0, null, null, null, null],
+    ["Freq", 1.0, "Table treatment * outcome", "", "not_healed", "01", 1.0, 10.0, null, null, null, null],
+    ["Freq", 1.0, "Table treatment * outcome", "", "", "00", 1.0, 23.0, null, null, null, 0.0]
+   ]
+  },
+  {
+   "name": "ChiSq",
+   "proc": "Freq",
+   "path": "Freq.Table1.ChiSq",
+   "template": "Base.Freq.ChiSq",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Table", "type": "char"},
+    {"name": "Statistic", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Value", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Freq", 1.0, "Table treatment * outcome", "Chi-Square", 1.0, 7.33962703962704, 0.00674508323173],
+    ["Freq", 1.0, "Table treatment * outcome", "Likelihood Ratio Chi-Square", 1.0, 7.78792216339059, 0.00525966503107],
+    ["Freq", 1.0, "Table treatment * outcome", "Continuity Adj. Chi-Square", 1.0, 5.23564976689977, 0.02212854124127],
+    ["Freq", 1.0, "Table treatment * outcome", "Mantel-Haenszel Chi-Square", 1.0, 7.02051282051282, 0.00805811489911],
+    ["Freq", 1.0, "Table treatment * outcome", "Phi Coefficient", null, -0.564901955311, null],
+    ["Freq", 1.0, "Table treatment * outcome", "Contingency Coefficient", null, 0.49184909553606, null],
+    ["Freq", 1.0, "Table treatment * outcome", "Cramer's V", null, -0.564901955311, null]
+   ]
+  },
+  {
+   "name": "FishersExact",
+   "proc": "Freq",
+   "path": "Freq.Table1.FishersExact",
+   "template": "Base.Freq.ChisqExactFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Table", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Freq", 1.0, "Table treatment * outcome", "Cell1_FREQ", "Cell (1,1) Frequency (F)", "3", 3.0],
+    ["Freq", 1.0, "Table treatment * outcome", "XPL_FISH", "Left-sided Pr <= F", "0.0101", 0.01010518623926],
+    ["Freq", 1.0, "Table treatment * outcome", "XPR_FISH", "Right-sided Pr >= F", "0.9994", 0.99941349537527],
+    ["Freq", 1.0, "Table treatment * outcome", "", "", "", null],
+    ["Freq", 1.0, "Table treatment * outcome", "P_TABLE", "Table Probability (P)", "0.0095", 0.00951868161452],
+    ["Freq", 1.0, "Table treatment * outcome", "XP2_FISH", "Two-sided Pr <= P", "0.0123", 0.01227813779974]
+   ]
+  },
+  {
+   "name": "CrossTabFreqs",
+   "proc": "Freq",
+   "path": "Freq.Table1.CrossTabFreqs",
+   "template": "Base.Freq.CrossTabFreqs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Table", "type": "char"},
+    {"name": "severity", "type": "char"},
+    {"name": "response", "type": "char"},
+    {"name": "_TYPE_", "type": "char"},
+    {"name": "_TABLE_", "type": "num"},
+    {"name": "Frequency", "type": "num"},
+    {"name": "RowPercent", "type": "num"},
+    {"name": "ColPercent", "type": "num"},
+    {"name": "Missing", "type": "num"}
+   ],
+   "rows": [
+    ["Freq", 1.0, "Table severity * response", "mild", "full", "11", 1.0, 24.0, 60.0, 70.5882352941177, null],
+    ["Freq", 1.0, "Table severity * response", "mild", "none", "11", 1.0, 3.0, 7.5, 7.5, null],
+    ["Freq", 1.0, "Table severity * response", "mild", "partial", "11", 1.0, 13.0, 32.5, 28.2608695652174, null],
+    ["Freq", 1.0, "Table severity * response", "mild", "", "10", 1.0, 40.0, null, null, null],
+    ["Freq", 1.0, "Table severity * response", "moderate", "full", "11", 1.0, 8.0, 21.0526315789474, 23.5294117647059, null],
+    ["Freq", 1.0, "Table severity * response", "moderate", "none", "11", 1.0, 12.0, 31.5789473684211, 30.0, null],
+    ["Freq", 1.0, "Table severity * response", "moderate", "partial", "11", 1.0, 18.0, 47.3684210526316, 39.1304347826087, null],
+    ["Freq", 1.0, "Table severity * response", "moderate", "", "10", 1.0, 38.0, null, null, null],
+    ["Freq", 1.0, "Table severity * response", "severe", "full", "11", 1.0, 2.0, 4.76190476190476, 5.88235294117647, null],
+    ["Freq", 1.0, "Table severity * response", "severe", "none", "11", 1.0, 25.0, 59.5238095238095, 62.5, null],
+    ["Freq", 1.0, "Table severity * response", "severe", "partial", "11", 1.0, 15.0, 35.7142857142857, 32.6086956521739, null],
+    ["Freq", 1.0, "Table severity * response", "severe", "", "10", 1.0, 42.0, null, null, null],
+    ["Freq", 1.0, "Table severity * response", "", "full", "01", 1.0, 34.0, null, null, null],
+    ["Freq", 1.0, "Table severity * response", "", "none", "01", 1.0, 40.0, null, null, null],
+    ["Freq", 1.0, "Table severity * response", "", "partial", "01", 1.0, 46.0, null, null, null],
+    ["Freq", 1.0, "Table severity * response", "", "", "00", 1.0, 120.0, null, null, 0.0]
+   ]
+  },
+  {
+   "name": "ChiSq",
+   "proc": "Freq",
+   "path": "Freq.Table1.ChiSq",
+   "template": "Base.Freq.ChiSq",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Table", "type": "char"},
+    {"name": "Statistic", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Value", "type": "num"},
+    {"name": "Prob", "type": "num"}
+   ],
+   "rows": [
+    ["Freq", 1.0, "Table severity * response", "Chi-Square", 4.0, 41.0296718458551, 2.65007399199e-08],
+    ["Freq", 1.0, "Table severity * response", "Likelihood Ratio Chi-Square", 4.0, 44.0760198110347, 6.18669728584e-09],
+    ["Freq", 1.0, "Table severity * response", "Mantel-Haenszel Chi-Square", 1.0, 10.4360796246256, 0.0012357729159],
+    ["Freq", 1.0, "Table severity * response", "Phi Coefficient", null, 0.58473406951262, null],
+    ["Freq", 1.0, "Table severity * response", "Contingency Coefficient", null, 0.50477294315281, null],
+    ["Freq", 1.0, "Table severity * response", "Cramer's V", null, 0.41346942574318, null]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "PEAS",
+   "columns": [
+    {"name": "phenotype", "type": "char", "length": 15, "format": "", "label": ""},
+    {"name": "count", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["round_green", 108.0],
+    ["round_yellow", 315.0],
+    ["wrinkled_green", 32.0],
+    ["wrinkled_yellow", 101.0]
+   ]
+  },
+  {
+   "name": "SEVERITY",
+   "columns": [
+    {"name": "severity", "type": "char", "length": 9, "format": "", "label": ""},
+    {"name": "response", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "count", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["mild", "full", 24.0],
+    ["mild", "partial", 13.0],
+    ["mild", "none", 3.0],
+    ["moderate", "full", 8.0],
+    ["moderate", "partial", 18.0],
+    ["moderate", "none", 12.0],
+    ["severe", "full", 2.0],
+    ["severe", "partial", 15.0],
+    ["severe", "none", 25.0]
+   ]
+  },
+  {
+   "name": "TRIAL",
+   "columns": [
+    {"name": "treatment", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "outcome", "type": "char", "length": 12, "format": "", "label": ""},
+    {"name": "count", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["new", "healed", 10.0],
+    ["new", "not_healed", 2.0],
+    ["control", "healed", 3.0],
+    ["control", "not_healed", 8.0]
+   ]
+  }
+ ]
+}

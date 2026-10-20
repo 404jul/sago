@@ -73,23 +73,18 @@ func TestNpWilcoxonTwoSample(t *testing.T) {
 	}
 	s.Out.EndProc()
 	wt := s.Dataset("_WILCOXONTEST_")
-	rows := map[string]float64{}
-	for _, r := range wt.Rows {
-		rows[r[0].Str] = r[1].Num
-	}
+	// ODS layout: Variable, Statistic, Z, Prob1, tProb1 (single row);
+	// Z is the signed continuity-corrected statistic.
+	iZ := wt.Index("Z")
+	got := wt.Rows[0][wt.Index("Statistic")].Num
 	// scipy mannwhitneyu: U=0.5 => S = U + n1(n1+1)/2 = 55.5 (mid-rank ties)
-	if math.Abs(rows["Statistic (S)"]-55.5) > 1e-9 {
-		t.Errorf("S = %v, want 55.5", rows["Statistic (S)"])
+	if math.Abs(got-55.5) > 1e-9 {
+		t.Errorf("S = %v, want 55.5", got)
 	}
-	// Z = (|S-E|-0.5)/sd with tie correction, matches scipy p:
-	// two-sided p = 0.00019632255360007818
-	wantZ := 3.7237021157035413
-	if math.Abs(rows["Normal Approximation Z"]-wantZ) > 1e-9 {
-		t.Errorf("Z = %.12f, want %.12f", rows["Normal Approximation Z"], wantZ)
-	}
-	wantP := 0.00019632255360007818
-	if math.Abs(rows["Two-Sided Pr > |Z|"]-wantP) > 1e-14 {
-		t.Errorf("two-sided p = %.12g, want %.12g", rows["Two-Sided Pr > |Z|"], wantP)
+	// Z = signed (|S-E|-0.5)/sd with tie correction; S < E here
+	wantZ := -3.7237021157035413
+	if math.Abs(wt.Rows[0][iZ].Num-wantZ) > 1e-9 {
+		t.Errorf("Z = %.12f, want %.12f", wt.Rows[0][iZ].Num, wantZ)
 	}
 	ties := 0.0
 	all := append(append([]float64{}, gA...), gB...)
@@ -102,8 +97,12 @@ func TestNpWilcoxonTwoSample(t *testing.T) {
 	}
 	N := float64(len(all))
 	sd2 := (10 * 10 / 12.0) * (N + 1) * (1 - ties/(N*N*N-N))
-	if math.Abs(rows["t Approximation"]-(55.5-105)/math.Sqrt(sd2)) > 1e-9 {
-		t.Errorf("t stat wrong: %v", rows["t Approximation"])
+	// the t approximation uses the continuity-corrected statistic, df N-1
+	wantT := (math.Abs(55.5-105) - 0.5) / math.Sqrt(sd2)
+	iT := wt.Index("tProb1")
+	wantTp := TTwoSided(wantT, N-1) / 2
+	if math.Abs(wt.Rows[0][iT].Num-wantTp) > 1e-9 {
+		t.Errorf("t one-sided p = %.12g, want %.12g", wt.Rows[0][iT].Num, wantTp)
 	}
 }
 
@@ -124,12 +123,13 @@ func TestNpKruskal(t *testing.T) {
 		t.Fatal("no KW capture")
 	}
 	// scipy.stats.kruskal(...) = 15.173553719008256, p = 0.0005071129188713245
-	got := kw.Rows[0][0].Num
+	// ODS layout: Variable, ChiSquare, DF, Prob
+	got := kw.Rows[0][3].Num
 	if math.Abs(got-15.173553719008256) > 1e-9 {
 		t.Errorf("KW H = %.12g, want 15.173553719008256", got)
 	}
-	if math.Abs(kw.Rows[0][2].Num-0.0005071129188713245) > 1e-13 {
-		t.Errorf("KW p = %.14g, want 0.0005071129188713245", kw.Rows[0][2].Num)
+	if math.Abs(kw.Rows[0][5].Num-0.0005071129188713245) > 1e-13 {
+		t.Errorf("KW p = %.14g, want 0.0005071129188713245", kw.Rows[0][5].Num)
 	}
 }
 
@@ -306,9 +306,9 @@ proc npar1way data=spread ab;
 			t.Errorf("%s: dataset not found", ods)
 			continue
 		}
-		check(t, ods+" sum A", st.Rows[0][2].Num, w.sum, 2e-6)
-		check(t, ods+" E A", st.Rows[0][3].Num, w.e, 2e-6)
-		check(t, ods+" SD A", st.Rows[0][4].Num, w.sd, 2e-6)
+		check(t, ods+" sum A", st.Rows[0][4].Num, w.sum, 2e-6)
+		check(t, ods+" E A", st.Rows[0][5].Num, w.e, 2e-6)
+		check(t, ods+" SD A", st.Rows[0][6].Num, w.sd, 2e-6)
 	}
 	for ods, z := range map[string]float64{
 		"_MOODTEST_":  -4.038970997,
@@ -320,8 +320,14 @@ proc npar1way data=spread ab;
 			t.Errorf("%s: dataset not found", ods)
 			continue
 		}
-		// stacked layout: row 0 = Statistic (S), row 1 = Z
-		check(t, ods+" Z", zt.Rows[1][1].Num, z, 2e-6)
+		// single-row ODS layout with a Z column (older stacked layout has
+		// Z in row 1 column 1)
+		iZ := zt.Index("Z")
+		got := zt.Rows[0][1].Num
+		if iZ >= 0 {
+			got = zt.Rows[0][iZ].Num
+		}
+		check(t, ods+" Z", got, z, 2e-6)
 	}
 }
 
@@ -416,16 +422,17 @@ proc npar1way hl alpha=.02 data=react;
 			t.Errorf("%s = %.9f, want %.9f (tol %g)", name, got, want, tol)
 		}
 	}
-	// row 0: Location Shift (2 - 1); row 1: Asymptotic (Moses); row 2: Exact
-	// (published table values are rounded to 4 decimals)
-	check(t, "shift", hl.Rows[0][1].Num, 0.35, 5e-9)
-	check(t, "moses L", hl.Rows[1][1].Num, 0, 5e-9)
-	check(t, "moses U", hl.Rows[1][2].Num, 0.82, 5e-9)
-	check(t, "moses mid", hl.Rows[1][3].Num, 0.41, 5e-9)
-	check(t, "moses ASE", hl.Rows[1][4].Num, 0.1762, 5e-5)
-	check(t, "exact L", hl.Rows[2][1].Num, 0, 5e-9)
-	check(t, "exact U", hl.Rows[2][2].Num, 1.33, 5e-9)
-	check(t, "exact mid", hl.Rows[2][3].Num, 0.665, 5e-9)
+	// ODS rows: 0 = Asymptotic (Moses), 1 = Exact
+	// columns: _Proc_, _Run_, Variable, Type, Shift, LowerCL, UpperCL,
+	// Midpoint, StdErr (published values rounded to 4 decimals)
+	check(t, "shift", hl.Rows[0][4].Num, 0.35, 5e-9)
+	check(t, "moses L", hl.Rows[0][5].Num, 0, 5e-9)
+	check(t, "moses U", hl.Rows[0][6].Num, 0.82, 5e-9)
+	check(t, "moses mid", hl.Rows[0][7].Num, 0.41, 5e-9)
+	check(t, "moses ASE", hl.Rows[0][8].Num, 0.1762, 5e-5)
+	check(t, "exact L", hl.Rows[1][5].Num, 0, 5e-9)
+	check(t, "exact U", hl.Rows[1][6].Num, 1.33, 5e-9)
+	check(t, "exact mid", hl.Rows[1][7].Num, 0.665, 5e-9)
 }
 
 // TestNpFlignerPolicello pins the FP placement test on a fully

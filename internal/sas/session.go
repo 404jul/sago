@@ -384,7 +384,32 @@ func (s *Session) ProcData(p *ProcStep) (*Dataset, error) {
 	for _, st := range p.Stmts("FORMAT") {
 		ApplyFormats(d, st.Args())
 	}
+	// SAS procedures report how many observations they read (and the WHERE
+	// they used); only some procedures write this note (FREQ, PRINT, MEANS,
+	// LOGISTIC, ... observed from SAS sessions); most stay silent.
+	if readNote[strings.ToUpper(p.Name)] {
+		msg := fmt.Sprintf("There were %d observations read from the data set %s.", len(d.Rows), DisplayName(refName(ref, d)))
+		if where != nil {
+			msg += "\n      WHERE " + strings.TrimSpace(TokText(p.Stmts("WHERE")[0].Args())) + ";"
+		}
+		s.Log.Note(p.Line, msg)
+	}
 	return d, nil
+}
+
+// readNote lists procedures that write the "observations read" note but do
+// not already emit it themselves (PRINT/MEANS/SORT have their own).
+var readNote = map[string]bool{
+	"FREQ":     true,
+	"LOGISTIC": true,
+}
+
+// refName recovers the display name of the procedure input data set.
+func refName(ref *DSRef, d *Dataset) string {
+	if ref != nil {
+		return ref.Name
+	}
+	return "_LAST_"
 }
 
 // ApplyLabels applies "var='label' ..." to variables of d.

@@ -1,0 +1,228 @@
+{
+ "engine": "sas",
+ "program": "examples/twoway_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.CROP has 30 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              668.03k OS Memory           23204.00k Timestamp           10/20/2026 06:07:41 AM Step Count                        221  Switch Count  2 Page Faults                       0 Page Reclaims                     100 Page Swaps                        0 Voluntary Context Switches        10 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Means from the MEANS statement are not adjusted for other terms in the model.  For adjusted means, use the LSMEANS statement."},
+  {"level": "NOTE", "text": "PROCEDURE GLM used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.01 seconds memory              3407.25k OS Memory           25016.00k Timestamp           10/20/2026 06:07:41 AM Step Count                        222  Switch Count  19 Page Faults                       0 Page Reclaims                     907 Page Swaps                        0 Voluntary Context Switches        139 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           2416"}
+ ],
+ "tables": [
+  {
+   "name": "ClassLevels",
+   "proc": "GLM",
+   "path": "GLM.Data.ClassLevels",
+   "template": "STAT.GLM.ClassLevels",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Class", "type": "char"},
+    {"name": "Levels", "type": "num"},
+    {"name": "Values", "type": "char"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "fert", 3.0, "K N P"],
+    ["GLM", 1.0, "irrig", 2.0, "High Low"]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "GLM",
+   "path": "GLM.Data.NObs",
+   "template": "STAT.GLM.NObsNotitle",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "Label1", "type": "char"},
+    {"name": "nvalue1", "type": "num"},
+    {"name": "DependentVariables", "type": "char"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "Number of Observations Read", 30.0, 30.0, 30.0, 30.0, 30.0, "Number of Observations Read", 30.0, "yield"],
+    ["GLM", 1.0, "Number of Observations Used", 30.0, 30.0, 30.0, 30.0, 30.0, "Number of Observations Used", 30.0, "yield"]
+   ]
+  },
+  {
+   "name": "OverallANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.yield.OverallANOVA",
+   "template": "stat.GLM.OverallANOVA",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "yield", "Model", 5.0, 410.2435, 82.0487, 564.85216809295, 4.5918265828e-24],
+    ["GLM", 1.0, "yield", "Error", 24.0, 3.4861666666666, 0.14525694444444, null, null],
+    ["GLM", 1.0, "yield", "Corrected Total", 29.0, 413.729666666667, null, null, null]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.yield.FitStatistics",
+   "template": "stat.GLM.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "RSquare", "type": "num"},
+    {"name": "CV", "type": "num"},
+    {"name": "RootMSE", "type": "num"},
+    {"name": "DepMean", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "yield", 0.99157380543978, 0.69048714997152, 0.38112589054595, 55.1966666666667]
+   ]
+  },
+  {
+   "name": "ModelANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.yield.ModelANOVA",
+   "template": "stat.GLM.Tests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "HypothesisType", "type": "num"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "yield", 1.0, "fert", 2.0, 98.5846666666667, 49.2923333333334, 339.345795286138, 2.5197521619e-18],
+    ["GLM", 1.0, "yield", 1.0, "irrig", 1.0, 264.482684931507, 264.482684931507, 1820.79201750431, 3.8115483689e-24],
+    ["GLM", 1.0, "yield", 1.0, "fert*irrig", 2.0, 47.1761484018265, 23.5880742009132, 162.38861619408, 1.1270868292e-14]
+   ]
+  },
+  {
+   "name": "ModelANOVA",
+   "proc": "GLM",
+   "path": "GLM.ANOVA.yield.ModelANOVA",
+   "template": "stat.GLM.Tests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Dependent", "type": "char"},
+    {"name": "HypothesisType", "type": "num"},
+    {"name": "Source", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "SS", "type": "num"},
+    {"name": "MS", "type": "num"},
+    {"name": "FValue", "type": "num"},
+    {"name": "ProbF", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "yield", 3.0, "fert", 2.0, 60.0055730593608, 30.0027865296804, 206.549756670367, 7.5088084413e-16],
+    ["GLM", 1.0, "yield", 3.0, "irrig", 1.0, 260.711894144144, 260.711894144144, 1794.83256474435, 4.518511449e-24],
+    ["GLM", 1.0, "yield", 3.0, "fert*irrig", 2.0, 47.1761484018265, 23.5880742009132, 162.38861619408, 1.1270868292e-14]
+   ]
+  },
+  {
+   "name": "Means",
+   "proc": "GLM",
+   "path": "GLM.Means.fert.Means",
+   "template": "stat.GLM.Means",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "fert", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "Mean yield", "type": "num"},
+    {"name": "SD yield", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "fert", "K", 10.0, null, null],
+    ["GLM", 1.0, "fert", "N", 10.0, null, null],
+    ["GLM", 1.0, "fert", "P", 10.0, null, null]
+   ]
+  },
+  {
+   "name": "LSMeans",
+   "proc": "GLM",
+   "path": "GLM.LSMEANS.fert.LSMeans",
+   "template": "stat.GLM.LSMeans",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "fert", "type": "char"},
+    {"name": "yieldLSMean", "type": "num"}
+   ],
+   "rows": [
+    ["GLM", 1.0, "fert", "K", 54.58],
+    ["GLM", 1.0, "fert", "N", 53.6333333333333],
+    ["GLM", 1.0, "fert", "P", 57.0541666666667]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "CROP",
+   "columns": [
+    {"name": "fert", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "irrig", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "yield", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["N", "Low", 51.8],
+    ["N", "Low", 52.4],
+    ["N", "Low", 51.9],
+    ["N", "Low", 52.8],
+    ["N", "Low", 52.1],
+    ["N", "Low", 52.3],
+    ["N", "High", 54.9],
+    ["N", "High", 55.4],
+    ["N", "High", 54.7],
+    ["N", "High", 55.2],
+    ["P", "Low", 53.6],
+    ["P", "Low", 54.1],
+    ["P", "Low", 53.9],
+    ["P", "Low", 54.5],
+    ["P", "High", 59.8],
+    ["P", "High", 60.3],
+    ["P", "High", 59.6],
+    ["P", "High", 60.8],
+    ["P", "High", 60.1],
+    ["P", "High", 59.9],
+    ["K", "Low", 49.8],
+    ["K", "Low", 50.3],
+    ["K", "Low", 49.5],
+    ["K", "Low", 50.6],
+    ["K", "Low", 50.1],
+    ["K", "High", 58.7],
+    ["K", "High", 59.2],
+    ["K", "High", 58.9],
+    ["K", "High", 59.6],
+    ["K", "High", 59.1]
+   ]
+  }
+ ]
+}

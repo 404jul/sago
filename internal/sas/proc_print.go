@@ -7,7 +7,7 @@ import (
 
 func init() { RegisterProc("PRINT", bpPrint) }
 
-// bpObsRead logs SAS's "observations read" note.
+// bpObsRead logs SAS's "observations read" note (shared with MEANS/SORT).
 func bpObsRead(s *Session, line int, d *Dataset) {
 	s.Log.Notef(line, "There were %d observations read from the data set %s.", len(d.Rows), DisplayName(d.Name))
 }
@@ -170,7 +170,6 @@ func bpPrint(s *Session, p *ProcStep) error {
 		}
 		s.Out.AddTable(t)
 	}
-	bpObsRead(s, p.Line, d)
 	return nil
 }
 

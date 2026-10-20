@@ -1,0 +1,717 @@
+{
+ "engine": "sas",
+ "program": "examples/ks_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.ASSAY has 60 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              667.25k OS Memory           29348.00k Timestamp           10/20/2026 06:00:45 AM Step Count                        1077  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.SUPPLIER has 27 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              665.62k OS Memory           29348.00k Timestamp           10/20/2026 06:00:45 AM Step Count                        1078  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        13 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.04 seconds user cpu time       0.04 seconds system cpu time     0.01 seconds memory              2466.18k OS Memory           29868.00k Timestamp           10/20/2026 06:00:45 AM Step Count                        1079  Switch Count  12 Page Faults                       0 Page Reclaims                     500 Page Swaps                        0 Voluntary Context Switches        90 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1848"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.04 seconds user cpu time       0.04 seconds system cpu time     0.00 seconds memory              1414.50k OS Memory           29868.00k Timestamp           10/20/2026 06:00:46 AM Step Count                        1080  Switch Count  14 Page Faults                       0 Page Reclaims                     564 Page Swaps                        0 Voluntary Context Switches        108 Involuntary Context Switches      4 Block Input Operations            0 Block Output Operations           2136"},
+  {"level": "NOTE", "text": "PROCEDURE NPAR1WAY used (Total process time): real time           0.03 seconds user cpu time       0.02 seconds system cpu time     0.00 seconds memory              1362.25k OS Memory           29868.00k Timestamp           10/20/2026 06:00:46 AM Step Count                        1081  Switch Count  8 Page Faults                       0 Page Reclaims                     372 Page Swaps                        0 Voluntary Context Switches        64 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1336"},
+  {"level": "NOTE", "text": "There were 60 observations read from the data set WORK.ASSAY."},
+  {"level": "NOTE", "text": "The data set WORK.LABB has 30 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              940.09k OS Memory           29608.00k Timestamp           10/20/2026 06:00:46 AM Step Count                        1082  Switch Count  2 Page Faults                       0 Page Reclaims                     121 Page Swaps                        0 Voluntary Context Switches        16 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROCEDURE UNIVARIATE used (Total process time): real time           0.19 seconds user cpu time       0.18 seconds system cpu time     0.02 seconds memory              7746.21k OS Memory           33556.00k Timestamp           10/20/2026 06:00:46 AM Step Count                        1083  Switch Count  16 Page Faults                       0 Page Reclaims                     1389 Page Swaps                        0 Voluntary Context Switches        133 Involuntary Context Switches      5 Block Input Operations            0 Block Output Operations           2112"}
+ ],
+ "tables": [
+  {
+   "name": "KSTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KSTest",
+   "template": "Stat.Npar1way.EDF",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "EDFatMaximum", "type": "num"},
+    {"name": "DevAtMaximum", "type": "num"},
+    {"name": "ObsAtMaximum", "type": "num"},
+    {"name": "ValueAtMaximum", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "A", 30.0, 0.1, -1.0041580220928, null, null],
+    ["Npar1way", 1.0, "value", "B", 30.0, 0.46666666666667, 1.0041580220928, null, null],
+    ["Npar1way", 1.0, "value", "Total", 60.0, 0.28333333333333, null, 44.0, 6.0]
+   ]
+  },
+  {
+   "name": "KS2Stats",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KS2Stats",
+   "template": "Stat.Npar1way.EdfFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Name2", "type": "char"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "_KS_", "KS", "0.183333", 0.18333333333333, "_D_", "D", "0.366667", 0.36666666666667],
+    ["Npar1way", 1.0, "value", "_KSA_", "KSa", "1.420094", 1.42009389360939, "P_KSA", "Pr > KSa", "0.0354", 0.03543016467203]
+   ]
+  },
+  {
+   "name": "CVMTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.CVMTest",
+   "template": "Stat.Npar1way.EDF",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SummedDev", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "A", 30.0, 0.46444444444444],
+    ["Npar1way", 1.0, "value", "B", 30.0, 0.46444444444444]
+   ]
+  },
+  {
+   "name": "CVMStats",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.CVMStats",
+   "template": "Stat.Npar1way.EdfFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Name2", "type": "char"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "_CM_", "CM", "0.015481", 0.01548148148148, "_CMA_", "CMa", "0.928889", 0.92888888888889]
+   ]
+  },
+  {
+   "name": "KuiperTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KuiperTest",
+   "template": "Stat.Npar1way.EDF",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "DevFromMean", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "A", 30.0, 0.03333333333333],
+    ["Npar1way", 1.0, "value", "B", 30.0, 0.36666666666667]
+   ]
+  },
+  {
+   "name": "KuiperStats",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KuiperStats",
+   "template": "Stat.Npar1way.EdfFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Name2", "type": "char"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"},
+    {"name": "Name3", "type": "char"},
+    {"name": "Label3", "type": "char"},
+    {"name": "cValue3", "type": "char"},
+    {"name": "nValue3", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "_K_", "K", "0.400000", 0.4, "_KA_", "Ka", "1.549193", 1.54919333848297, "P_KA", "Pr > Ka", "0.1416", 0.14155199236434]
+   ]
+  },
+  {
+   "name": "KSTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KSTest",
+   "template": "Stat.Npar1way.EDF",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "EDFatMaximum", "type": "num"},
+    {"name": "DevAtMaximum", "type": "num"},
+    {"name": "ObsAtMaximum", "type": "num"},
+    {"name": "ValueAtMaximum", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "A", 30.0, 0.1, -1.0041580220928, null, null],
+    ["Npar1way", 1.0, "value", "B", 30.0, 0.46666666666667, 1.0041580220928, null, null],
+    ["Npar1way", 1.0, "value", "Total", 60.0, 0.28333333333333, null, 44.0, 6.0]
+   ]
+  },
+  {
+   "name": "KSStats",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KSStats",
+   "template": "Stat.Npar1way.EdfFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Name2", "type": "char"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "_KS_", "KS", "0.1833", 0.18333333333333, "_KSA_", "KSa", "1.4201", 1.42009389360939]
+   ]
+  },
+  {
+   "name": "KS2Stats",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KS2Stats",
+   "template": "Stat.Npar1way.StatFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "_D_", "D = max |F1 - F2|", "0.3667", 0.36666666666667],
+    ["Npar1way", 1.0, "value", "P_D", "Pr > D", "0.0354", 0.03543016467203],
+    ["Npar1way", 1.0, "value", "", "", "", null],
+    ["Npar1way", 1.0, "value", "_Dp_", "D+ = max (F1 - F2)", "0.0333", 0.03333333333333],
+    ["Npar1way", 1.0, "value", "P_Dp", "Pr > D+", "0.9672", 0.96721610048201],
+    ["Npar1way", 1.0, "value", "", "", "", null],
+    ["Npar1way", 1.0, "value", "_Dm_", "D- = max (F2 - F1)", "0.3667", 0.36666666666667],
+    ["Npar1way", 1.0, "value", "P_Dm", "Pr > D-", "0.0177", 0.0177151808238]
+   ]
+  },
+  {
+   "name": "CVMTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.CVMTest",
+   "template": "Stat.Npar1way.EDF",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SummedDev", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "A", 30.0, 0.46444444444444],
+    ["Npar1way", 1.0, "value", "B", 30.0, 0.46444444444444]
+   ]
+  },
+  {
+   "name": "CVMStats",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.CVMStats",
+   "template": "Stat.Npar1way.EdfFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Name2", "type": "char"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "_CM_", "CM", "0.015481", 0.01548148148148, "_CMA_", "CMa", "0.928889", 0.92888888888889]
+   ]
+  },
+  {
+   "name": "KuiperTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KuiperTest",
+   "template": "Stat.Npar1way.EDF",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "DevFromMean", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "A", 30.0, 0.03333333333333],
+    ["Npar1way", 1.0, "value", "B", 30.0, 0.36666666666667]
+   ]
+  },
+  {
+   "name": "KuiperStats",
+   "proc": "Npar1way",
+   "path": "Npar1way.value.EDF.KuiperStats",
+   "template": "Stat.Npar1way.EdfFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Name2", "type": "char"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"},
+    {"name": "Name3", "type": "char"},
+    {"name": "Label3", "type": "char"},
+    {"name": "cValue3", "type": "char"},
+    {"name": "nValue3", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "value", "_K_", "K", "0.400000", 0.4, "_KA_", "Ka", "1.549193", 1.54919333848297, "P_KA", "Pr > Ka", "0.1416", 0.14155199236434]
+   ]
+  },
+  {
+   "name": "KSTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.yield.EDF.KSTest",
+   "template": "Stat.Npar1way.EDF",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "EDFatMaximum", "type": "num"},
+    {"name": "DevAtMaximum", "type": "num"},
+    {"name": "ObsAtMaximum", "type": "num"},
+    {"name": "ValueAtMaximum", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "yield", "S1", 8.0, 0.125, -0.6940122111646, null, null],
+    ["Npar1way", 1.0, "yield", "S2", 9.0, 0.33333333333333, -0.1111111111111, null, null],
+    ["Npar1way", 1.0, "yield", "S3", 10.0, 0.6, 0.72615264789052, null, null],
+    ["Npar1way", 1.0, "yield", "Total", 27.0, 0.37037037037037, null, 23.0, 43.4]
+   ]
+  },
+  {
+   "name": "KSStats",
+   "proc": "Npar1way",
+   "path": "Npar1way.yield.EDF.KSStats",
+   "template": "Stat.Npar1way.EdfFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Name2", "type": "char"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "yield", "_KS_", "KS", "0.194489", 0.19448853115728, "_KSA_", "KSa", "1.010592", 1.01059205236153]
+   ]
+  },
+  {
+   "name": "CVMTest",
+   "proc": "Npar1way",
+   "path": "Npar1way.yield.EDF.CVMTest",
+   "template": "Stat.Npar1way.EDF",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Class", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "SummedDev", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "yield", "S1", 8.0, 0.17793908448915],
+    ["Npar1way", 1.0, "yield", "S2", 9.0, 0.01737540009145],
+    ["Npar1way", 1.0, "yield", "S3", 10.0, 0.21295026164711]
+   ]
+  },
+  {
+   "name": "CVMStats",
+   "proc": "Npar1way",
+   "path": "Npar1way.yield.EDF.CVMStats",
+   "template": "Stat.Npar1way.EdfFactoid",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "Name1", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Name2", "type": "char"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Npar1way", 1.0, "yield", "_CM_", "CM", "0.015121", 0.01512091652695, "_CMA_", "CMa", "0.408265", 0.40826474622771]
+   ]
+  },
+  {
+   "name": "Moments",
+   "proc": "Univariate",
+   "path": "Univariate.value.Moments",
+   "template": "base.univariate.Moments",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "VarName", "type": "char"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Univaria", 1.0, "value", "N", "        30", 30.0, "Sum Weights", "        30", 30.0],
+    ["Univaria", 1.0, "value", "Mean", "       6.2", 6.2, "Sum Observations", "       186", 186.0],
+    ["Univaria", 1.0, "value", "Std Deviation", "1.88588221", 1.88588221374982, "Variance", "3.55655172", 3.55655172413793],
+    ["Univaria", 1.0, "value", "Skewness", "         0", 0.0, "Kurtosis", " -0.273352", -0.2733519805503],
+    ["Univaria", 1.0, "value", "Uncorrected SS", "   1256.34", 1256.34, "Corrected SS", "    103.14", 103.14],
+    ["Univaria", 1.0, "value", "Coeff Variation", "30.4174551", 30.417455060481, "Std Error Mean", "0.34431341", 0.34431340975619]
+   ]
+  },
+  {
+   "name": "BasicMeasures",
+   "proc": "Univariate",
+   "path": "Univariate.value.BasicMeasures",
+   "template": "base.univariate.Measures",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "VarName", "type": "char"},
+    {"name": "LocMeasure", "type": "char"},
+    {"name": "LocValue", "type": "num"},
+    {"name": "VarMeasure", "type": "char"},
+    {"name": "VarValue", "type": "num"}
+   ],
+   "rows": [
+    ["Univaria", 1.0, "value", "Mean", 6.2, "Std Deviation", 1.88588221374982],
+    ["Univaria", 1.0, "value", "Median", 6.2, "Variance", 3.55655172413793],
+    ["Univaria", 1.0, "value", "Mode", null, "Range", 8.0],
+    ["Univaria", 1.0, "value", "", null, "Interquartile Range", 2.6]
+   ]
+  },
+  {
+   "name": "TestsForLocation",
+   "proc": "Univariate",
+   "path": "Univariate.value.TestsForLocation",
+   "template": "base.univariate.Location",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "VarName", "type": "char"},
+    {"name": "Test", "type": "char"},
+    {"name": "Testlab", "type": "char"},
+    {"name": "Stat", "type": "num"},
+    {"name": "pType", "type": "char"},
+    {"name": "pValue", "type": "num"},
+    {"name": "Mu0", "type": "num"}
+   ],
+   "rows": [
+    ["Univaria", 1.0, "value", "Student's t", "t", 18.0068502251781, "Pr > |t|", 2.7669007689e-17, 0.0],
+    ["Univaria", 1.0, "value", "Sign", "M", 15.0, "Pr >= |M|", 1.86264514923e-09, 0.0],
+    ["Univaria", 1.0, "value", "Signed Rank", "S", 232.5, "Pr >= |S|", 1.4935469986e-10, 0.0]
+   ]
+  },
+  {
+   "name": "TestsForNormality",
+   "proc": "Univariate",
+   "path": "Univariate.value.TestsForNormality",
+   "template": "base.univariate.Normal",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "VarName", "type": "char"},
+    {"name": "Test", "type": "char"},
+    {"name": "TestLab", "type": "char"},
+    {"name": "Stat", "type": "num"},
+    {"name": "pType", "type": "char"},
+    {"name": "pSign", "type": "char"},
+    {"name": "pValue", "type": "num"}
+   ],
+   "rows": [
+    ["Univaria", 1.0, "value", "Shapiro-Wilk", "W", 0.99827665017512, "Pr < W", "", 0.99999999904725],
+    ["Univaria", 1.0, "value", "Kolmogorov-Smirnov", "D", 0.02481574303335, "Pr > D", ">", 0.15],
+    ["Univaria", 1.0, "value", "Cramer-von Mises", "W-Sq", 0.00334005604952, "Pr > W-Sq", ">", 0.25],
+    ["Univaria", 1.0, "value", "Anderson-Darling", "A-Sq", 0.03467443784675, "Pr > A-Sq", ">", 0.25]
+   ]
+  },
+  {
+   "name": "Quantiles",
+   "proc": "Univariate",
+   "path": "Univariate.value.Quantiles",
+   "template": "base.univariate.Quantiles",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "VarName", "type": "char"},
+    {"name": "Quantile", "type": "char"},
+    {"name": "Estimate", "type": "num"}
+   ],
+   "rows": [
+    ["Univaria", 1.0, "value", "100% Max", 10.2],
+    ["Univaria", 1.0, "value", "99%", 10.2],
+    ["Univaria", 1.0, "value", "95%", 9.3],
+    ["Univaria", 1.0, "value", "90%", 8.65],
+    ["Univaria", 1.0, "value", "75% Q3", 7.5],
+    ["Univaria", 1.0, "value", "50% Median", 6.2],
+    ["Univaria", 1.0, "value", "25% Q1", 4.9],
+    ["Univaria", 1.0, "value", "10%", 3.75],
+    ["Univaria", 1.0, "value", "5%", 3.1],
+    ["Univaria", 1.0, "value", "1%", 2.2],
+    ["Univaria", 1.0, "value", "0% Min", 2.2]
+   ]
+  },
+  {
+   "name": "ExtremeObs",
+   "proc": "Univariate",
+   "path": "Univariate.value.ExtremeObs",
+   "template": "base.univariate.ExtObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "VarName", "type": "char"},
+    {"name": "Low", "type": "num"},
+    {"name": "LowObs", "type": "num"},
+    {"name": "High", "type": "num"},
+    {"name": "HighObs", "type": "num"}
+   ],
+   "rows": [
+    ["Univaria", 1.0, "value", 2.2, 1.0, 8.2, 26.0],
+    ["Univaria", 1.0, "value", 3.1, 2.0, 8.5, 27.0],
+    ["Univaria", 1.0, "value", 3.6, 3.0, 8.8, 28.0],
+    ["Univaria", 1.0, "value", 3.9, 4.0, 9.3, 29.0],
+    ["Univaria", 1.0, "value", 4.2, 5.0, 10.2, 30.0]
+   ]
+  },
+  {
+   "name": "UNIVAR",
+   "proc": "Univariate",
+   "path": "Univariate.value.QQPlot.UNIVAR",
+   "template": "",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "VarName", "type": "char"},
+    {"name": "QQPlot", "type": "num"},
+    {"name": "_Libname_", "type": "char"},
+    {"name": "_Memname_", "type": "char"},
+    {"name": "_Entry_", "type": "char"}
+   ],
+   "rows": [
+    ["Univaria", 1.0, "value", 1.0, "WORK", "GSEG", "GKBL10CS"]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "ASSAY",
+   "columns": [
+    {"name": "lab", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "value", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["A", 4.9],
+    ["A", 5.5],
+    ["A", 5.8],
+    ["A", 6.1],
+    ["A", 6.3],
+    ["A", 6.4],
+    ["A", 6.6],
+    ["A", 6.7],
+    ["A", 6.8],
+    ["A", 6.9],
+    ["A", 7.0],
+    ["A", 7.1],
+    ["A", 7.2],
+    ["A", 7.3],
+    ["A", 7.4],
+    ["A", 7.6],
+    ["A", 7.7],
+    ["A", 7.8],
+    ["A", 7.9],
+    ["A", 8.0],
+    ["A", 8.1],
+    ["A", 8.2],
+    ["A", 8.3],
+    ["A", 8.4],
+    ["A", 8.6],
+    ["A", 8.7],
+    ["A", 8.9],
+    ["A", 9.2],
+    ["A", 9.5],
+    ["A", 10.1],
+    ["B", 2.2],
+    ["B", 3.1],
+    ["B", 3.6],
+    ["B", 3.9],
+    ["B", 4.2],
+    ["B", 4.5],
+    ["B", 4.7],
+    ["B", 4.9],
+    ["B", 5.1],
+    ["B", 5.3],
+    ["B", 5.5],
+    ["B", 5.6],
+    ["B", 5.8],
+    ["B", 6.0],
+    ["B", 6.1],
+    ["B", 6.3],
+    ["B", 6.4],
+    ["B", 6.6],
+    ["B", 6.8],
+    ["B", 6.9],
+    ["B", 7.1],
+    ["B", 7.3],
+    ["B", 7.5],
+    ["B", 7.7],
+    ["B", 7.9],
+    ["B", 8.2],
+    ["B", 8.5],
+    ["B", 8.8],
+    ["B", 9.3],
+    ["B", 10.2]
+   ]
+  },
+  {
+   "name": "LABB",
+   "columns": [
+    {"name": "lab", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "value", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["B", 2.2],
+    ["B", 3.1],
+    ["B", 3.6],
+    ["B", 3.9],
+    ["B", 4.2],
+    ["B", 4.5],
+    ["B", 4.7],
+    ["B", 4.9],
+    ["B", 5.1],
+    ["B", 5.3],
+    ["B", 5.5],
+    ["B", 5.6],
+    ["B", 5.8],
+    ["B", 6.0],
+    ["B", 6.1],
+    ["B", 6.3],
+    ["B", 6.4],
+    ["B", 6.6],
+    ["B", 6.8],
+    ["B", 6.9],
+    ["B", 7.1],
+    ["B", 7.3],
+    ["B", 7.5],
+    ["B", 7.7],
+    ["B", 7.9],
+    ["B", 8.2],
+    ["B", 8.5],
+    ["B", 8.8],
+    ["B", 9.3],
+    ["B", 10.2]
+   ]
+  },
+  {
+   "name": "SUPPLIER",
+   "columns": [
+    {"name": "supplier", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "yield", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["S1", 42.1],
+    ["S1", 43.5],
+    ["S1", 44.2],
+    ["S1", 45.0],
+    ["S1", 45.8],
+    ["S1", 46.9],
+    ["S1", 48.2],
+    ["S1", 49.1],
+    ["S2", 40.8],
+    ["S2", 41.9],
+    ["S2", 43.0],
+    ["S2", 43.8],
+    ["S2", 44.6],
+    ["S2", 45.5],
+    ["S2", 46.3],
+    ["S2", 47.4],
+    ["S2", 48.8],
+    ["S3", 39.5],
+    ["S3", 40.2],
+    ["S3", 41.1],
+    ["S3", 41.9],
+    ["S3", 42.6],
+    ["S3", 43.4],
+    ["S3", 44.1],
+    ["S3", 45.2],
+    ["S3", 46.0],
+    ["S3", 47.1]
+   ]
+  }
+ ]
+}

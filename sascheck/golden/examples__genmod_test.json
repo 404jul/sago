@@ -1,0 +1,422 @@
+{
+ "engine": "sas",
+ "program": "examples/genmod_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.DOBSON has 18 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.34k OS Memory           29348.00k Timestamp           10/20/2026 06:00:42 AM Step Count                        978  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Algorithm converged."},
+  {"level": "NOTE", "text": "The scale parameter was held fixed."},
+  {"level": "NOTE", "text": "PROCEDURE GENMOD used (Total process time): real time           0.04 seconds user cpu time       0.04 seconds system cpu time     0.00 seconds memory              2683.87k OS Memory           29868.00k Timestamp           10/20/2026 06:00:42 AM Step Count                        979  Switch Count  10 Page Faults                       0 Page Reclaims                     446 Page Swaps                        0 Voluntary Context Switches        79 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           1328"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.INS has 16 observations and 4 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              667.06k OS Memory           29348.00k Timestamp           10/20/2026 06:00:42 AM Step Count                        980  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Algorithm converged."},
+  {"level": "NOTE", "text": "The scale parameter was held fixed."},
+  {"level": "NOTE", "text": "PROCEDURE GENMOD used (Total process time): real time           0.04 seconds user cpu time       0.04 seconds system cpu time     0.01 seconds memory              1670.81k OS Memory           29868.00k Timestamp           10/20/2026 06:00:43 AM Step Count                        981  Switch Count  10 Page Faults                       0 Page Reclaims                     446 Page Swaps                        0 Voluntary Context Switches        78 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1344"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.OVER has 8 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.06k OS Memory           29348.00k Timestamp           10/20/2026 06:00:43 AM Step Count                        982  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        18 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Algorithm converged."},
+  {"level": "NOTE", "text": "The scale parameter was held fixed."},
+  {"level": "NOTE", "text": "PROCEDURE GENMOD used (Total process time): real time           0.04 seconds user cpu time       0.04 seconds system cpu time     0.00 seconds memory              1839.81k OS Memory           29868.00k Timestamp           10/20/2026 06:00:43 AM Step Count                        983  Switch Count  10 Page Faults                       0 Page Reclaims                     446 Page Swaps                        0 Voluntary Context Switches        83 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           1352"}
+ ],
+ "tables": [
+  {
+   "name": "ModelInfo",
+   "proc": "Genmod",
+   "path": "Genmod.ModelInfo",
+   "template": "Stat.Genmod.ModelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Data Set", "WORK.DOBSON", null],
+    ["Genmod", 1.0, "Distribution", "Poisson", null],
+    ["Genmod", 1.0, "Link Function", "Log", null],
+    ["Genmod", 1.0, "Dependent Variable", "counts", null]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "Genmod",
+   "path": "Genmod.NObs",
+   "template": "Stat.Genmod.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Number of Observations Read", 18.0, 18.0, 18.0, 18.0, 18.0],
+    ["Genmod", 1.0, "Number of Observations Used", 18.0, 18.0, 18.0, 18.0, 18.0]
+   ]
+  },
+  {
+   "name": "ModelFit",
+   "proc": "Genmod",
+   "path": "Genmod.ModelFit",
+   "template": "stat.genmod.ModelFit",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Criterion", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Value", "type": "num"},
+    {"name": "ValueDF", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Deviance", 16.0, 19.5165063944805, 1.21978164965503],
+    ["Genmod", 1.0, "Scaled Deviance", 16.0, 19.5165063944805, 1.21978164965503],
+    ["Genmod", 1.0, "Pearson Chi-Square", 16.0, 19.50915010072, 1.219321881295],
+    ["Genmod", 1.0, "Scaled Pearson X2", 16.0, 19.50915010072, 1.219321881295],
+    ["Genmod", 1.0, "Log Likelihood", null, 622.28135999106, null],
+    ["Genmod", 1.0, "Full Log Likelihood", null, -52.174649300318, null],
+    ["Genmod", 1.0, "AIC (smaller is better)", null, 108.349298600637, null],
+    ["Genmod", 1.0, "AICC (smaller is better)", null, 109.149298600637, null],
+    ["Genmod", 1.0, "BIC (smaller is better)", null, 110.130042116429, null]
+   ]
+  },
+  {
+   "name": "ConvergenceStatus",
+   "proc": "Genmod",
+   "path": "Genmod.ConvergenceStatus",
+   "template": "Stat.Genmod.ConvergenceStatus",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Status", "type": "num"},
+    {"name": "Reason", "type": "char"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, 0.0, "Algorithm converged."]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "Genmod",
+   "path": "Genmod.ParameterEstimates",
+   "template": "stat.genmod.parameterestimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Parameter", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "LowerWaldCL", "type": "num"},
+    {"name": "UpperWaldCL", "type": "num"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Intercept", 1.0, 2.81341090570438, 0.08164965037915, 2.65338053161095, 2.9734412797978, 1187.2923629826, 3.523995792e-260],
+    ["Genmod", 1.0, "treat", 1.0, 0.1655142994158, 0.11097919912912, -0.0520009339104, 0.38302953274196, 2.22427185914155, 0.13585669293031],
+    ["Genmod", 1.0, "Scale", 0.0, 1.0, 0.0, 1.0, 1.0, null, null]
+   ]
+  },
+  {
+   "name": "ModelInfo",
+   "proc": "Genmod",
+   "path": "Genmod.ModelInfo",
+   "template": "Stat.Genmod.ModelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Data Set", "WORK.INS", null],
+    ["Genmod", 1.0, "Distribution", "Poisson", null],
+    ["Genmod", 1.0, "Link Function", "Log", null],
+    ["Genmod", 1.0, "Dependent Variable", "claims", null],
+    ["Genmod", 1.0, "Offset Variable", "ln", null]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "Genmod",
+   "path": "Genmod.NObs",
+   "template": "Stat.Genmod.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Number of Observations Read", 16.0, 16.0, 16.0, 16.0, 16.0],
+    ["Genmod", 1.0, "Number of Observations Used", 16.0, 16.0, 16.0, 16.0, 16.0]
+   ]
+  },
+  {
+   "name": "ModelFit",
+   "proc": "Genmod",
+   "path": "Genmod.ModelFit",
+   "template": "stat.genmod.ModelFit",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Criterion", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Value", "type": "num"},
+    {"name": "ValueDF", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Deviance", 14.0, 30.1244695124615, 2.15174782231868],
+    ["Genmod", 1.0, "Scaled Deviance", 14.0, 30.1244695124615, 2.15174782231868],
+    ["Genmod", 1.0, "Pearson Chi-Square", 14.0, 28.1069214758639, 2.00763724827599],
+    ["Genmod", 1.0, "Scaled Pearson X2", 14.0, 28.1069214758639, 2.00763724827599],
+    ["Genmod", 1.0, "Log Likelihood", null, 384.089005841358, null],
+    ["Genmod", 1.0, "Full Log Likelihood", null, -46.321357309635, null],
+    ["Genmod", 1.0, "AIC (smaller is better)", null, 96.6427146192699, null],
+    ["Genmod", 1.0, "AICC (smaller is better)", null, 97.5657915423468, null],
+    ["Genmod", 1.0, "BIC (smaller is better)", null, 98.1878920637495, null]
+   ]
+  },
+  {
+   "name": "ConvergenceStatus",
+   "proc": "Genmod",
+   "path": "Genmod.ConvergenceStatus",
+   "template": "Stat.Genmod.ConvergenceStatus",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Status", "type": "num"},
+    {"name": "Reason", "type": "char"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, 0.0, "Algorithm converged."]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "Genmod",
+   "path": "Genmod.ParameterEstimates",
+   "template": "stat.genmod.parameterestimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Parameter", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "LowerWaldCL", "type": "num"},
+    {"name": "UpperWaldCL", "type": "num"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Intercept", 1.0, -3.1298160665227, 0.09325048082391, -3.3125836504786, -2.9470484825668, 1126.51109018321, 5.713635367e-247],
+    ["Genmod", 1.0, "group", 1.0, -0.2371102987213, 0.14117934420402, -0.5138167287221, 0.03959613127961, 2.82071049821838, 0.09305520419506],
+    ["Genmod", 1.0, "Scale", 0.0, 1.0, 0.0, 1.0, 1.0, null, null]
+   ]
+  },
+  {
+   "name": "ModelInfo",
+   "proc": "Genmod",
+   "path": "Genmod.ModelInfo",
+   "template": "Stat.Genmod.ModelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Data Set", "WORK.OVER", null],
+    ["Genmod", 1.0, "Distribution", "Poisson", null],
+    ["Genmod", 1.0, "Link Function", "Log", null],
+    ["Genmod", 1.0, "Dependent Variable", "y", null]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "Genmod",
+   "path": "Genmod.NObs",
+   "template": "Stat.Genmod.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Number of Observations Read", 8.0, 8.0, 8.0, 8.0, 8.0],
+    ["Genmod", 1.0, "Number of Observations Used", 8.0, 8.0, 8.0, 8.0, 8.0]
+   ]
+  },
+  {
+   "name": "ModelFit",
+   "proc": "Genmod",
+   "path": "Genmod.ModelFit",
+   "template": "stat.genmod.ModelFit",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Criterion", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Value", "type": "num"},
+    {"name": "ValueDF", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Deviance", 6.0, 7.69152505868189, 1.28192084311365],
+    ["Genmod", 1.0, "Scaled Deviance", 6.0, 7.69152505868189, 1.28192084311365],
+    ["Genmod", 1.0, "Pearson Chi-Square", 6.0, 6.06060409013885, 1.01010068168981],
+    ["Genmod", 1.0, "Scaled Pearson X2", 6.0, 6.06060409013885, 1.01010068168981],
+    ["Genmod", 1.0, "Log Likelihood", null, 34.1822130559164, null],
+    ["Genmod", 1.0, "Full Log Likelihood", null, -15.877694411572, null],
+    ["Genmod", 1.0, "AIC (smaller is better)", null, 35.7553888231439, null],
+    ["Genmod", 1.0, "AICC (smaller is better)", null, 38.1553888231439, null],
+    ["Genmod", 1.0, "BIC (smaller is better)", null, 35.9142719065036, null]
+   ]
+  },
+  {
+   "name": "ConvergenceStatus",
+   "proc": "Genmod",
+   "path": "Genmod.ConvergenceStatus",
+   "template": "Stat.Genmod.ConvergenceStatus",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Status", "type": "num"},
+    {"name": "Reason", "type": "char"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, 0.0, "Algorithm converged."]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "Genmod",
+   "path": "Genmod.ParameterEstimates",
+   "template": "stat.genmod.parameterestimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Parameter", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "LowerWaldCL", "type": "num"},
+    {"name": "UpperWaldCL", "type": "num"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["Genmod", 1.0, "Intercept", 1.0, 0.69314757465371, 0.35355332092669, 0.00019579902288, 1.38609935028455, 3.84362999673695, 0.04993530096896],
+    ["Genmod", 1.0, "x", 1.0, 1.41706562569288, 0.39408499215438, 0.64467323422254, 2.18945801716321, 12.9300479234593, 0.00032334950466],
+    ["Genmod", 1.0, "Scale", 0.0, 1.0, 0.0, 1.0, 1.0, null, null]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "DOBSON",
+   "columns": [
+    {"name": "counts", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "treat", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [18.0, 0.0],
+    [17.0, 0.0],
+    [15.0, 0.0],
+    [20.0, 0.0],
+    [10.0, 0.0],
+    [20.0, 0.0],
+    [25.0, 0.0],
+    [13.0, 0.0],
+    [12.0, 0.0],
+    [21.0, 1.0],
+    [20.0, 1.0],
+    [18.0, 1.0],
+    [23.0, 1.0],
+    [13.0, 1.0],
+    [23.0, 1.0],
+    [28.0, 1.0],
+    [16.0, 1.0],
+    [15.0, 1.0]
+   ]
+  },
+  {
+   "name": "INS",
+   "columns": [
+    {"name": "claims", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "ln", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "hours", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "group", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [2.0, 4.6052, 100.0, 0.0],
+    [3.0, 5.0106, 150.0, 0.0],
+    [5.0, 5.3471, 210.0, 0.0],
+    [7.0, 5.5607, 260.0, 0.0],
+    [11.0, 5.7991, 330.0, 0.0],
+    [18.0, 6.0162, 410.0, 0.0],
+    [28.0, 6.2538, 520.0, 0.0],
+    [41.0, 6.477, 650.0, 0.0],
+    [1.0, 4.4998, 90.0, 1.0],
+    [2.0, 4.9416, 140.0, 1.0],
+    [3.0, 5.323, 205.0, 1.0],
+    [5.0, 5.5413, 255.0, 1.0],
+    [9.0, 5.7838, 325.0, 1.0],
+    [14.0, 6.0039, 405.0, 1.0],
+    [22.0, 6.2442, 515.0, 1.0],
+    [33.0, 6.4693, 645.0, 1.0]
+   ]
+  },
+  {
+   "name": "OVER",
+   "columns": [
+    {"name": "y", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 0.0],
+    [0.0, 0.0],
+    [4.0, 0.0],
+    [3.0, 0.0],
+    [6.0, 1.0],
+    [8.0, 1.0],
+    [9.0, 1.0],
+    [10.0, 1.0]
+   ]
+  }
+ ]
+}

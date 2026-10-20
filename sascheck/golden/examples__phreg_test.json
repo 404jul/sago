@@ -1,0 +1,436 @@
+{
+ "engine": "sas",
+ "program": "examples/phreg_test.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.RATS has 40 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.15k OS Memory           29604.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1236  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Convergence criterion (GCONV=1E-8) satisfied."},
+  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.00 seconds memory              4249.15k OS Memory           31424.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1237  Switch Count  14 Page Faults                       0 Page Reclaims                     724 Page Swaps                        0 Voluntary Context Switches        115 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1904"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.EXPOSED has 40 observations and 4 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              673.81k OS Memory           29604.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1238  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           272"},
+  {"level": "NOTE", "text": "Convergence criterion (GCONV=1E-8) satisfied."},
+  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.05 seconds user cpu time       0.05 seconds system cpu time     0.01 seconds memory              3225.06k OS Memory           31424.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1239  Switch Count  14 Page Faults                       0 Page Reclaims                     724 Page Swaps                        0 Voluntary Context Switches        115 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           1920"},
+  {"level": "NOTE", "text": "SAS went to a new line when INPUT statement reached past the end of a line."},
+  {"level": "NOTE", "text": "The data set WORK.TIES has 18 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              672.81k OS Memory           29604.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1240  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        13 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "PUT", "text": "148        proc phreg data=ties ties=efron;"},
+  {"level": "PUT", "text": "                                ____"},
+  {"level": "PUT", "text": "                                22"},
+  {"level": "PUT", "text": "                                76"},
+  {"level": "ERROR", "text": "Syntax error, expecting one of the following: ;, (, ALPHA, ATRISK, BRIEF, BRIEFSUMMARY, CONCORDANCE, COVM, COVOUT, COVS, DATA, DETAILS, EV, EXPLVAR, FAST, IN, INEST, MULTIPASS, NAMELEN, NOPRINT, NOSUMMARY, OUT, OUTEST, PLOT, PLOTS, PRINT, ROCOPTIONS, SIMPLE, SUREV, TAU, TRACE, ZPH."},
+  {"level": "ERROR", "text": "Syntax error, statement will be ignored."},
+  {"level": "NOTE", "text": "The SAS System stopped processing this step because of errors."},
+  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              364.62k OS Memory           29344.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1241  Switch Count  0 Page Faults                       0 Page Reclaims                     53 Page Swaps                        0 Voluntary Context Switches        0 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           0"},
+  {"level": "PUT", "text": "152        proc phreg data=ties ties=breslow;"},
+  {"level": "PUT", "text": "                                ____"},
+  {"level": "PUT", "text": "                                22"},
+  {"level": "PUT", "text": "                                76"},
+  {"level": "ERROR", "text": "Syntax error, expecting one of the following: ;, (, ALPHA, ATRISK, BRIEF, BRIEFSUMMARY, CONCORDANCE, COVM, COVOUT, COVS, DATA, DETAILS, EV, EXPLVAR, FAST, IN, INEST, MULTIPASS, NAMELEN, NOPRINT, NOSUMMARY, OUT, OUTEST, PLOT, PLOTS, PRINT, ROCOPTIONS, SIMPLE, SUREV, TAU, TRACE, ZPH."},
+  {"level": "ERROR", "text": "Syntax error, statement will be ignored."},
+  {"level": "NOTE", "text": "The SAS System stopped processing this step because of errors."},
+  {"level": "NOTE", "text": "PROCEDURE PHREG used (Total process time): real time           0.00 seconds user cpu time       0.01 seconds system cpu time     0.00 seconds memory              476.75k OS Memory           29344.00k Timestamp           10/20/2026 06:00:50 AM Step Count                        1242  Switch Count  0 Page Faults                       0 Page Reclaims                     53 Page Swaps                        0 Voluntary Context Switches        0 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           0"}
+ ],
+ "tables": [
+  {
+   "name": "ModelInfo",
+   "proc": "PHReg",
+   "path": "PHReg.ModelInfo",
+   "template": "Stat.Phreg.ModelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Description", "type": "char"},
+    {"name": "cValue", "type": "char"},
+    {"name": "nValue", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Data Set", "WORK.RATS", null],
+    ["PHReg", 1.0, "Dependent Variable", "days", null],
+    ["PHReg", 1.0, "Censoring Variable", "status", null],
+    ["PHReg", 1.0, "Censoring Value(s)", "0", 0.0],
+    ["PHReg", 1.0, "Ties Handling", "BRESLOW", null]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "PHReg",
+   "path": "PHReg.NObs",
+   "template": "Stat.Phreg.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, 40.0, 40.0, 40.0, 40.0]
+   ]
+  },
+  {
+   "name": "CensoredSummary",
+   "proc": "PHReg",
+   "path": "PHReg.CensoredSummary",
+   "template": "Stat.Phreg.CensoredSummary",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Total", "type": "num"},
+    {"name": "Event", "type": "num"},
+    {"name": "Censored", "type": "num"},
+    {"name": "PctCens", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, 40.0, 36.0, 4.0, 10.0]
+   ]
+  },
+  {
+   "name": "ConvergenceStatus",
+   "proc": "PHReg",
+   "path": "PHReg.ConvergenceStatus",
+   "template": "Stat.Phreg.ConvergenceStatus",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Reason", "type": "char"},
+    {"name": "Status", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Convergence criterion (GCONV=1E-8) satisfied.", 0.0]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "PHReg",
+   "path": "PHReg.FitStatistics",
+   "template": "Stat.Phreg.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Criterion", "type": "char"},
+    {"name": "WithoutCovariates", "type": "num"},
+    {"name": "WithCovariates", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "-2 LOG L", 204.316662597283, 201.438258001551],
+    ["PHReg", 1.0, "AIC", 204.316662597283, 203.438258001551],
+    ["PHReg", 1.0, "SBC", 204.316662597283, 205.021776940007]
+   ]
+  },
+  {
+   "name": "GlobalTests",
+   "proc": "PHReg",
+   "path": "PHReg.GlobalTests",
+   "template": "Stat.Phreg.GlobalTests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Test", "type": "char"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Likelihood Ratio", 2.87840459573235, 1.0, 0.08977492835226],
+    ["PHReg", 1.0, "Score", 3.00009428220397, 1.0, 0.08325967132873],
+    ["PHReg", 1.0, "Wald", 2.92538318858528, 1.0, 0.08719652132588]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "PHReg",
+   "path": "PHReg.ParameterEstimates",
+   "template": "Stat.Phreg.ParameterEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Parameter", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"},
+    {"name": "HazardRatio", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "group", 1.0, -0.5959017383802, 0.34840411171253, 2.92538318858528, 0.08719652132588, 0.55106542491234]
+   ]
+  },
+  {
+   "name": "ModelInfo",
+   "proc": "PHReg",
+   "path": "PHReg.ModelInfo",
+   "template": "Stat.Phreg.ModelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Description", "type": "char"},
+    {"name": "cValue", "type": "char"},
+    {"name": "nValue", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Data Set", "WORK.EXPOSED", null],
+    ["PHReg", 1.0, "Dependent Variable", "days", null],
+    ["PHReg", 1.0, "Censoring Variable", "status", null],
+    ["PHReg", 1.0, "Censoring Value(s)", "0", 0.0],
+    ["PHReg", 1.0, "Ties Handling", "BRESLOW", null]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "PHReg",
+   "path": "PHReg.NObs",
+   "template": "Stat.Phreg.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, 40.0, 40.0, 40.0, 40.0]
+   ]
+  },
+  {
+   "name": "CensoredSummary",
+   "proc": "PHReg",
+   "path": "PHReg.CensoredSummary",
+   "template": "Stat.Phreg.CensoredSummary",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Total", "type": "num"},
+    {"name": "Event", "type": "num"},
+    {"name": "Censored", "type": "num"},
+    {"name": "PctCens", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, 40.0, 36.0, 4.0, 10.0]
+   ]
+  },
+  {
+   "name": "ConvergenceStatus",
+   "proc": "PHReg",
+   "path": "PHReg.ConvergenceStatus",
+   "template": "Stat.Phreg.ConvergenceStatus",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Reason", "type": "char"},
+    {"name": "Status", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Convergence criterion (GCONV=1E-8) satisfied.", 0.0]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "PHReg",
+   "path": "PHReg.FitStatistics",
+   "template": "Stat.Phreg.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Criterion", "type": "char"},
+    {"name": "WithoutCovariates", "type": "num"},
+    {"name": "WithCovariates", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "-2 LOG L", 204.445739639558, 192.453166379295],
+    ["PHReg", 1.0, "AIC", 204.445739639558, 196.453166379295],
+    ["PHReg", 1.0, "SBC", 204.445739639558, 199.620204256208]
+   ]
+  },
+  {
+   "name": "GlobalTests",
+   "proc": "PHReg",
+   "path": "PHReg.GlobalTests",
+   "template": "Stat.Phreg.GlobalTests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Test", "type": "char"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "Likelihood Ratio", 11.9925732602627, 2.0, 0.00248797381138],
+    ["PHReg", 1.0, "Score", 11.5064211936509, 2.0, 0.00317257855699],
+    ["PHReg", 1.0, "Wald", 10.698984768539, 2.0, 0.00475056184739]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "PHReg",
+   "path": "PHReg.ParameterEstimates",
+   "template": "Stat.Phreg.ParameterEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Parameter", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"},
+    {"name": "HazardRatio", "type": "num"}
+   ],
+   "rows": [
+    ["PHReg", 1.0, "treatment", 1.0, -1.1848710244907, 0.40621389704612, 8.50810036094582, 0.00353568975296, 0.30578561581103],
+    ["PHReg", 1.0, "sex", 1.0, -1.0163544584953, 0.39709466605849, 6.55091985663782, 0.01048299488878, 0.36191190305676]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "EXPOSED",
+   "columns": [
+    {"name": "days", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "status", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "treatment", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "sex", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [179.0, 1.0, 1.0, 2.0],
+    [378.0, 0.0, 1.0, 1.0],
+    [256.0, 1.0, 1.0, 1.0],
+    [355.0, 1.0, 1.0, 1.0],
+    [262.0, 1.0, 1.0, 2.0],
+    [319.0, 1.0, 1.0, 2.0],
+    [256.0, 1.0, 1.0, 1.0],
+    [256.0, 1.0, 1.0, 1.0],
+    [255.0, 1.0, 1.0, 2.0],
+    [171.0, 1.0, 1.0, 1.0],
+    [224.0, 0.0, 1.0, 1.0],
+    [325.0, 1.0, 1.0, 2.0],
+    [225.0, 1.0, 1.0, 1.0],
+    [325.0, 1.0, 1.0, 2.0],
+    [287.0, 1.0, 1.0, 2.0],
+    [217.0, 1.0, 1.0, 1.0],
+    [319.0, 1.0, 1.0, 2.0],
+    [255.0, 1.0, 1.0, 1.0],
+    [264.0, 1.0, 1.0, 2.0],
+    [256.0, 1.0, 1.0, 1.0],
+    [237.0, 0.0, 0.0, 1.0],
+    [291.0, 1.0, 0.0, 2.0],
+    [156.0, 1.0, 0.0, 1.0],
+    [323.0, 1.0, 0.0, 2.0],
+    [270.0, 1.0, 0.0, 2.0],
+    [253.0, 1.0, 0.0, 2.0],
+    [257.0, 1.0, 0.0, 2.0],
+    [206.0, 1.0, 0.0, 1.0],
+    [242.0, 1.0, 0.0, 2.0],
+    [206.0, 1.0, 0.0, 1.0],
+    [157.0, 1.0, 0.0, 1.0],
+    [237.0, 1.0, 0.0, 2.0],
+    [249.0, 1.0, 0.0, 2.0],
+    [211.0, 1.0, 0.0, 1.0],
+    [180.0, 1.0, 0.0, 1.0],
+    [229.0, 1.0, 0.0, 1.0],
+    [226.0, 1.0, 0.0, 1.0],
+    [234.0, 1.0, 0.0, 1.0],
+    [268.0, 0.0, 0.0, 2.0],
+    [209.0, 1.0, 0.0, 1.0]
+   ]
+  },
+  {
+   "name": "RATS",
+   "columns": [
+    {"name": "days", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "status", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "group", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [143.0, 1.0, 0.0],
+    [164.0, 1.0, 0.0],
+    [188.0, 1.0, 0.0],
+    [188.0, 1.0, 0.0],
+    [190.0, 1.0, 0.0],
+    [192.0, 1.0, 0.0],
+    [206.0, 1.0, 0.0],
+    [209.0, 1.0, 0.0],
+    [213.0, 1.0, 0.0],
+    [216.0, 1.0, 0.0],
+    [220.0, 1.0, 0.0],
+    [227.0, 1.0, 0.0],
+    [230.0, 1.0, 0.0],
+    [234.0, 1.0, 0.0],
+    [246.0, 1.0, 0.0],
+    [265.0, 1.0, 0.0],
+    [304.0, 1.0, 0.0],
+    [216.0, 0.0, 0.0],
+    [244.0, 0.0, 0.0],
+    [142.0, 1.0, 1.0],
+    [156.0, 1.0, 1.0],
+    [163.0, 1.0, 1.0],
+    [198.0, 1.0, 1.0],
+    [205.0, 1.0, 1.0],
+    [232.0, 1.0, 1.0],
+    [232.0, 1.0, 1.0],
+    [233.0, 1.0, 1.0],
+    [233.0, 1.0, 1.0],
+    [233.0, 1.0, 1.0],
+    [233.0, 1.0, 1.0],
+    [239.0, 1.0, 1.0],
+    [240.0, 1.0, 1.0],
+    [261.0, 1.0, 1.0],
+    [280.0, 1.0, 1.0],
+    [280.0, 1.0, 1.0],
+    [296.0, 1.0, 1.0],
+    [296.0, 1.0, 1.0],
+    [323.0, 1.0, 1.0],
+    [204.0, 0.0, 1.0],
+    [344.0, 0.0, 1.0]
+   ]
+  },
+  {
+   "name": "TIES",
+   "columns": [
+    {"name": "months", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "status", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 1.0, 0.0],
+    [2.0, 1.0, 1.0],
+    [2.0, 0.0, 0.0],
+    [3.0, 1.0, 1.0],
+    [3.0, 0.0, 0.0],
+    [4.0, 1.0, 1.0],
+    [4.0, 0.0, 0.0],
+    [5.0, 1.0, 1.0],
+    [5.0, 0.0, 0.0],
+    [6.0, 1.0, 1.0],
+    [6.0, 0.0, 0.0],
+    [7.0, 1.0, 1.0],
+    [1.0, 1.0, 1.0],
+    [2.0, 0.0, 0.0],
+    [3.0, 0.0, 0.0],
+    [4.0, 0.0, 0.0],
+    [5.0, 1.0, 1.0],
+    [6.0, 1.0, 1.0]
+   ]
+  }
+ ]
+}
