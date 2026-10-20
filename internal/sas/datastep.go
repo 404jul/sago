@@ -28,6 +28,7 @@ type dsVar struct {
 	lenSet   bool // length fixed by LENGTH/ATTRIB/INPUT/first assignment/data set
 	retain   bool // RETAIN, sum statement, initial array values
 	auto     bool // automatic or temporary variable: never written to output
+	noOut    bool // IN=/END=/NOBS= variable: hidden unless explicitly kept
 	assigned bool // receives a value somewhere (otherwise "uninitialized")
 	fromData bool // read by SET/MERGE: retained
 	init     *Value
@@ -314,6 +315,18 @@ func (st *dsStep) invalidNumeric(s string) {
 	st.setError()
 }
 
+// invalidInputData queues SAS's invalid-data block for the current iteration:
+// the NOTE (flushed by endIteration), the ruler with the raw record and the
+// PDV dump (via _ERROR_).
+func (st *dsStep) invalidInputData(v *dsVar, lineNo, colStart, colEnd int) {
+	if st.errDumps < dsMaxErrors {
+		st.pendNotes = append(st.pendNotes, fmt.Sprintf("Invalid data for %s in line %d %d-%d.",
+			strings.ToLower(v.Name), lineNo, colStart, colEnd))
+	}
+	st.pendRule = st.curInfile
+	st.setError()
+}
+
 func (st *dsStep) setError() { st.pdv[st.eVar.slot] = Value{Num: 1} }
 
 // note logs a runtime note subject to the ERRORS= style limit.
@@ -577,7 +590,7 @@ func (st *dsStep) buildOutputs() error {
 	for _, o := range st.outs {
 		var sel []*dsVar
 		for _, v := range st.vars {
-			if v.auto || drop[v] || (hasKeep && !keep[v]) {
+			if v.auto || drop[v] || (hasKeep && !keep[v]) || (v.noOut && !(hasKeep && keep[v])) {
 				continue
 			}
 			sel = append(sel, v)
@@ -809,6 +822,18 @@ func (st *dsStep) track(line, miss0, inv0 int) {
 		}
 		st.invAt[line] += c.InvalidOps - inv0
 		st.note(fmt.Sprintf("Invalid argument or division by zero at line %d.", line))
+		st.setError()
+	}
+	if c.InvalidArg != 0 {
+		if _, ok := st.invAt[line]; !ok {
+			st.invOrder = append(st.invOrder, line)
+		}
+		st.invAt[line] += c.InvalidArg
+		c.InvalidArg = 0
+	}
+	for c.DivZero > 0 {
+		c.DivZero--
+		st.note(fmt.Sprintf("Division by zero detected at line %d column 1.", line))
 		st.setError()
 	}
 }

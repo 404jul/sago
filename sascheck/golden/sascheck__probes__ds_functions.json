@@ -1,0 +1,48 @@
+{
+ "engine": "sas",
+ "program": "sascheck/probes/ds_functions.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "The data set WORK.F has 1 observations and 28 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              752.65k OS Memory           21924.00k Timestamp           10/20/2026 05:33:23 AM Step Count                        196  Switch Count  2 Page Faults                       0 Page Reclaims                     126 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"}
+ ],
+ "tables": [],
+ "datasets": [
+  {
+   "name": "F",
+   "columns": [
+    {"name": "r1", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "r2", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "r3", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "r4", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "md", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "i1", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "f1", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "c1", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "s1", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "m1", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "lt", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "eq", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "ab", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "eqp", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "k", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "nx", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "ne", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "mdy1", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "wd", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "sc1", "type": "char", "length": 6, "format": "", "label": ""},
+    {"name": "sc2", "type": "char", "length": 5, "format": "", "label": ""},
+    {"name": "sb", "type": "char", "length": 6, "format": "", "label": ""},
+    {"name": "cx", "type": "char", "length": 200, "format": "", "label": ""},
+    {"name": "cp", "type": "char", "length": 5, "format": "", "label": ""},
+    {"name": "up", "type": "char", "length": 5, "format": "", "label": ""},
+    {"name": "ix", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "tr", "type": "char", "length": 3, "format": "", "label": ""},
+    {"name": "st", "type": "char", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [3.0, -3.0, 0.2, 1.01, -2.0, -2.0, -3.0, -2.0, 1.0, 3.0, 1.0, 0.0, 0.0, 1.0, 1.0, 21946.0, 21974.0, 21974.0, 4.0, "c", "c", "bcd", "a-b", "abc", "MIXED", 3.0, "xyc", "pad|"]
+   ]
+  }
+ ]
+}

@@ -90,6 +90,9 @@ func (f *FormatSpec) String() string {
 func FormatValue(v Value, f *FormatSpec) string {
 	if v.Char {
 		s := strings.TrimRight(v.Str, " ")
+		if f != nil && f.Name == "QUOTE" {
+			s = `"` + strings.ReplaceAll(s, `"`, `""`) + `"`
+		}
 		if f != nil && f.HasW && f.W < len(s) {
 			s = s[:f.W]
 		}
@@ -183,52 +186,56 @@ func FormatByName(v Value, name string) string {
 	return FormatValue(v, ParseFormat(name))
 }
 
-// formatBest mimics BESTw.: as many significant digits as fit in w characters.
+// formatBest mimics BESTw.: the shortest representation that fits the width,
+// preferring fixed notation with the leading "0." kept for magnitudes
+// >= 1e-4 and scientific notation for smaller ones.
 func formatBest(x float64, w int) string {
-	if math.IsNaN(x) {
+	if math.IsNaN(x) || math.IsInf(x, 0) {
 		return "."
 	}
-	if math.IsInf(x, 0) {
-		return "."
-	}
-	if x == math.Trunc(x) && math.Abs(x) < 1e15 {
-		s := strconv.FormatFloat(x, 'f', 0, 64)
-		if len(s) <= w {
-			return s
-		}
-	}
-	// shortest exact repr first
-	s := strconv.FormatFloat(x, 'f', -1, 64)
-	if len(s) <= w && !(math.Abs(x) < 1e-4 && x != 0 && sigDigits(s) > w-6) {
-		return trimLeadingZero(s, w)
+	if x == 0 {
+		return "0"
 	}
 	ax := math.Abs(x)
-	if ax >= 1e-4 && ax < math.Pow(10, float64(w-1)) {
+	fixed := func(d int) string {
+		s := strconv.FormatFloat(x, 'f', d, 64)
+		if strings.Contains(s, ".") {
+			s = strings.TrimRight(strings.TrimRight(s, "0"), ".")
+		}
+		return s
+	}
+	if ax >= 1e-4 {
+		// most decimals that fit (d=0 only for whole numbers: a fractional
+		// value rounded to an integer is a fit failure)
 		for d := w; d >= 0; d-- {
-			s = strconv.FormatFloat(x, 'f', d, 64)
-			if strings.Contains(s, ".") {
-				s = strings.TrimRight(strings.TrimRight(s, "0"), ".")
+			if d == 0 && x != math.Trunc(x) {
+				continue
 			}
+			if s := fixed(d); len(s) <= w {
+				return s
+			}
+		}
+		// tight width: drop the leading zero ("0.5" -> ".5")
+		for d := w; d >= 1; d-- {
+			s := trimLeadingZero(fixed(d), w)
 			if len(s) <= w {
 				return s
 			}
-			if t := trimLeadingZero(s, w); len(t) <= w {
-				return t
-			}
 		}
 	}
-	// scientific
+	return sciBest(x, w)
+}
+
+// sciBest picks the most precise scientific form that fits w characters.
+func sciBest(x float64, w int) string {
 	for d := w; d >= 0; d-- {
-		s = strconv.FormatFloat(x, 'E', d, 64)
+		s := strconv.FormatFloat(x, 'E', d, 64)
 		mant, exp, _ := strings.Cut(s, "E")
 		if strings.Contains(mant, ".") {
 			mant = strings.TrimRight(strings.TrimRight(mant, "0"), ".")
 		}
 		e, _ := strconv.Atoi(exp)
 		s = mant + "E" + strconv.Itoa(e)
-		if e >= 0 {
-			s = mant + "E" + strconv.Itoa(e)
-		}
 		if len(s) <= w {
 			return s
 		}

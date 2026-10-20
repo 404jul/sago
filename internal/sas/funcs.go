@@ -629,17 +629,70 @@ func init() {
 		if math.IsNaN(d) {
 			return Missing
 		}
+		align := "BEGINNING"
+		if len(args) >= 4 {
+			align = strings.ToUpper(strings.TrimSpace(args[3].AsStr()))
+		}
 		t := DateToTime(d)
+		clampDay := func(y, m, day int) float64 {
+			last := int(MDY(m%12+1, 1, y+(m/12)) - MDY(m, 1, y))
+			if day > last {
+				day = last
+			}
+			if day < 1 {
+				day = 1
+			}
+			return MDY(m, day, y)
+		}
+		shifted := func(start float64, length int) float64 {
+			switch align {
+			case "MIDDLE":
+				return start + math.Floor(float64(length)/2)
+			case "END":
+				return start + float64(length-1)
+			default: // BEGINNING
+				return start
+			}
+		}
 		switch iv {
 		case "DAY":
+			if align == "SAMEDAY" {
+				return NumV(d + float64(n))
+			}
 			return NumV(math.Floor(d) + float64(n))
 		case "WEEK":
-			return NumV(math.Floor(d) - float64(t.Weekday()) + float64(7*n))
+			start := math.Floor(d) - float64(t.Weekday()) + float64(7*n)
+			if align == "SAMEDAY" {
+				return NumV(start + float64(t.Day()%7))
+			}
+			return NumV(shifted(start, 7))
 		case "MONTH":
 			tot := t.Year()*12 + int(t.Month()) - 1 + n
-			return NumV(MDY(tot%12+1, 1, tot/12))
+			y, m := tot/12, tot%12+1
+			start := MDY(m, 1, y)
+			length := int(MDY(m%12+1, 1, y+(m/12)) - start)
+			if align == "SAMEDAY" {
+				return NumV(clampDay(y, m, t.Day()))
+			}
+			return NumV(shifted(start, length))
+		case "QTR":
+			m0 := (int(t.Month())-1)/3*3 + 1
+			tot := t.Year()*12 + m0 - 1 + 3*n
+			y, m := tot/12, tot%12+1
+			start := MDY(m, 1, y)
+			length := int(MDY(m%12+1, 1, y+(m/12)) - start)
+			if align == "SAMEDAY" {
+				return NumV(clampDay(y, m, t.Day()))
+			}
+			return NumV(shifted(start, length))
 		case "YEAR":
-			return NumV(MDY(1, 1, t.Year()+n))
+			y := t.Year() + n
+			start := MDY(1, 1, y)
+			length := int(MDY(1, 1, y+1) - start)
+			if align == "SAMEDAY" {
+				return NumV(clampDay(y, 1, t.Day()))
+			}
+			return NumV(shifted(start, length))
 		}
 		return invalid(c, call)
 	}

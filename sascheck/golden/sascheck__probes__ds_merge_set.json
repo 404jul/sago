@@ -1,0 +1,130 @@
+{
+ "engine": "sas",
+ "program": "sascheck/probes/ds_merge_set.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "The data set WORK.A has 4 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.01 seconds system cpu time     0.00 seconds memory              666.03k OS Memory           21924.00k Timestamp           10/20/2026 05:33:26 AM Step Count                        241  Switch Count  2 Page Faults                       0 Page Reclaims                     105 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "The data set WORK.B has 4 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.03k OS Memory           21924.00k Timestamp           10/20/2026 05:33:26 AM Step Count                        242  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "There were 4 observations read from the data set WORK.A."},
+  {"level": "NOTE", "text": "There were 4 observations read from the data set WORK.B."},
+  {"level": "NOTE", "text": "The data set WORK.M has 6 observations and 5 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              1381.93k OS Memory           22700.00k Timestamp           10/20/2026 05:33:26 AM Step Count                        243  Switch Count  2 Page Faults                       0 Page Reclaims                     191 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "There were 4 observations read from the data set WORK.A."},
+  {"level": "NOTE", "text": "There were 4 observations read from the data set WORK.B."},
+  {"level": "NOTE", "text": "The data set WORK.INTER has 8 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              1377.28k OS Memory           22700.00k Timestamp           10/20/2026 05:33:26 AM Step Count                        244  Switch Count  2 Page Faults                       0 Page Reclaims                     173 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "There were 4 observations read from the data set WORK.A."},
+  {"level": "NOTE", "text": "The data set WORK.LAGGED has 4 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.01 seconds system cpu time     0.00 seconds memory              943.90k OS Memory           22440.00k Timestamp           10/20/2026 05:33:26 AM Step Count                        245  Switch Count  2 Page Faults                       0 Page Reclaims                     121 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "The data set WORK.S has 4 observations and 1 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              666.03k OS Memory           22180.00k Timestamp           10/20/2026 05:33:26 AM Step Count                        246  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        10 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           272"},
+  {"level": "NOTE", "text": "There were 4 observations read from the data set WORK.S."},
+  {"level": "NOTE", "text": "The data set WORK.SORTED has 4 observations and 1 variables."},
+  {"level": "NOTE", "text": "PROCEDURE SORT used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              1217.09k OS Memory           22700.00k Timestamp           10/20/2026 05:33:26 AM Step Count                        247  Switch Count  2 Page Faults                       0 Page Reclaims                     147 Page Swaps                        0 Voluntary Context Switches        10 Involuntary Context Switches      1 Block Input Operations            0 Block Output Operations           272"}
+ ],
+ "tables": [],
+ "datasets": [
+  {
+   "name": "A",
+   "columns": [
+    {"name": "id", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 10.0],
+    [1.0, 11.0],
+    [2.0, 20.0],
+    [3.0, 30.0]
+   ]
+  },
+  {
+   "name": "B",
+   "columns": [
+    {"name": "id", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "y", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 100.0],
+    [2.0, 200.0],
+    [2.0, 201.0],
+    [4.0, 400.0]
+   ]
+  },
+  {
+   "name": "INTER",
+   "columns": [
+    {"name": "id", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "y", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 10.0, null],
+    [1.0, 11.0, null],
+    [1.0, null, 100.0],
+    [2.0, 20.0, null],
+    [2.0, null, 200.0],
+    [2.0, null, 201.0],
+    [3.0, 30.0, null],
+    [4.0, null, 400.0]
+   ]
+  },
+  {
+   "name": "LAGGED",
+   "columns": [
+    {"name": "id", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "pl", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 10.0, null],
+    [1.0, 11.0, null],
+    [2.0, 20.0, null],
+    [3.0, 30.0, 11.0]
+   ]
+  },
+  {
+   "name": "M",
+   "columns": [
+    {"name": "id", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "y", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "fa", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "fb", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 10.0, 100.0, 1.0, 1.0],
+    [1.0, 11.0, 100.0, 1.0, 1.0],
+    [2.0, 20.0, 200.0, 1.0, 1.0],
+    [2.0, 20.0, 201.0, 1.0, 1.0],
+    [3.0, 30.0, null, 1.0, 0.0],
+    [4.0, null, 400.0, 0.0, 1.0]
+   ]
+  },
+  {
+   "name": "S",
+   "columns": [
+    {"name": "k", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [3.0],
+    [null],
+    [1.0],
+    [-2.0]
+   ]
+  },
+  {
+   "name": "SORTED",
+   "columns": [
+    {"name": "k", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [null],
+    [-2.0],
+    [1.0],
+    [3.0]
+   ]
+  }
+ ]
+}

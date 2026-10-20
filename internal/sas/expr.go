@@ -26,7 +26,9 @@ type EvalCtx struct {
 	State map[*Call]any
 
 	MissingOps int // "Missing values were generated" counter
-	InvalidOps int // invalid argument / division by zero counter
+	InvalidOps int // invalid argument counter
+	DivZero    int // division by zero counter
+	InvalidArg int // invalid function argument counter (finish-note places only)
 	ConvNotes  int // char<->num conversion counter
 }
 
@@ -184,7 +186,7 @@ func (n *Binary) Eval(c *EvalCtx) Value {
 		return NumV(a * b)
 	case "/":
 		if b == 0 {
-			c.InvalidOps++
+			c.DivZero++
 			return Missing
 		}
 		return NumV(a / b)

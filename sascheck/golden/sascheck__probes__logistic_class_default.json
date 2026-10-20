@@ -1,0 +1,268 @@
+{
+ "engine": "sas",
+ "program": "sascheck/probes/logistic_class_default.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "The data set WORK.TRIAL has 12 observations and 4 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              669.90k OS Memory           21924.00k Timestamp           10/20/2026 05:33:29 AM Step Count                        287  Switch Count  2 Page Faults                       0 Page Reclaims                     111 Page Swaps                        0 Voluntary Context Switches        12 Involuntary Context Switches      2 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "PROC LOGISTIC is modeling the probability that resp=1."},
+  {"level": "NOTE", "text": "Convergence criterion (GCONV=1E-8) satisfied."},
+  {"level": "NOTE", "text": "There were 12 observations read from the data set WORK.TRIAL."},
+  {"level": "NOTE", "text": "PROCEDURE LOGISTIC used (Total process time): real time           0.07 seconds user cpu time       0.07 seconds system cpu time     0.00 seconds memory              3668.53k OS Memory           23992.00k Timestamp           10/20/2026 05:33:30 AM Step Count                        288  Switch Count  22 Page Faults                       0 Page Reclaims                     1103 Page Swaps                        0 Voluntary Context Switches        157 Involuntary Context Switches      3 Block Input Operations            0 Block Output Operations           2960"}
+ ],
+ "tables": [
+  {
+   "name": "ModelInfo",
+   "proc": "Logistic",
+   "path": "Logistic.ModelInfo",
+   "template": "Stat.Logistic.ModelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Description", "type": "char"},
+    {"name": "Value", "type": "char"},
+    {"name": "nValue1", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "Data Set", "WORK.TRIAL", null],
+    ["Logistic", 1.0, "Response Variable", "resp", null],
+    ["Logistic", 1.0, "Number of Response Levels", "2", 2.0],
+    ["Logistic", 1.0, "Frequency Variable", "count", null],
+    ["Logistic", 1.0, "Model", "binary logit", null],
+    ["Logistic", 1.0, "Optimization Technique", "Fisher's scoring", null]
+   ]
+  },
+  {
+   "name": "NObs",
+   "proc": "Logistic",
+   "path": "Logistic.NObs",
+   "template": "Stat.Logistic.NObs",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label", "type": "char"},
+    {"name": "N", "type": "num"},
+    {"name": "NObsRead", "type": "num"},
+    {"name": "NObsUsed", "type": "num"},
+    {"name": "SumFreqsRead", "type": "num"},
+    {"name": "SumFreqsUsed", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "Number of Observations Read", 12.0, 12.0, 12.0, 169.0, 169.0],
+    ["Logistic", 1.0, "Number of Observations Used", 12.0, 12.0, 12.0, 169.0, 169.0],
+    ["Logistic", 1.0, "Sum of Frequencies Read", 169.0, 12.0, 12.0, 169.0, 169.0],
+    ["Logistic", 1.0, "Sum of Frequencies Used", 169.0, 12.0, 12.0, 169.0, 169.0]
+   ]
+  },
+  {
+   "name": "ResponseProfile",
+   "proc": "Logistic",
+   "path": "Logistic.ResponseProfile",
+   "template": "Stat.Logistic.ResponseProfile",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "OrderedValue", "type": "num"},
+    {"name": "Outcome", "type": "char"},
+    {"name": "Count", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, 1.0, "       1", 90.0],
+    ["Logistic", 1.0, 2.0, "       0", 79.0]
+   ]
+  },
+  {
+   "name": "ClassLevelInfo",
+   "proc": "Logistic",
+   "path": "Logistic.ClassLevelInfo",
+   "template": "Stat.Logistic.ClassLevelInfo",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Class", "type": "char"},
+    {"name": "control_var", "type": "char"},
+    {"name": "Value", "type": "char"},
+    {"name": "X1", "type": "num"},
+    {"name": "X2", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "trt", "0", "A", 1.0, 0.0],
+    ["Logistic", 1.0, "", "0", "B", 0.0, 1.0],
+    ["Logistic", 1.0, "", "0", "C", -1.0, -1.0]
+   ]
+  },
+  {
+   "name": "ConvergenceStatus",
+   "proc": "Logistic",
+   "path": "Logistic.ConvergenceStatus",
+   "template": "Stat.Logistic.MConvergenceStatus",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "NullModel", "type": "num"},
+    {"name": "Reason", "type": "char"},
+    {"name": "Status", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, 0.0, "Convergence criterion (GCONV=1E-8) satisfied.", 0.0]
+   ]
+  },
+  {
+   "name": "FitStatistics",
+   "proc": "Logistic",
+   "path": "Logistic.FitStatistics",
+   "template": "Stat.Logistic.FitStatistics",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "RowId", "type": "char"},
+    {"name": "Criterion", "type": "char"},
+    {"name": "InterceptOnly", "type": "num"},
+    {"name": "InterceptAndCovariates", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "AIC", "AIC", 235.567264294762, 217.1514787525],
+    ["Logistic", 1.0, "SBC", "SC", 238.697163009685, 229.671073612193],
+    ["Logistic", 1.0, "M2LOGL", "-2 Log L", 233.567264294762, 209.1514787525]
+   ]
+  },
+  {
+   "name": "GlobalTests",
+   "proc": "Logistic",
+   "path": "Logistic.GlobalTests",
+   "template": "Stat.Logistic.GlobalTests",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Test", "type": "char"},
+    {"name": "ChiSq", "type": "num"},
+    {"name": "DF", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "Likelihood Ratio", 24.4157855422614, 3.0, 2.045312142e-05],
+    ["Logistic", 1.0, "Score", 23.2056846284722, 3.0, 3.658636878e-05],
+    ["Logistic", 1.0, "Wald", 20.9840272635315, 3.0, 0.00010608334179]
+   ]
+  },
+  {
+   "name": "ModelANOVA",
+   "proc": "Logistic",
+   "path": "Logistic.ModelANOVA",
+   "template": "Stat.Logistic.Type3Analysis",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "WaldChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "trt", 2.0, 17.3717816942495, 0.00016895285489],
+    ["Logistic", 1.0, "dose", 1.0, 4.78867445777816, 0.02864746471025]
+   ]
+  },
+  {
+   "name": "ParameterEstimates",
+   "proc": "Logistic",
+   "path": "Logistic.ParameterEstimates",
+   "template": "Stat.Logistic.ParameterEstimates",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Variable", "type": "char"},
+    {"name": "ClassVal0", "type": "char"},
+    {"name": "DF", "type": "num"},
+    {"name": "Estimate", "type": "num"},
+    {"name": "StdErr", "type": "num"},
+    {"name": "WaldChiSq", "type": "num"},
+    {"name": "ProbChiSq", "type": "num"},
+    {"name": "_ESTTYPE_", "type": "char"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "Intercept", "", 1.0, -0.9383003172648, 0.51543350625133, 3.31389262566728, 0.06869658829263, "MLE"],
+    ["Logistic", 1.0, "trt", "A", 1.0, -0.1613695196663, 0.22980386865278, 0.49309243697379, 0.48255107262745, "MLE"],
+    ["Logistic", 1.0, "trt", "B", 1.0, -0.7836907952939, 0.23585720754849, 11.040562154062, 0.00089139827881, "MLE"],
+    ["Logistic", 1.0, "dose", "", 1.0, 0.73069074456876, 0.33390732726679, 4.78867445777816, 0.02864746471025, "MLE"]
+   ]
+  },
+  {
+   "name": "OddsRatios",
+   "proc": "Logistic",
+   "path": "Logistic.OddsRatios",
+   "template": "Stat.Logistic.OddsRatios",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Effect", "type": "char"},
+    {"name": "OddsRatioEst", "type": "num"},
+    {"name": "LowerCL", "type": "num"},
+    {"name": "UpperCL", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "trt  A vs C", 0.33073764386082, 0.14847798245503, 0.73672464602443],
+    ["Logistic", 1.0, "trt  B vs C", 0.17750595696668, 0.07810743959195, 0.40339774192141],
+    ["Logistic", 1.0, "dose", 2.0765144534872, 1.07922631449803, 3.99537355382852]
+   ]
+  },
+  {
+   "name": "Association",
+   "proc": "Logistic",
+   "path": "Logistic.Association",
+   "template": "Stat.Logistic.Association",
+   "captured": true,
+   "columns": [
+    {"name": "_Proc_", "type": "char"},
+    {"name": "_Run_", "type": "num"},
+    {"name": "Label1", "type": "char"},
+    {"name": "cValue1", "type": "char"},
+    {"name": "nValue1", "type": "num"},
+    {"name": "Label2", "type": "char"},
+    {"name": "cValue2", "type": "char"},
+    {"name": "nValue2", "type": "num"}
+   ],
+   "rows": [
+    ["Logistic", 1.0, "Percent Concordant", " 63.9", 63.9381153305204, "Somers' D", "0.422", 0.42222222222222],
+    ["Logistic", 1.0, "Percent Discordant", " 21.7", 21.7158931082982, "Gamma", "0.493", 0.49293924466338],
+    ["Logistic", 1.0, "Percent Tied", " 14.3", 14.3459915611814, "Tau-a", "0.211", 0.21146801916033],
+    ["Logistic", 1.0, "Pairs", "7110", 7110.0, "c", "0.711", 0.71111111111111]
+   ]
+  }
+ ],
+ "datasets": [
+  {
+   "name": "TRIAL",
+   "columns": [
+    {"name": "trt", "type": "char", "length": 8, "format": "", "label": ""},
+    {"name": "dose", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "resp", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "count", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    ["A", 1.0, 1.0, 12.0],
+    ["A", 1.0, 0.0, 18.0],
+    ["A", 2.0, 1.0, 15.0],
+    ["A", 2.0, 0.0, 10.0],
+    ["B", 1.0, 1.0, 8.0],
+    ["B", 1.0, 0.0, 22.0],
+    ["B", 2.0, 1.0, 11.0],
+    ["B", 2.0, 0.0, 14.0],
+    ["C", 1.0, 1.0, 20.0],
+    ["C", 1.0, 0.0, 9.0],
+    ["C", 2.0, 1.0, 24.0],
+    ["C", 2.0, 0.0, 6.0]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+ "engine": "sas",
+ "program": "sascheck/probes/ds_log_notes.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "NOTE", "text": "The data set WORK.LOOP has 2 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              661.18k OS Memory           21924.00k Timestamp           10/20/2026 05:33:25 AM Step Count                        211  Switch Count  2 Page Faults                       0 Page Reclaims                     102 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Variable z is uninitialized."},
+  {"level": "NOTE", "text": "Missing values were generated as a result of performing an operation on missing values. Each place is given by: (Number of times) at (Line):(Column). 1 at 87:9"},
+  {"level": "NOTE", "text": "The data set WORK.UNINIT has 1 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              730.65k OS Memory           21924.00k Timestamp           10/20/2026 05:33:25 AM Step Count                        212  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        10 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Invalid data for x in line 94 1-3."},
+  {"level": "PUT", "text": "RULE:      ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8----+----9----+----0"},
+  {"level": "PUT", "text": "18         abc 3"},
+  {"level": "PUT", "text": "x=. y=3 _ERROR_=1 _N_=2"},
+  {"level": "NOTE", "text": "The data set WORK.BAD has 2 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              746.31k OS Memory           21924.00k Timestamp           10/20/2026 05:33:25 AM Step Count                        213  Switch Count  2 Page Faults                       0 Page Reclaims                     88 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "Division by zero detected during the compilation phase, detected at line 100 column 9."},
+  {"level": "NOTE", "text": "Missing values were generated as a result of performing an operation on missing values. Each place is given by: (Number of times) at (Line):(Column). 101:9"},
+  {"level": "NOTE", "text": "Character values have been converted to numeric values at the places given by: (Line):(Column). 102:9"},
+  {"level": "NOTE", "text": "Invalid argument to function INPUT at line 99 column 8."},
+  {"level": "PUT", "text": "n1=12.5 n2=. q=. m=. c2n=43 _ERROR_=1 _N_=1"},
+  {"level": "NOTE", "text": "Mathematical operations could not be performed at the following places. The results of the operations have been set to missing values. Each place is given by: (Number of times) at (Line):(Column). 1 at 99:8"},
+  {"level": "NOTE", "text": "The data set WORK.CONV has 1 observations and 5 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.01 seconds system cpu time     0.00 seconds memory              858.43k OS Memory           21924.00k Timestamp           10/20/2026 05:33:25 AM Step Count                        214  Switch Count  2 Page Faults                       0 Page Reclaims                     90 Page Swaps                        0 Voluntary Context Switches        9 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"},
+  {"level": "NOTE", "text": "The data set WORK.A has 2 observations and 2 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.00 seconds memory              667.15k OS Memory           21924.00k Timestamp           10/20/2026 05:33:25 AM Step Count                        215  Switch Count  2 Page Faults                       0 Page Reclaims                     87 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           272"},
+  {"level": "NOTE", "text": "MERGE statement has more than one data set with repeats of BY values."},
+  {"level": "NOTE", "text": "There were 2 observations read from the data set WORK.A."},
+  {"level": "NOTE", "text": "There were 2 observations read from the data set WORK.A."},
+  {"level": "NOTE", "text": "The data set WORK.BOTH has 2 observations and 3 variables."},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.00 seconds system cpu time     0.01 seconds memory              1122.18k OS Memory           22440.00k Timestamp           10/20/2026 05:33:25 AM Step Count                        216  Switch Count  2 Page Faults                       0 Page Reclaims                     153 Page Swaps                        0 Voluntary Context Switches        11 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           264"}
+ ],
+ "tables": [],
+ "datasets": [
+  {
+   "name": "A",
+   "columns": [
+    {"name": "id", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "v", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 1.0],
+    [1.0, 2.0]
+   ]
+  },
+  {
+   "name": "BAD",
+   "columns": [
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "y", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 2.0],
+    [null, 3.0]
+   ]
+  },
+  {
+   "name": "BOTH",
+   "columns": [
+    {"name": "id", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "v", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "w", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 1.0, 1.0],
+    [1.0, 2.0, 2.0]
+   ]
+  },
+  {
+   "name": "CONV",
+   "columns": [
+    {"name": "n1", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "n2", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "q", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "m", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "c2n", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [12.5, null, null, null, 43.0]
+   ]
+  },
+  {
+   "name": "LOOP",
+   "columns": [
+    {"name": "i", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "y", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [1.0, 2.0],
+    [2.0, 4.0]
+   ]
+  },
+  {
+   "name": "UNINIT",
+   "columns": [
+    {"name": "x", "type": "num", "length": 8, "format": "", "label": ""},
+    {"name": "z", "type": "num", "length": 8, "format": "", "label": ""}
+   ],
+   "rows": [
+    [null, null]
+   ]
+  }
+ ]
+}

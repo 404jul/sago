@@ -1,0 +1,21 @@
+{
+ "engine": "sas",
+ "program": "sascheck/probes/ds_put_formats.sas",
+ "version": "9.04.01M8P022223",
+ "log": [
+  {"level": "PUT", "text": "01JAN1960"},
+  {"level": "PUT", "text": "01/01/1960"},
+  {"level": "PUT", "text": "d=01JAN1960"},
+  {"level": "PUT", "text": "f=15MAR2021"},
+  {"level": "PUT", "text": "2021-03-15"},
+  {"level": "PUT", "text": "b1=0.3333333333 b2=1E15 b3=123456789012 b4=1.2345679E12 b5=0.3 b6=-1.234E-6 b7=6.6666667E-6"},
+  {"level": "PUT", "text": " 1234.57"},
+  {"level": "PUT", "text": "  1,234.57"},
+  {"level": "PUT", "text": "   $1,234.57"},
+  {"level": "PUT", "text": " 1.235E+03"},
+  {"level": "PUT", "text": "\"abc\"     |abc       |"},
+  {"level": "NOTE", "text": "DATA statement used (Total process time): real time           0.00 seconds user cpu time       0.01 seconds system cpu time     0.00 seconds memory              487.84k OS Memory           21664.00k Timestamp           10/20/2026 05:33:28 AM Step Count                        274  Switch Count  0 Page Faults                       0 Page Reclaims                     41 Page Swaps                        0 Voluntary Context Switches        0 Involuntary Context Switches      0 Block Input Operations            0 Block Output Operations           8"}
+ ],
+ "tables": [],
+ "datasets": []
+}

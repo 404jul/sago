@@ -190,8 +190,39 @@ func (p *dsParser) expr(toks []Token, line int) (*dsExpr, error) {
 	st := p.st
 	dsTypeExpr(st, e, line)
 	st.collectConv(e, line)
+	e = st.foldDivZero(e, line, toks)
 	return &dsExpr{e: e, line: line}, nil
 }
+
+// foldDivZero replaces division by a literal zero with a missing value and
+// reports it the way SAS does at compile time (q = 1/0). Returns the
+// replacement node for the walked position.
+func (st *dsStep) foldDivZero(e Expr, line int, toks []Token) Expr {
+	switch n := e.(type) {
+	case *Binary:
+		n.L = st.foldDivZero(n.L, line, nil)
+		n.R = st.foldDivZero(n.R, line, nil)
+		if n.Op == "/" {
+			if z, ok := n.R.(*NumLit); ok && z.V == 0 {
+				col := 1
+				if text := TokText(toks); text != "" {
+					if i := strings.Index(text, "/"); i >= 0 {
+						col = i + 1
+					}
+				}
+				st.s.Log.Note(line, fmt.Sprintf("Division by zero detected during the compilation phase, detected at line %d column %d.", line, col))
+				return missingLit{}
+			}
+		}
+	}
+	return e
+}
+
+// missingLit is the compile-time folded result of 1/0: always missing, no
+// runtime operation counted.
+type missingLit struct{}
+
+func (missingLit) Eval(*EvalCtx) Value { return Missing }
 
 func (x *dsExpr) eval(st *dsStep) Value {
 	miss0, inv0 := st.ctx.MissingOps, st.ctx.InvalidOps
@@ -925,6 +956,12 @@ func (p *dsParser) parseAssign(s *Stmt) (dsNode, bool, error) {
 		return nil, false, nil
 	}
 	lhs, rhs := toks[:eq], toks[eq+1:]
+	// the target enters the PDV before the right-hand side is compiled
+	// (SAS PDV order: assignment targets come first).
+	var target *dsVar
+	if len(lhs) == 1 && lhs[0].Kind == TIdent {
+		target = p.st.variable(lhs[0].Text)
+	}
 	e, err := p.expr(rhs, s.Line)
 	if err != nil {
 		return nil, true, err
@@ -933,7 +970,7 @@ func (p *dsParser) parseAssign(s *Stmt) (dsNode, bool, error) {
 		return nil, false, nil
 	}
 	if len(lhs) == 1 {
-		v := p.st.variable(lhs[0].Text)
+		v := target
 		p.st.defineFromValue(v, e, s.Line)
 		v.assigned = true
 		if ec, _ := p.st.cType(e.e); ec != v.Char {
@@ -1090,9 +1127,9 @@ func (st *dsStep) callCType(n *Call) (bool, int) {
 	switch n.Name {
 	case "TRIM", "TRIMN", "LEFT", "RIGHT", "UPCASE", "LOWCASE", "PROPCASE",
 		"STRIP", "REVERSE", "COMPRESS", "TRANSLATE", "TRANSTRN", "SOUNDEX",
-		"SUBSTR", "QUOTE", "COALESCEC":
+		"SUBSTR", "QUOTE", "COALESCEC", "SCAN":
 		return true, first
-	case "CAT", "CATS", "CATT", "CATX", "CATQ", "SCAN", "TRANWRD", "REPEAT",
+	case "CAT", "CATS", "CATT", "CATX", "CATQ", "TRANWRD", "REPEAT",
 		"SUBSTRN", "SYMGET", "RESOLVE", "IFC", "CHOOSEC", "PATHNAME":
 		return true, 200
 	case "BYTE":

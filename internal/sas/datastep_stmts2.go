@@ -487,6 +487,7 @@ type dsPutItem struct {
 	lit     string // literal text (already includes trailing spaces)
 	name    string // variable (x= form when eq)
 	eq      bool
+	format  string // explicit format (x date9., s $10.)
 	expr    *dsExpr
 	col     int  // @n
 	rel     int  // +n
@@ -542,8 +543,15 @@ func (n *dsPutNode) exec(st *dsStep) dsCtl {
 			if it.eq {
 				appendStr(v.Name + "=")
 			}
-			appendStr(st.listValue(v, st.pdv[v.slot]))
-			appendStr(" ")
+			x := st.pdv[v.slot]
+			if it.format != "" {
+				// formatted output occupies exactly the format width: no
+				// list separator after it
+				appendStr(st.putFormatted(x, it.format))
+			} else {
+				appendStr(st.listValue(v, x))
+				appendStr(" ")
+			}
 		case it.expr != nil:
 			x := it.expr.eval(st)
 			if x.Char {
@@ -572,6 +580,20 @@ func (st *dsStep) flushPut(n *dsPutNode) {
 	}
 	st.putLine = st.putLine[:0]
 	st.putCol = 0
+}
+
+// putFormatted renders a value under an explicit PUT format: character
+// formats left-justify in the width, numeric formats right-justify.
+func (st *dsStep) putFormatted(x Value, format string) string {
+	s := FormatByName(x, format)
+	f := ParseFormat(format)
+	if f == nil || !f.HasW || len(s) >= f.W {
+		return s
+	}
+	if f.Char {
+		return s + strings.Repeat(" ", f.W-len(s))
+	}
+	return strings.Repeat(" ", f.W-len(s)) + s
 }
 
 func (p *dsParser) parsePut(s *Stmt) (dsNode, error) {
@@ -611,18 +633,42 @@ func (p *dsParser) parsePut(s *Stmt) (dsNode, error) {
 				n.items = append(n.items, dsPutItem{all: true})
 				continue
 			}
+			// variable with optional = and trailing format
 			eq := c.Peek().IsOp("=")
 			if eq {
 				c.Next()
 			}
-			// variable (with optional trailing format tokens skipped)
-			for c.Peek().Kind == TNumber || (c.Peek().Kind == TIdent && strings.Contains(c.Peek().Text, ".")) || c.Peek().IsOp("$") {
-				c.Next()
+			if f, ok := putFormatToken(c); ok {
+				n.items = append(n.items, dsPutItem{name: t.Text, eq: eq, format: f})
+				continue
 			}
 			n.items = append(n.items, dsPutItem{name: t.Text, eq: eq})
 		}
 	}
 	return n, nil
+}
+
+// putFormatToken consumes a format token after a PUT item: w.d / namew.
+// (one token), or $w. / $namew. (a '$' op followed by the width token).
+func putFormatToken(c *Cursor) (string, bool) {
+	dollar := false
+	if c.Peek().IsOp("$") && (c.PeekN(1).Kind == TIdent || c.PeekN(1).Kind == TNumber) &&
+		strings.Contains(c.PeekN(1).Text, ".") {
+		dollar = true
+		c.Next()
+	} else if !(c.Peek().Kind == TIdent || c.Peek().Kind == TNumber) ||
+		!strings.Contains(c.Peek().Text, ".") {
+		return "", false
+	}
+	tok := c.Next()
+	f := "$" + tok.Text
+	if !dollar {
+		f = tok.Text
+	}
+	if ParseFormat(f) == nil {
+		return "", false
+	}
+	return f, true
 }
 
 func (p *dsParser) parseError(s *Stmt) (dsNode, error) {

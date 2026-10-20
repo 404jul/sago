@@ -176,7 +176,43 @@ def frame_rows(rows_by_mem, mem, cols):
     return [[rows.get(r, {}).get(c["name"]) for c in cols] for r in sorted(rows)]
 
 
+def normalize_rule_lines(raw, program):
+    """The invalid-data ruler prints the record's line number in the submitted
+    code, which includes the harness preamble. Rewrite those lines (RULE data
+    lines and the NOTE's 'in line N' reference) to the program's own line
+    numbers so goldens do not depend on the capture wrapper."""
+    prog = Path(program).resolve()
+    src_lines = prog.read_text().splitlines()
+    lines = raw.splitlines()
+    offset = None
+    out = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        m = re.match(r"^RULE:      -", line)
+        if m and i + 1 < len(lines):
+            m2 = re.match(r"^(\d+)(\s+)(.*)$", lines[i + 1])
+            if m2:
+                abs_no, gap, content = int(m2.group(1)), m2.group(2), m2.group(3)
+                cands = [n + 1 for n, l in enumerate(src_lines) if l.rstrip() == content.rstrip()]
+                pick = None
+                for L in cands:
+                    off = abs_no - L
+                    if offset is None or off == offset:
+                        pick, offset = L, off
+                        break
+                if pick is not None and offset is not None:
+                    out.append(line)
+                    out.append(f"{pick}{gap}{content}")
+                    i += 2
+                    continue
+        out.append(line)
+        i += 1
+    return "\n".join(out)
+
+
 def build_snapshot(raw, program):
+    raw = normalize_rule_lines(raw, program)
     prog = Path(program).resolve()
     lines = raw.splitlines()
     region = capture.program_log(raw)

@@ -339,6 +339,27 @@ func dsHook(st *dsStep) func(c *EvalCtx, call *Call, args []Expr) (Value, bool) 
 				}
 			}
 			return StrV(""), true
+		case call.Name == "INPUT" || call.Name == "INPUTN":
+			// invalid input text reports "Invalid argument to function INPUT"
+			// and sets _ERROR_ (the generic table's InvalidOps has the wrong
+			// note text)
+			if len(args) >= 2 {
+				x := args[0].Eval(c)
+				fs := args[1].Eval(c).AsStr()
+				f := ParseFormat(fs)
+				v, ok := ApplyInformat(x.Str, f, f != nil && f.Char)
+				if !ok {
+					st.note(fmt.Sprintf("Invalid argument to function %s at line %d column 8.", call.Name, c.Line))
+					c.InvalidArg++
+					st.setError()
+					return Missing, true
+				}
+				return v, true
+			}
+		case call.Name == "PUT" || call.Name == "PUTN" || call.Name == "PUTC":
+			// keep table behavior; nothing to intercept
+		default:
+			return Missing, false
 		case call.Name == "RANUNI" || call.Name == "UNIFORM":
 			if len(args) >= 1 {
 				seed := args[0].Eval(c).AsNum()

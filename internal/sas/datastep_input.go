@@ -258,23 +258,35 @@ func (f *dsInfile) readToken() (string, bool) {
 	}
 }
 
-// eofReported tracks whether the END= note was emitted.
+// logRule prints the invalid-data ruler and the offending record, the way
+// SAS formats them (both are plain log lines, not notes).
 func (f *dsInfile) logRule(st *dsStep) {
-	rule := 1
+	lineNo := st.dataLine
 	if f.cur >= 0 && f.cur < len(f.lines) {
-		rule = f.cur + 1
+		lineNo = st.dataLine + f.cur
+		var b strings.Builder
+		b.WriteString("RULE:      ")
+		b.WriteString(sasRuler())
+		st.s.Log.Put(strings.TrimRight(b.String(), ""))
+		st.s.Log.Put(fmt.Sprintf("%-11d%s", lineNo, f.lines[f.cur]))
 	}
-	col := f.col
-	if col < 1 {
-		col = 1
+}
+
+// sasRuler is SAS's column ruler: '+' every 5 columns, digit every 10.
+func sasRuler() string {
+	r := make([]rune, 100)
+	for i := range r {
+		pos := i + 1
+		switch {
+		case pos%10 == 0:
+			r[i] = rune('0' + (pos/10)%10)
+		case pos%5 == 0:
+			r[i] = '+'
+		default:
+			r[i] = '-'
+		}
 	}
-	var b strings.Builder
-	fmt.Fprintf(&b, "RULE:\n     +---+----+----+----+----+----+----+----+----+----+\n")
-	if f.cur >= 0 && f.cur < len(f.lines) {
-		fmt.Fprintf(&b, "  %3d         %s\n", rule, f.lines[f.cur])
-		_ = col
-	}
-	st.s.Log.Note(st.ctx.Line, b.String())
+	return string(r)
 }
 
 func (f *dsInfile) finishNotes(st *dsStep) {
@@ -468,14 +480,17 @@ func (n *dsInputNode) exec(st *dsStep) dsCtl {
 		case 'v':
 			var raw string
 			var ok bool
+			sc := f.col + 1
+			invalid := func() {
+				ec := sc + len(strings.TrimRight(raw, " ")) - 1
+				lineNo := st.dataLine
+				if f.cur >= 0 {
+					lineNo = st.dataLine + f.cur
+				}
+				st.invalidInputData(it.v, lineNo, sc, ec)
+			}
 			if it.colSpec > 0 {
 				raw, ok = readColumn(it.colSpec)
-				if it.inform == "" && !it.char {
-					// column input: blank-padded field
-					if len(f.lines) > f.cur && f.cur >= 0 {
-						_ = f.lines[f.cur]
-					}
-				}
 			} else {
 				raw, ok = f.readToken()
 			}
@@ -502,7 +517,7 @@ func (n *dsInputNode) exec(st *dsStep) dsCtl {
 					if x, ok2 := dsCharToNum(fld); ok2 {
 						st.pdv[it.v.slot] = NumV(x)
 					} else {
-						st.invalidNumeric(fld)
+						invalid()
 						st.pdv[it.v.slot] = Missing
 					}
 				}
@@ -514,12 +529,12 @@ func (n *dsInputNode) exec(st *dsStep) dsCtl {
 			}
 			v, ok2 := ApplyInformat(raw, fm, it.v.Char)
 			if !ok2 {
-				st.invalidNumeric(raw)
+				invalid()
 			}
 			if !it.v.Char && v.Char {
 				x, ok3 := dsCharToNum(v.Str)
 				if !ok3 {
-					st.invalidNumeric(v.Str)
+					invalid()
 				}
 				v = NumV(x)
 			}
@@ -582,6 +597,8 @@ type dsSetStmt struct {
 	prevKey   []Value
 	havePrev  bool
 	nWritten  int
+
+	repeatsNoted bool // "MERGE ... repeats of BY values" note emitted
 }
 
 func (s *dsSetStmt) compile() error {
@@ -601,6 +618,8 @@ func (s *dsSetStmt) compile() error {
 				v := st.variable(op.Val[0].Text)
 				st.numeric(v, s.line)
 				v.retain = true
+				v.assigned = true
+				v.noOut = true // IN= variables are hidden unless explicitly kept
 				src.inSlot = v.slot
 			}
 			if op, ok := ref.Opts.Get("WHERE"); ok {
@@ -632,11 +651,15 @@ func (s *dsSetStmt) compile() error {
 			v := st.variable(o[1])
 			st.numeric(v, s.line)
 			v.retain = true
+			v.assigned = true
+			v.noOut = true
 			s.endSlot = v.slot
 		case "NOBS":
 			v := st.variable(o[1])
 			st.numeric(v, s.line)
 			v.retain = true
+			v.assigned = true
+			v.noOut = true
 			s.nobsSlot = v.slot
 		}
 	}
@@ -768,8 +791,22 @@ func (s *dsSetStmt) execSet(st *dsStep) dsCtl {
 	return s.atEnd(st)
 }
 
-func (s *dsSetStmt) readFrom(st *dsStep, i int, byMerge bool) dsCtl {
+// resetSources clears every SET source's variables in the PDV: when a SET
+// statement reads from one of several data sets, the variables of the others
+// are missing for this iteration.
+func (s *dsSetStmt) resetSources(st *dsStep) {
+	for _, src := range s.srcs {
+		for _, sl := range src.cols {
+			st.pdv[sl] = st.vars[sl].missing()
+		}
+	}
+}
+
+func (s *dsSetStmt) readFrom(st *dsStep, i int, reset bool) dsCtl {
 	src := s.srcs[i]
+	if reset {
+		s.resetSources(st)
+	}
 	row := src.rows[src.pos]
 	src.pos++
 	src.read++
@@ -906,30 +943,53 @@ func (s *dsSetStmt) execMerge(st *dsStep) dsCtl {
 			minK = c.keys
 		}
 	}
+	newGroup := !s.havePrev || cmpKeys(minK, s.prevKey, s.byInfo.Desc) != 0
+	if newGroup {
+		// a new BY group starts with all merged variables missing; sources
+		// without rows in the group stay missing for the whole group
+		s.resetSources(st)
+		// SAS reports repeats of BY values once per merge when more than one
+		// data set contributes several observations to the same group
+		if !s.repeatsNoted {
+			n := 0
+			for _, src := range s.srcs {
+				if s.rowsInGroup(src, minK) > 1 {
+					n++
+				}
+			}
+			if n > 1 {
+				st.note("MERGE statement has more than one data set with repeats of BY values.")
+				s.repeatsNoted = true
+			}
+		}
+		// IN= flags hold for the whole group: 1 when the source has rows in it
+		for _, src := range s.srcs {
+			if src.inSlot >= 0 {
+				if s.rowsInGroup(src, minK) > 0 {
+					st.pdv[src.inSlot] = NumV(1)
+				} else {
+					st.pdv[src.inSlot] = NumV(0)
+				}
+			}
+		}
+	}
 	// write BY values into PDV
 	for j, sl := range s.pd {
 		st.pdv[sl] = minK[j]
 	}
 	st.readIter = true
-	for _, c := range cands {
-		if cmpKeys(c.keys, minK, s.byInfo.Desc) == 0 {
-			src := s.srcs[c.i]
+	for _, src := range s.srcs {
+		if k := s.srcKey(src); k != nil && cmpKeys(k, minK, s.byInfo.Desc) == 0 {
 			row := src.rows[src.pos]
 			src.pos++
 			src.read++
 			s.copyRow(st, src, row)
-			if src.inSlot >= 0 {
-				st.pdv[src.inSlot] = NumV(1)
-			}
 		}
 	}
-	// FIRST./LAST. based on minK vs neighbors
-	prevEmpty := !s.havePrev
-	s.prevKey = minK
-	s.havePrev = true
+	// FIRST./LAST. based on group boundaries
 	for _, n := range s.byInfo.Names {
 		if v := st.lookup("FIRST." + n); v != nil {
-			if prevEmpty {
+			if newGroup {
 				st.pdv[v.slot] = NumV(1)
 			} else {
 				st.pdv[v.slot] = NumV(0)
@@ -955,7 +1015,25 @@ func (s *dsSetStmt) execMerge(st *dsStep) dsCtl {
 			}
 		}
 	}
+	s.prevKey = minK
+	s.havePrev = true
 	return dsNext
+}
+
+// rowsInGroup counts the rows src still contributes to the BY group of key k.
+func (s *dsSetStmt) rowsInGroup(src *dsSrc, k []Value) int {
+	n := 0
+	for i := src.pos; i < len(src.rows); i++ {
+		key := make([]Value, len(src.keys))
+		for j, ci := range src.keys {
+			key[j] = src.rows[i][ci]
+		}
+		if cmpKeys(key, k, s.byInfo.Desc) != 0 {
+			break
+		}
+		n++
+	}
+	return n
 }
 
 func (s *dsSetStmt) maxLen() int {
