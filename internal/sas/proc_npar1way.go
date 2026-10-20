@@ -782,14 +782,15 @@ func npMedianTest(s *Session, v *Var, classVar *Var, classes []Value, x []float6
 		MissDot: true,
 	}
 	t.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
 		{Name: "Class", Label: classVar.Name, Char: true},
 		{Name: "N", Label: "N", Format: "6."},
 		{Name: "SumOfScores", Label: "Sum of\nScores", Format: "12.4"},
-		{Name: "ExpectedUnderH0", Label: "Expected\nUnder H0", Format: "12.4"},
-		{Name: "StdDevUnderH0", Label: "Std Dev\nUnder H0", Format: "10.4"},
+		{Name: "ExpectedSum", Label: "Expected\nSum", Format: "12.4"},
+		{Name: "StdDevOfSum", Label: "Std Dev\nof Sum", Format: "10.4"},
 		{Name: "MeanScore", Label: "Median\nScore", Format: "10.4"},
 	}
-	t.RowHeader = 1
+	t.RowHeader = 2
 	chi2 := 0.0
 	for i := range k {
 		e := nip[i] * m / N
@@ -799,13 +800,17 @@ func npMedianTest(s *Session, v *Var, classVar *Var, classes []Value, x []float6
 		if varr > 0 {
 			chi2 += d * d / varr
 		}
-		t.AddRow(classes[i], nip[i], sums[i], e, sd, sums[i]/nip[i])
+		t.AddRow(v.Name, FormatValue(classes[i], nil), nip[i], sums[i], e, sd, sums[i]/nip[i])
 	}
 	npEmit(s, t)
 	df := float64(k - 1)
 	tt := &Table{ODSName: "MedianTest", Caption: fmt.Sprintf("Median One-Way Analysis\nChi-Square Test for Variable %s", v.Name), MissDot: true}
-	tt.Cols = []Col{{Name: "Statistic", Label: "Chi-Square", Char: true}, {Name: "DF", Label: "DF", Format: "3."}, {Name: "Value", Label: "Value", Format: "8.4"}, {Name: "Prob", Label: "Pr > ChiSq", Format: "PVALUE6.4"}}
-	tt.AddRow("Chi-Square", df, chi2, ChiSqSF(chi2, df))
+	tt.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
+		{Name: "ChiSquare", Label: "Chi-Square", Format: "8.4"},
+		{Name: "DF", Label: "DF", Format: "3."},
+		{Name: "Prob", Label: "Pr > ChiSq", Format: "PVALUE6.4"}}
+	tt.AddRow(v.Name, chi2, df, ChiSqSF(chi2, df))
 	npEmit(s, tt)
 }
 
@@ -819,6 +824,7 @@ func npAnova(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cl
 		MissDot: true,
 	}
 	t.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
 		{Name: "Class", Label: classVar.Name, Char: true},
 		{Name: "N", Label: "N", Format: "6."},
 		{Name: "SumOfScores", Label: "Sum of\nScores", Format: "12.4"},
@@ -826,7 +832,7 @@ func npAnova(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cl
 		{Name: "UnderH0MeanScore", Label: "Under H0\nMean Score", Format: "10.4"},
 		{Name: "UnderH0StdDev", Label: "Under H0\nStd Deviation", Format: "10.4"},
 	}
-	t.RowHeader = 1
+	t.RowHeader = 2
 	meanAll := Mean(x)
 	sdAll := math.Sqrt(CSS(x) / (N - 1))
 	for i := range k {
@@ -836,7 +842,7 @@ func npAnova(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cl
 				s += x[j]
 			}
 		}
-		t.AddRow(classes[i], nip[i], s, s/nip[i], meanAll, sdAll)
+		t.AddRow(v.Name, FormatValue(classes[i], nil), nip[i], s, s/nip[i], meanAll, sdAll)
 	}
 	npEmit(s, t)
 	gm := Mean(x)
@@ -985,14 +991,15 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 		t.Caption = fmt.Sprintf("%s Scores (Exponential) for Variable %s\nClassified by Variable %s", title, v.Name, classVar.Name)
 	}
 	t.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
 		{Name: "Class", Label: classVar.Name, Char: true},
 		{Name: "N", Label: "N", Format: "6."},
 		{Name: "SumOfScores", Label: "Sum of\nScores", Format: "12.4"},
-		{Name: "ExpectedUnderH0", Label: "Expected\nUnder H0", Format: "12.4"},
-		{Name: "StdDevUnderH0", Label: "Std Dev\nUnder H0", Format: "10.4"},
+		{Name: "ExpectedSum", Label: "Expected\nSum", Format: "12.4"},
+		{Name: "StdDevOfSum", Label: "Std Dev\nof Sum", Format: "10.4"},
 		{Name: "MeanScore", Label: "Mean\nScore", Format: "10.4"},
 	}
-	t.RowHeader = 1
+	t.RowHeader = 2
 	N := float64(n)
 	meanScore := Mean(scores)
 	// General linear rank statistic variance under H0 (tie-corrected):
@@ -1004,7 +1011,7 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 	for i := range k {
 		e := nip[i] * meanScore
 		vg := css / (N - 1) * (nip[i] * (N - nip[i]) / N)
-		t.AddRow(classes[i], nip[i], sums[i], e, math.Sqrt(vg), sums[i]/nip[i])
+		t.AddRow(v.Name, FormatValue(classes[i], nil), nip[i], sums[i], e, math.Sqrt(vg), sums[i]/nip[i])
 	}
 	npEmit(s, t)
 	// one-way ANOVA statistic: chi-square with k-1 df
@@ -1016,11 +1023,13 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 		return q
 	}()
 	ta := &Table{ODSName: odsPrefix + "Analysis", Caption: fmt.Sprintf("%s One-Way Analysis", title), MissDot: true}
-	ta.Cols = []Col{{Name: "Label", Label: "", Char: true}, {Name: "Value", Label: "", Format: "12.4"}}
+	ta.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
+		{Name: "ChiSquare", Label: "Chi-Square", Format: "12.4"},
+		{Name: "DF", Label: "DF", Format: "3."},
+		{Name: "Prob", Label: "Pr > ChiSq", Format: "PVALUE6.4"}}
 	ta.RowHeader = 1
-	ta.AddRow("Chi-Square", Q)
-	ta.AddRow("DF", float64(k-1))
-	ta.AddRow("Pr > Chi-Square", npPStr(ChiSqSF(Q, float64(k-1))))
+	ta.AddRow(v.Name, Q, float64(k-1), ChiSqSF(Q, float64(k-1)))
 	npEmit(s, ta)
 	if k != 2 {
 		return
@@ -1044,17 +1053,18 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 			z = (si - e + 0.5) / math.Sqrt(vr)
 		}
 	}
-	t2 := &Table{ODSName: odsPrefix + "Test", Caption: fmt.Sprintf("%s Two-Sample Test", title), MissDot: true}
-	t2.Cols = []Col{{Name: "Label", Label: "", Char: true}, {Name: "Value", Label: "", Format: "12.4"}}
-	t2.RowHeader = 1
-	t2.AddRow("Statistic (S)", si)
-	t2.AddRow("Z", z)
-	if z < 0 {
-		t2.AddRow("One-Sided Pr < Z", npPStr(NormCDF(z)))
-	} else {
-		t2.AddRow("One-Sided Pr > Z", npPStr(NormSF(z)))
+	one := NormCDF(z)
+	if z > 0 {
+		one = NormSF(z)
 	}
-	t2.AddRow("Two-Sided Pr > |Z|", npPStr(2*NormSF(math.Abs(z))))
+	t2 := &Table{ODSName: odsPrefix + "Test", Caption: fmt.Sprintf("%s Two-Sample Test", title), MissDot: true}
+	t2.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
+		{Name: "Statistic", Label: "Statistic", Format: "12.4"},
+		{Name: "Z", Label: "Z", Format: "9.4"},
+		{Name: "Prob1", Label: "One-Sided\nPr > Z", Format: "PVALUE6.4"}}
+	t2.RowHeader = 1
+	t2.AddRow(v.Name, si, z, one)
 	npEmit(s, t2)
 }
 
@@ -1077,25 +1087,30 @@ func npVW(s *Session, v *Var, classVar *Var, classes []Value, x []float64, cls [
 		MissDot: true,
 	}
 	t.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
 		{Name: "Class", Label: classVar.Name, Char: true},
 		{Name: "N", Label: "N", Format: "6."},
 		{Name: "SumOfScores", Label: "Sum of\nScores", Format: "12.4"},
-		{Name: "ExpectedUnderH0", Label: "Expected\nUnder H0", Format: "12.4"},
-		{Name: "StdDevUnderH0", Label: "Std Dev\nUnder H0", Format: "10.4"},
+		{Name: "ExpectedSum", Label: "Expected\nSum", Format: "12.4"},
+		{Name: "StdDevOfSum", Label: "Std Dev\nof Sum", Format: "10.4"},
 	}
-	t.RowHeader = 1
+	t.RowHeader = 2
 	N := float64(n)
 	for i := range k {
 		e := 0.0
-		t.AddRow(classes[i], nip[i], sums[i], e, math.Sqrt(npVarScore(nip[i], N, tieF)))
+		t.AddRow(v.Name, FormatValue(classes[i], nil), nip[i], sums[i], e, math.Sqrt(npVarScore(nip[i], N, tieF)))
 	}
 	npEmit(s, t)
 	if k == 2 {
 		varr := npVarScore(nip[0], N, tieF)
 		z := sums[0] / math.Sqrt(varr)
 		t2 := &Table{ODSName: "VWTest", Caption: fmt.Sprintf("Van der Waerden Two-Sample Test\nStatistic (S) = Z for Variable %s", v.Name), MissDot: true}
-		t2.Cols = []Col{{Name: "Statistic", Label: "Statistic", Char: true}, {Name: "Z", Label: "Z", Format: "8.4"}, {Name: "OneSidedPr", Label: "One-Sided Pr > Z", Format: "PVALUE6.4"}, {Name: "TwoSidedPr", Label: "Two-Sided Pr > |Z|", Format: "PVALUE6.4"}}
-		t2.AddRow("Z", z, NormSF(z), 2*NormSF(math.Abs(z)))
+		t2.Cols = []Col{
+			{Name: "Variable", Label: "Variable", Char: true},
+			{Name: "Z", Label: "Z", Format: "8.4"},
+			{Name: "OneSidedPr", Label: "One-Sided Pr > Z", Format: "PVALUE6.4"},
+			{Name: "TwoSidedPr", Label: "Two-Sided Pr > |Z|", Format: "PVALUE6.4"}}
+		t2.AddRow(v.Name, z, NormSF(z), 2*NormSF(math.Abs(z)))
 		npEmit(s, t2)
 	}
 }

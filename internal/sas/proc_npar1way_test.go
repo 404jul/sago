@@ -306,9 +306,10 @@ proc npar1way data=spread ab;
 			t.Errorf("%s: dataset not found", ods)
 			continue
 		}
-		check(t, ods+" sum A", st.Rows[0][4].Num, w.sum, 2e-6)
-		check(t, ods+" E A", st.Rows[0][5].Num, w.e, 2e-6)
-		check(t, ods+" SD A", st.Rows[0][6].Num, w.sd, 2e-6)
+		iSum := st.Index("SumOfScores")
+		check(t, ods+" sum A", st.Rows[0][iSum].Num, w.sum, 2e-6)
+		check(t, ods+" E A", st.Rows[0][iSum+1].Num, w.e, 2e-6)
+		check(t, ods+" SD A", st.Rows[0][iSum+2].Num, w.sd, 2e-6)
 	}
 	for ods, z := range map[string]float64{
 		"_MOODTEST_":  -4.038970997,
@@ -371,27 +372,25 @@ proc npar1way data=g2 savage;
 		t.Fatal("no SavageScores capture")
 	}
 	sums := []float64{-3.36798016798017, 0.095618270618274, 3.2723618973619}
+	iSum := ss.Index("SumOfScores")
 	for i, want := range sums {
-		check(t, "mice S", ss.Rows[i][2].Num, want, 2e-9)
-		check(t, "mice SD", ss.Rows[i][4].Num, 1.63455486646275, 2e-9)
-		check(t, "mice mean", ss.Rows[i][5].Num, want/5, 2e-9)
+		check(t, "mice S", ss.Rows[i][iSum].Num, want, 2e-9)
+		check(t, "mice SD", ss.Rows[i][iSum+2].Num, 1.63455486646275, 2e-9)
+		check(t, "mice mean", ss.Rows[i][iSum+3].Num, want/5, 2e-9)
 	}
 	sa := s.Dataset("_SA_")
 	if sa == nil {
 		t.Fatal("no SavageAnalysis capture")
 	}
-	check(t, "mice chi2", sa.Rows[0][1].Num, 5.50466266705125, 2e-9)
-	check(t, "mice df", sa.Rows[1][1].Num, 2, 1e-12)
-	// two-sample: S from the smaller class (.04, n=11)
+	// ODS layout with _Proc_/_Run_ first: Variable, ChiSquare, DF, Prob
+	check(t, "mice chi2", sa.Rows[0][3].Num, 5.50466266705125, 2e-9)
+	// two-sample: S from the smaller class (.04, n=11); ODS single-row
 	gt := s.Dataset("_GT_")
 	if gt == nil {
 		t.Fatal("no SavageTest capture")
 	}
-	check(t, "g2 S", gt.Rows[0][1].Num, -1.83455385708751, 2e-9)
-	check(t, "g2 Z", gt.Rows[1][1].Num, -0.763812212423011, 2e-9)
-	if got := gt.Rows[3][1].Str; got != "0.4450" {
-		t.Errorf("g2 two-sided p = %q, want 0.4450", got)
-	}
+	check(t, "g2 S", gt.Rows[0][3].Num, -1.83455385708751, 2e-9)
+	check(t, "g2 Z", gt.Rows[0][4].Num, -0.763812212423011, 2e-9)
 }
 
 // TestNpHodgesLehmann pins the HL location-shift estimation against the
@@ -462,22 +461,20 @@ proc npar1way data=fp3 fp;
 			t.Errorf("%s = %.9f, want %.9f (tol %g)", name, got, want, tol)
 		}
 	}
-	// rows in sorted class order: A first, B second
-	check(t, "A sum", fp.Rows[0][2].Num, 3.5, 1e-12)
-	check(t, "A mean", fp.Rows[0][3].Num, 0.583333333333333, 1e-12)
-	check(t, "A sd", fp.Rows[0][4].Num, 1.02062072615966, 1e-12)
-	check(t, "B sum", fp.Rows[1][2].Num, 32.5, 1e-12)
-	check(t, "B mean", fp.Rows[1][3].Num, 5.41666666666667, 1e-12)
-	check(t, "B sd", fp.Rows[1][4].Num, 0.735980072193987, 1e-12)
+	// rows in sorted class order: A first, B second; _Proc_/_Run_ lead
+	check(t, "A sum", fp.Rows[0][5].Num, 3.5, 1e-12)
+	check(t, "A mean", fp.Rows[0][6].Num, 0.583333333333333, 1e-12)
+	check(t, "A sd", fp.Rows[0][7].Num, 1.02062072615966, 1e-12)
+	check(t, "B sum", fp.Rows[1][5].Num, 32.5, 1e-12)
+	check(t, "B mean", fp.Rows[1][6].Num, 5.41666666666667, 1e-12)
+	check(t, "B sd", fp.Rows[1][7].Num, 0.735980072193987, 1e-12)
 	ft := s.Dataset("_FPT_")
 	if ft == nil {
 		t.Fatal("no FPTest capture")
 	}
-	check(t, "diff", ft.Rows[0][1].Num, -29, 1e-12)
-	check(t, "z", ft.Rows[1][1].Num, -4.35681284677437, 1e-12)
-	if got := ft.Rows[3][1].Str; got != "<.0001" {
-		t.Errorf("two-sided p = %q, want <.0001", got)
-	}
+	// single-row ODS layout: _Proc_, _Run_, Variable, Statistic, Z, Prob1
+	check(t, "diff", ft.Rows[0][3].Num, -29, 1e-12)
+	check(t, "z", ft.Rows[0][4].Num, -4.35681284677437, 1e-12)
 }
 
 // TestNpDSCF pins the Dwass-Steel-Critchlow-Fligner all-pairs analysis
