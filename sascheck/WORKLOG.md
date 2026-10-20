@@ -36,6 +36,24 @@ sago: used $8 default everywhere, no truncation. Also: SAS emits "NOTE: Numeric
 values have been converted to character values" for `||` with numeric operand;
 sago doesn't. sago wrongly emits "Variable I is uninitialized" for DO loop vars.
 
+### Commit c9a6574 — 5 probes green
+- ds_functions: SCAN compile length = first argument; INTNX alignment
+  (BEGINNING/MIDDLE/END/SAMEDAY) implemented.
+- ds_log_notes: invalid-data block (NOTE + RULE + record + PDV dump),
+  INPUT() invalid-argument note, compile-time div-by-zero fold, PDV order
+  (assignment targets first), merge repeats note.
+- ds_merge_set: group-wise MERGE (retention within BY group, IN= per group),
+  IN=/END=/NOBS= hidden from output, interleaved SET resets other sources.
+- ds_put_formats: PUT explicit formats (attach + width, $QUOTE.), BEST12.
+  rewrite (leading zero, 1e-4 scientific threshold, shortest round-trip).
+- logistic_class_default: LOGISTIC rewritten to ODS OUTPUT shapes; EFFECT
+  coding default, FREQ weights, ModelANOVA joint Wald, OR contrasts,
+  GCONV stopping (SAS's own convergence slop reproduced deliberately).
+  Unit-test tolerances loosened to GCONV precision; global Wald pinned to
+  the joint statistic (10.5841... for the chd data).
+- browsecap: normalize_rule_lines rewrites the wrapper-dependent line
+  numbers of invalid-data records to program-relative numbers.
+
 ## Queue
 
 - [ ] fix compile-time char lengths (datastep compiler) + conversion NOTE + spurious uninit NOTE
