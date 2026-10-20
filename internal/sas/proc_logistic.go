@@ -113,7 +113,6 @@ func lgRun(s *Session, p *ProcStep) error {
 	if !strings.Contains(dataName, ".") {
 		dataName = "WORK." + dataName
 	}
-	s.Log.Note(p.Line, fmt.Sprintf("There were %d observations read from the data set %s.", len(d.Rows), dataName))
 	for run, g := range groups {
 		sub := d.Subset(g.Rows)
 		if by != nil {

@@ -639,11 +639,15 @@ func npWilcoxonTest(s *Session, v *Var, classVar *Var, classes []Value, nip, sum
 	if sdi == 0 {
 		return
 	}
-	sign := 1.0
-	if si < ei {
-		sign = -1
+	zc := (si - ei) / sdi
+	if si != ei {
+		// continuity correction toward zero (none for an exact tie)
+		if si > ei {
+			zc = (si - ei - 0.5) / sdi
+		} else {
+			zc = (si - ei + 0.5) / sdi
+		}
 	}
-	zc := sign * (math.Abs(si-ei) - 0.5) / sdi
 	one := NormSF(math.Abs(zc))
 	oneT := TSF(math.Abs(zc), N-1)
 	t := &Table{
@@ -1014,28 +1018,8 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 		t.AddRow(v.Name, FormatValue(classes[i], nil), nip[i], sums[i], e, math.Sqrt(vg), sums[i]/nip[i])
 	}
 	npEmit(s, t)
-	// one-way ANOVA statistic: chi-square with k-1 df
-	Q := (N - 1) / css * func() float64 {
-		q := 0.0
-		for i := range k {
-			q += sums[i] * sums[i] / nip[i]
-		}
-		return q
-	}()
-	ta := &Table{ODSName: odsPrefix + "Analysis", Caption: fmt.Sprintf("%s One-Way Analysis", title), MissDot: true}
-	ta.Cols = []Col{
-		{Name: "Variable", Label: "Variable", Char: true},
-		{Name: "ChiSquare", Label: "Chi-Square", Format: "12.4"},
-		{Name: "DF", Label: "DF", Format: "3."},
-		{Name: "Prob", Label: "Pr > ChiSq", Format: "PVALUE6.4"}}
-	ta.RowHeader = 1
-	ta.AddRow(v.Name, Q, float64(k-1), ChiSqSF(Q, float64(k-1)))
-	npEmit(s, ta)
-	if k != 2 {
-		return
-	}
 	var i int
-	if nip[1] < nip[0] || (nip[1] == nip[0] && Compare(classes[1], classes[0]) < 0) {
+	if k == 2 && nip[1] < nip[0] {
 		i = 1
 	}
 	si := sums[i]
@@ -1045,6 +1029,32 @@ func npScale(s *Session, name, odsPrefix, title string, v *Var, classVar *Var, c
 		return
 	}
 	z := (si - e) / math.Sqrt(vr)
+	// Analysis chi-square: for two samples SAS reports the squared z of the
+	// two-sample test; for k samples the one-way ANOVA statistic
+	var chi2 float64
+	if k == 2 {
+		chi2 = z * z
+	} else {
+		chi2 = (N - 1) / css * func() float64 {
+			q := 0.0
+			for j := range k {
+				q += sums[j] * sums[j] / nip[j]
+			}
+			return q
+		}()
+	}
+	ta := &Table{ODSName: odsPrefix + "Analysis", Caption: fmt.Sprintf("%s One-Way Analysis", title), MissDot: true}
+	ta.Cols = []Col{
+		{Name: "Variable", Label: "Variable", Char: true},
+		{Name: "ChiSquare", Label: "Chi-Square", Format: "12.4"},
+		{Name: "DF", Label: "DF", Format: "3."},
+		{Name: "Prob", Label: "Pr > ChiSq", Format: "PVALUE6.4"}}
+	ta.RowHeader = 1
+	ta.AddRow(v.Name, chi2, float64(k-1), ChiSqSF(chi2, float64(k-1)))
+	npEmit(s, ta)
+	if k != 2 {
+		return
+	}
 	if name == "ST" {
 		// continuity correction toward zero
 		if z > 0 {

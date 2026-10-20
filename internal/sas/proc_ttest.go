@@ -324,7 +324,7 @@ func ttTwoSample(s *Session, d *Dataset, v *Var, ci int, cv *Var, h0, alpha floa
 	ttAddStatRows(statTbl, confTbl, sa, sa.N-1, alpha)
 	ttAddStatRows(statTbl, confTbl, sb, sb.N-1, alpha)
 	// diff rows
-	statTbl.AddRow("Diff (1-2)", sa.N+sb.N, diff, sePool, Missing, Missing)
+	statTbl.AddRow("Diff (1-2)", sa.N+sb.N, diff, sePool, Missing, Missing, Missing)
 	confTbl.AddRow("Diff (1-2) Pooled", diff, diff-TInv(1-alpha/2, sa.N+sb.N-2)*sePool, diff+TInv(1-alpha/2, sa.N+sb.N-2)*sePool, sp, math.NaN(), math.NaN())
 	confTbl.AddRow("Diff (1-2) Satterthwaite", diff, diff-TInv(1-alpha/2, dfSat)*seSat, diff+TInv(1-alpha/2, dfSat)*seSat, math.NaN(), math.NaN(), math.NaN())
 

@@ -60,3 +60,38 @@ sago doesn't. sago wrongly emits "Variable I is uninitialized" for DO loop vars.
 - [ ] capture+fix remaining probes: ds_functions, ds_log_notes, ds_merge_set, ds_put_formats, logistic_class_default
 - [ ] then examples/*.sas, problems/*.sas (need file materialization path: CSV embedded via data step writing ~/__sgoN_name files)
 - [ ] new probes for gaps found along the way
+
+## Session end state (2026-10-20, wrap-up)
+
+Green: all unit tests; conformance for probes (6/6), examples anova partially,
+diag, dist, lifetest, scale, fp/hl/dscf (npar1way), logistic_class_default.
+
+Remaining failing conformance (with golden specs already in sascheck/golden/
+as the worklist — each shows the exact SAS columns/rows to emit):
+- examples__anova_test (27): GLM CLDiffs/CLDiffsInfo cValue widths
+  (%8.2 alpha etc.), Significance column numeric.
+- examples__cat_test (24): FREQ OneWayFreqs (F_<var> holds the level value),
+  OneWayChiSq rows.
+- examples__corr_test (10): CORR SimpleStats/VarInformation column sets.
+- examples__genmod_test (24): GENMOD missing ModelInfo/NObs/ModelFit/
+  ConvergenceStatus tables; ParameterEstimates without WaldChiSq column.
+- examples__ks_test (38): NPAR1WAY EDF tables (KSTest per-class+Total rows,
+  KSStats/CVMStats/KuiperStats label-value pair layouts, KS2Stats).
+- examples__paired_test (9): TTEST Statistics/ConfLimits/TTests Variable
+  column; UNIVARIATE Moments cValue width formatting.
+- examples__phreg_test (35): PHREG ModelInfo/NObs/CensoredSummary/
+  ConvergenceStatus/ParameterEstimates/GlobalTests/FitStatistics tables.
+- examples__score_test (42): class sort order for numeric classes;
+  SavageScores layout largely matches otherwise.
+- examples__twoway_test (2): GLM Means/LSMeans columns.
+
+Stale goldens moved to sascheck/golden/stale/ (question1, rng_test,
+reg_test): captured before the PROC PRINT ODS OUTPUT exclusion, so they
+carry the harness artifact error "PROC PRINT does not support the ODS
+OUTPUT statement." Re-capture with the current browsecap (one command:
+browsecap pass1/pass2/golden) and move back. Also never captured:
+project1, tutorial (their first runs crashed the ODA workspace before the
+row-capped dump harness existed; the capped harness should handle them).
+
+Recovery notes: SAS sessions die under load/idle; relaunch via the welcome
+tab, hook XHR, trigger one run to harvest SID+CSRF (documented above).
