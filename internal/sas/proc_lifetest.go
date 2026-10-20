@@ -16,9 +16,10 @@ import (
 
 // ltObs is one valid observation.
 type ltObs struct {
-	t   float64
-	evt bool
-	str string
+	t    float64
+	evt  bool
+	str  string
+	strV Value
 }
 
 // ltRow is one observed time of the product-limit table.
@@ -30,6 +31,18 @@ type ltRow struct {
 }
 
 func init() { RegisterProc("LIFETEST", ltLifetest) }
+
+// ltEmit prepends the _Proc_/_Run_ columns SAS's ODS OUTPUT tables carry.
+func ltEmit(s *Session, t *Table) {
+	t.Cols = append([]Col{
+		{Name: "_Proc_", Label: "", Char: true, Hidden: true},
+		{Name: "_Run_", Label: "", Format: "4.", Hidden: true},
+	}, t.Cols...)
+	for i := range t.Rows {
+		t.Rows[i] = append([]Value{StrV("Lifetest"), NumV(1)}, t.Rows[i]...)
+	}
+	s.Out.AddTable(t)
+}
 
 func ltLifetest(s *Session, p *ProcStep) error {
 	d, err := s.ProcData(p)
@@ -90,6 +103,7 @@ func ltLifetest(s *Session, p *ProcStep) error {
 			if r[si].IsMissing() {
 				continue
 			}
+			o.strV = r[si]
 			o.str = FormatValue(r[si], nil)
 			if !strSet[o.str] {
 				strSet[o.str] = true
@@ -119,14 +133,52 @@ func ltLifetest(s *Session, p *ProcStep) error {
 	}
 	strOrder = strOrder[:len(samples)]
 
+	var sv *Var
+	if strVar != "" {
+		sv = d.Vars[si]
+	}
+	var cs *Table
+	if strVar == "" {
+		cs = ltCensoredRow(nil, nil, Missing, samples[0])
+	}
 	for i, sd := range samples {
 		krows, events := ltKM(sd)
-		str := ""
+		var strVal Value
 		if strVar != "" {
-			str = strOrder[i]
+			strVal = sd[0].strV
 		}
-		ltPLTable(s, d.Vars[ti], strVar, str, i, krows)
-		ltSummary(s, strVar, str, krows, events, alpha)
+		ltPLTable(s, d.Vars[ti], sv, strVal, i, krows)
+		ltSummary(s, d.Vars[ti], sv, strVal, i, krows, events, alpha, ltRestricted(sd))
+		if strVar != "" {
+			cs = ltCensoredRow(cs, sv, strVal, sd)
+		}
+	}
+	if strVar == "" && cs != nil {
+		ltEmit(s, cs)
+	}
+	if strVar != "" && cs != nil {
+		// total row: control_var = '-'
+		tot, failed, cens := 0, 0, 0
+		for _, o := range rows {
+			tot++
+			if o.evt {
+				failed++
+			} else {
+				cens++
+			}
+		}
+		row := []any{StrV("-"), Missing}
+		if sv != nil {
+			if sv.Char {
+				row = append(row, StrV(""))
+			} else {
+				row = append(row, Missing)
+			}
+		}
+		row = append(row, NumV(float64(tot)), NumV(float64(failed)), NumV(float64(cens)),
+			NumV(100 * float64(cens) / float64(tot)))
+		cs.AddRow(row...)
+		ltEmit(s, cs)
 	}
 	if strVar != "" && len(samples) >= 2 {
 		ltHomogeneity(s, strVar, rows, strOrder[:len(samples)])
@@ -185,67 +237,102 @@ func ltKM(d []ltObs) ([]ltRow, int) {
 	return out, events
 }
 
-func ltPLTable(s *Session, v *Var, strVar, str string, si int, rows []ltRow) {
+func ltPLTable(s *Session, v *Var, strVar *Var, strVal Value, si int, rows []ltRow) {
 	cap := "Product-Limit Survival Estimates"
-	if strVar != "" {
-		cap = fmt.Sprintf("%s\nStratum %d: %s = %s", cap, si+1, strVar, str)
+	if strVar != nil {
+		cap = fmt.Sprintf("%s\nStratum %d: %s = %s", cap, si+1, strVar.Name, FormatValue(strVal, nil))
 	}
 	t := &Table{ODSName: "ProductLimitEstimates", Caption: cap, MissDot: true}
 	t.Cols = []Col{
-		{Name: "Time", Label: v.Name, Format: "10.3"},
-		{Name: "Type", Label: "", Char: true},
-		{Name: "Survival", Label: "Survival", Format: "8.4"},
-		{Name: "Failure", Label: "Failure", Format: "8.4"},
-		{Name: "SurvivalStdErr", Label: "Survival\nStandard\nError", Format: "8.4"},
-		{Name: "NumberFailed", Label: "Number\nFailed", Format: "6."},
-		{Name: "NumberLeft", Label: "Number\nLeft", Format: "6."},
+		{Name: "STRATUM", Label: "Stratum", Format: "3."},
 	}
-	t.RowHeader = 1
-	for i, r := range rows {
-		left := 0
-		for j := i + 1; j < len(rows); j++ {
-			left += rows[j].dd + rows[j].c
-		}
-		failed := 0
-		for j := 0; j <= i; j++ {
-			failed += rows[j].dd
-		}
-		mk := ""
-		if r.c > 0 {
-			mk = "*"
-		}
-		var sv, fv, se Value = Missing, Missing, Missing
-		if r.hasS {
-			sv = NumV(r.s)
-			fv = NumV(1 - r.s)
-		}
-		if r.hasSE {
-			se = NumV(r.se)
-		}
-		t.AddRow(NumV(r.t), mk, sv, fv, se, failed, left)
+	if strVar != nil {
+		t.Cols = append(t.Cols, Col{Name: strVar.Name, Label: strVar.Name, Char: strVar.Char, Format: strVar.Format})
 	}
+	t.Cols = append(t.Cols,
+		Col{Name: v.Name, Label: v.Name, Format: "10.3"},
+		Col{Name: "Censor", Label: "Censor", Format: "3."},
+		Col{Name: "Survival", Label: "Survival", Format: "8.4"},
+		Col{Name: "Failure", Label: "Failure", Format: "8.4"},
+		Col{Name: "StdErr", Label: "Survival\nStandard\nError", Format: "8.4"},
+		Col{Name: "Failed", Label: "Number\nFailed", Format: "6."},
+		Col{Name: "Left", Label: "Number\nLeft", Format: "6."})
+	t.RowHeader = len(t.Cols) - 7
+	N := 0
 	for _, r := range rows {
-		if r.c > 0 {
-			t.Notes = append(t.Notes, "The marked survival times are censored observations.")
-			break
+		N += r.dd + r.c
+	}
+	// SAS's listing: one row per observation, the t=0 origin row first; at a
+	// tie group the deaths come first (only the last carries the updated
+	// curve), then the censored observations.
+	row := []any{NumV(float64(si + 1))}
+	if strVar != nil {
+		row = append(row, strVal)
+	}
+	row = append(row, NumV(0), Missing, NumV(1), NumV(0), NumV(0), NumV(0), NumV(float64(N)))
+	t.AddRow(row...)
+	failed := 0.0
+	left := N
+	for _, r := range rows {
+		for j := 0; j < r.dd; j++ {
+			row := []any{NumV(float64(si + 1))}
+			if strVar != nil {
+				row = append(row, strVal)
+			}
+			row = append(row, NumV(r.t), NumV(0))
+			if j == r.dd-1 {
+				if r.hasS {
+					row = append(row, NumV(r.s), NumV(1-r.s))
+				} else {
+					row = append(row, Missing, Missing)
+				}
+				if r.hasSE {
+					row = append(row, NumV(r.se))
+				} else {
+					row = append(row, Missing)
+				}
+			} else {
+				row = append(row, Missing, Missing, Missing)
+			}
+			failed++
+			left--
+			row = append(row, NumV(failed), NumV(float64(left)))
+			t.AddRow(row...)
+		}
+		for j := 0; j < r.c; j++ {
+			row := []any{NumV(float64(si + 1))}
+			if strVar != nil {
+				row = append(row, strVal)
+			}
+			row = append(row, NumV(r.t), NumV(1), Missing, Missing, Missing, NumV(failed))
+			left--
+			row = append(row, NumV(float64(left)))
+			t.AddRow(row...)
 		}
 	}
-	s.Out.AddTable(t)
+	ltEmit(s, t)
 }
 
-func ltSummary(s *Session, strVar, str string, rows []ltRow, events int, alpha float64) {
+func ltSummary(s *Session, v *Var, sv *Var, strVal Value, si int, rows []ltRow, events int, alpha float64, restricted bool) {
 	cap := "Summary Statistics of Survival Times"
-	if strVar != "" {
-		cap = fmt.Sprintf("%s for %s = %s", cap, strVar, str)
-	}
-	t := &Table{ODSName: "QuartileEstimates", Caption: cap, MissDot: true}
+	t := &Table{ODSName: "Quartiles", Caption: cap, MissDot: true}
 	t.Cols = []Col{
-		{Name: "Percent", Label: "Percent", Char: true},
-		{Name: "Estimate", Label: "Point\nEstimate", Format: "10.3"},
-		{Name: "LowerCL", Label: fmt.Sprintf("%.0f%% Confidence\nLimits", 100*(1-alpha)), Format: "10.3"},
-		{Name: "UpperCL", Label: "", Format: "10.3"},
+		{Name: "STRATUM", Label: "Stratum", Format: "3."},
 	}
-	t.RowHeader = 1
+	if sv != nil {
+		t.Cols = append(t.Cols, Col{Name: sv.Name, Label: sv.Name, Char: sv.Char, Format: sv.Format})
+	}
+	t.Cols = append(t.Cols,
+		Col{Name: "Percent", Label: "Percent", Format: "3."},
+		Col{Name: "Estimate", Label: v.Name, Format: "10.3"},
+		Col{Name: "Transform", Label: "", Char: true},
+		Col{Name: "LowerLimit", Label: fmt.Sprintf("%.0f%% Confidence\nLimits", 100*(1-alpha)), Format: "10.3"},
+		Col{Name: "UpperLimit", Label: "", Format: "10.3"})
+	t.RowHeader = len(t.Cols) - 5
+	head := []any{NumV(float64(si + 1))}
+	if sv != nil {
+		head = append(head, strVal)
+	}
 	type ept struct {
 		t, s, se float64
 		hasSE    bool
@@ -257,6 +344,7 @@ func ltSummary(s *Session, strVar, str string, rows []ltRow, events int, alpha f
 		}
 	}
 	z := NormInv(1 - alpha/2)
+	_ = z
 	bounds := func(pp ept) (lo, hi float64) {
 		if pp.s <= 0 {
 			return 0, 0
@@ -268,8 +356,8 @@ func ltSummary(s *Session, strVar, str string, rows []ltRow, events int, alpha f
 		sth := pp.se / (pp.s * math.Abs(math.Log(pp.s)))
 		return math.Exp(-math.Exp(th + z*sth)), math.Exp(-math.Exp(th - z*sth))
 	}
-	for _, pc := range []string{"75", "50", "25"} {
-		p, _ := parseNumber(pc)
+	for _, pct := range []float64{75, 50, 25} {
+		p := pct
 		lvl := 1 - p/100
 		q, lo, hi := Missing, Missing, Missing
 		for i, pp := range ev {
@@ -290,13 +378,18 @@ func ltSummary(s *Session, strVar, str string, rows []ltRow, events int, alpha f
 			}
 		}
 		for _, pp := range ev {
+			if pp.s <= 0 {
+				break // the curve reached 0: the upper limit is undefined
+			}
 			_, shi := bounds(pp)
 			if hi.IsMissing() && shi < lvl {
 				hi = NumV(pp.t)
 				break
 			}
 		}
-		t.AddRow(pc, q, lo, hi)
+		row := append(append([]any{}, head...), NumV(pct))
+		row = append(row, q, "LOGLOG", lo, hi)
+		t.AddRow(row...)
 	}
 	// restricted mean over the event-time grid with the Greenwood-type
 	// standard error (finite-population corrected, as in SAS)
@@ -339,9 +432,97 @@ func ltSummary(s *Session, strVar, str string, rows []ltRow, events int, alpha f
 	if events > 1 {
 		se = math.Sqrt(varv * float64(events) / float64(events-1))
 	}
-	t.AddRow("Mean", NumV(mu), Missing, Missing)
-	t.AddRow("Standard Error", NumV(se), Missing, Missing)
-	s.Out.AddTable(t)
+	ltEmit(s, t)
+
+	mt := &Table{ODSName: "Means", Caption: cap, MissDot: true}
+	mt.Cols = []Col{
+		{Name: "STRATUM", Label: "Stratum", Format: "3."},
+	}
+	if sv != nil {
+		mt.Cols = append(mt.Cols, Col{Name: sv.Name, Label: sv.Name, Char: sv.Char, Format: sv.Format})
+	}
+	mt.Cols = append(mt.Cols,
+		Col{Name: "Mean", Label: "Mean", Format: "10.3"},
+		Col{Name: "StdErr", Label: "Standard\nError", Format: "10.3"},
+		Col{Name: "Bias", Label: "Biasing", Char: true})
+	mt.RowHeader = len(mt.Cols) - 3
+	mrow := []any{NumV(float64(si + 1))}
+	if sv != nil {
+		mrow = append(mrow, strVal)
+	}
+	bias := "none"
+	if restricted {
+		bias = "restricted to L where L = max_event_time < max_censored_time"
+	}
+	mrow = append(mrow, NumV(mu), NumV(se), bias)
+	mt.AddRow(mrow...)
+	ltEmit(s, mt)
+}
+
+// ltRestricted reports whether the largest observed time is censored after
+// the largest event time (SAS then reports the mean as restricted).
+func ltRestricted(sd []ltObs) bool {
+	maxE, maxC := math.Inf(-1), math.Inf(-1)
+	for _, o := range sd {
+		if o.evt {
+			maxE = math.Max(maxE, o.t)
+		} else {
+			maxC = math.Max(maxC, o.t)
+		}
+	}
+	return maxC > maxE
+}
+
+// ltCensoredRow appends one stratum line to the CensoredSummary table
+// (created on first use).
+func ltCensoredRow(cs *Table, sv *Var, strVal Value, sd []ltObs) *Table {
+	if cs == nil {
+		cs = &Table{ODSName: "CensoredSummary", Caption: "Summary of the Number of Censored and Uncensored Values", MissDot: true}
+		if sv == nil {
+			// no STRATA: SAS's reduced single-row layout
+			cs.Cols = []Col{
+				{Name: "Total", Label: "Total", Format: "8."},
+				{Name: "Failed", Label: "Failed", Format: "8."},
+				{Name: "Censored", Label: "Censored", Format: "8."},
+				{Name: "PctCens", Label: "Percent\nCensored", Format: "8."}}
+		} else {
+			cs.Cols = []Col{
+				{Name: "control_var", Label: "", Char: true, Hidden: true},
+				{Name: "Stratum", Label: "Stratum", Format: "3."},
+			}
+			cs.Cols = append(cs.Cols, Col{Name: sv.Name, Label: sv.Name, Char: sv.Char, Format: sv.Format})
+			cs.Cols = append(cs.Cols,
+				Col{Name: "Total", Label: "Total", Format: "8."},
+				Col{Name: "Failed", Label: "Failed", Format: "8."},
+				Col{Name: "Censored", Label: "Censored", Format: "8."},
+				Col{Name: "PctCens", Label: "Percent\nCensored", Format: "8."})
+		}
+		cs.RowHeader = len(cs.Cols) - 5
+	}
+	tot, failed, cens := 0, 0, 0
+	for _, o := range sd {
+		tot++
+		if o.evt {
+			failed++
+		} else {
+			cens++
+		}
+	}
+	var row []any
+	if sv != nil {
+		row = []any{StrV(""), NumV(float64(len(cs.Rows) + 1))}
+		if sv.Char {
+			row = append(row, StrV(strings.TrimRight(strVal.Str, " ")))
+		} else {
+			row = append(row, strVal)
+		}
+	} else {
+		row = []any{}
+	}
+	row = append(row, NumV(float64(tot)), NumV(float64(failed)), NumV(float64(cens)),
+		NumV(100*float64(cens)/float64(tot)))
+	cs.AddRow(row...)
+	return cs
 }
 
 func ltHomogeneity(s *Session, strVar string, rows []ltObs, strOrder []string) {
@@ -375,7 +556,7 @@ func ltHomogeneity(s *Session, strVar string, rows []ltObs, strOrder []string) {
 		}
 		return n
 	}
-	run := func(wfn func(float64) float64) float64 {
+	run := func(wfn func(float64) float64) (float64, []float64, [][]float64) {
 		k := len(K)
 		vv := make([]float64, k)
 		V := make([][]float64, k)
@@ -441,19 +622,60 @@ func ltHomogeneity(s *Session, strVar string, rows []ltObs, strOrder []string) {
 		for i := 0; i < m; i++ {
 			chi2 += vv[i] * x[i]
 		}
-		return chi2
+		return chi2, vv, V
 	}
-	t := &Table{ODSName: "HomogeneityTests", Caption: fmt.Sprintf("Test of Equality over %s", strVar), MissDot: true}
+	// the run closure also returns the per-group score sums and the
+	// covariance matrix, feeding the HomStats and HomCov ODS tables
+	lr, lrV, lrC := run(func(y float64) float64 { return 1 })
+	wi, wiV, wiC := run(func(y float64) float64 { return y })
+	df := len(K) - 1
+	strVal := func(g string) Value {
+		for _, o := range rows {
+			if o.str == g {
+				return o.strV
+			}
+		}
+		return Missing
+	}
+	hs := &Table{ODSName: "HomStats", Caption: fmt.Sprintf("Log-Rank and Wilcoxon Statistics over %s", strVar), MissDot: true}
+	hs.Cols = []Col{
+		Col{Name: strVar, Label: strVar, Char: true},
+		Col{Name: "LogRank", Label: "Log-Rank", Format: "10.3"},
+		Col{Name: "Wilcoxon", Label: "Wilcoxon", Format: "10.3"}}
+	for gi, g := range K {
+		sv := strVal(g)
+		if sv.Char {
+			hs.AddRow(StrV(strings.TrimRight(sv.Str, " ")), NumV(lrV[gi]), NumV(wiV[gi]))
+		} else {
+			hs.AddRow(FormatValue(sv, nil), NumV(lrV[gi]), NumV(wiV[gi]))
+		}
+	}
+	ltEmit(s, hs)
+	covTable := func(name string, C [][]float64) *Table {
+		ct := &Table{ODSName: name, Caption: "", MissDot: true}
+		ct.Cols = []Col{{Name: strVar, Label: strVar, Char: true}}
+		for _, g := range K {
+			ct.Cols = append(ct.Cols, Col{Name: FormatValue(strVal(g), nil), Label: FormatValue(strVal(g), nil), Format: "10.3"})
+		}
+		for gi, g := range K {
+			row := []any{StrV(FormatValue(strVal(g), nil))}
+			for hj := range K {
+				row = append(row, NumV(C[gi][hj]))
+			}
+			ct.AddRow(row...)
+		}
+		return ct
+	}
+	ltEmit(s, covTable("LogrankHomCov", lrC))
+	ltEmit(s, covTable("WilcoxonHomCov", wiC))
+	t := &Table{ODSName: "HomTests", Caption: fmt.Sprintf("Test of Equality over %s", strVar), MissDot: true}
 	t.Cols = []Col{
 		{Name: "Test", Label: "Test", Char: true},
-		{Name: "ChiSquare", Label: "Chi-Square", Format: "10.4"},
+		{Name: "ChiSq", Label: "Chi-Square", Format: "10.4"},
 		{Name: "DF", Label: "DF", Format: "4."},
 		{Name: "ProbChiSq", Label: "Pr > Chi-Square", Format: "PVALUE6.4"},
 	}
 	t.RowHeader = 1
-	lr := run(func(y float64) float64 { return 1 })
-	wi := run(func(y float64) float64 { return y })
-	df := len(K) - 1
 	t.AddRow("Log-Rank", lr, df, ChiSqSF(lr, float64(df)))
 	t.AddRow("Wilcoxon", wi, df, ChiSqSF(wi, float64(df)))
 	// -2Log(LR): exponential likelihood ratio (SAS sign convention)
@@ -481,5 +703,5 @@ func ltHomogeneity(s *Session, strVar string, rows []ltObs, strOrder []string) {
 	}
 	lr2 := -2 * logL
 	t.AddRow("-2Log(LR)", lr2, df, ChiSqSF(lr2, float64(df)))
-	s.Out.AddTable(t)
+	ltEmit(s, t)
 }

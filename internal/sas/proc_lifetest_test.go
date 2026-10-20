@@ -24,12 +24,12 @@ data exposed;
 157 1 0 237 1 0 249 1 0 211 1 0 180 1 0 229 1 0
 226 1 0 234 1 0 268 0 0 209 1 0
 ;
-ods output QuartileEstimates=_qt_ ProductLimitEstimates=_pl_;
+ods output Quartiles=_qt_ Means=_means_ ProductLimitEstimates=_pl_;
 proc lifetest data=exposed alpha=.05;
   where treatment = 0;
   time days*status(0);
 run;
-ods output HomogeneityTests=_ht_;
+ods output HomTests=_ht_ HomStats=_hstats_;
 proc lifetest data=exposed alpha=.05;
   time days*status(0);
   strata treatment;
@@ -45,13 +45,19 @@ run;
 			t.Errorf("%s = %.6f, want %.6f (tol %g)", name, got, want, tol)
 		}
 	}
-	// placebo: time 206 has two deaths (S drops 0.85 -> 0.75)
+	// ODS layout: _Proc_, _Run_, STRATUM, treatment, days, Censor,
+	// Survival, Failure, StdErr, Failed, Left. Placebo (treatment=0):
+	// time 206 has two deaths (S drops 0.85 -> 0.75).
 	found206 := false
+	iSurv := pl.Index("Survival")
+	iStd := pl.Index("StdErr")
+	iTime := pl.Index("days")
+	iFailed := pl.Index("Failed")
 	for _, r := range pl.Rows {
-		if r[0].Num == 206 && r[5].Num == 5 {
+		if r[iTime].Num == 206 && r[iFailed].Num == 5 {
 			found206 = true
-			check(t, "S(206)", r[2].Num, 0.75, 1e-9)
-			check(t, "SE(206)", r[4].Num, 0.0968, 5e-5)
+			check(t, "S(206)", r[iSurv].Num, 0.75, 1e-9)
+			check(t, "SE(206)", r[iStd].Num, 0.0968, 5e-5)
 		}
 	}
 	if !found206 {
@@ -59,38 +65,47 @@ run;
 	}
 	qt := s.Dataset("_QT_")
 	if qt == nil {
-		t.Fatal("no QuartileEstimates capture")
+		t.Fatal("no Quartiles capture")
 	}
-	var median, medLo, medHi, se float64
+	// ODS layout: _Proc_, _Run_, STRATUM, treatment, Percent, days,
+	// Transform, LowerLimit, UpperLimit
+	var median, medLo, medHi float64
 	haveMedian := false
+	iPct := qt.Index("Percent")
+	iEst := qt.Index("Estimate")
+	iLo := qt.Index("LowerLimit")
+	iHi := qt.Index("UpperLimit")
 	for _, r := range qt.Rows {
-		if r[0].Str == "50" {
-			median, medLo, medHi = r[1].Num, r[2].Num, r[3].Num
+		if r[iPct].Num == 50 {
+			median, medLo, medHi = r[iEst].Num, r[iLo].Num, r[iHi].Num
 			haveMedian = true
-		}
-		if r[0].Str == "Standard Error" {
-			se = r[1].Num
 		}
 	}
 	if !haveMedian {
-		t.Fatal("no median row in QuartileEstimates")
+		t.Fatal("no median row in Quartiles")
 	}
 	check(t, "median", median, 235.5, 5e-6)
 	check(t, "median LCL", medLo, 206, 5e-6)
 	check(t, "median UCL", medHi, 253, 5e-6)
-	check(t, "mean SE", se, 10.211, 5e-4)
+	mn := s.Dataset("_MEANS_")
+	if mn == nil {
+		t.Fatal("no Means capture")
+	}
+	check(t, "mean SE", mn.Rows[0][mn.Index("StdErr")].Num, 10.211, 5e-4)
 	ht := s.Dataset("_HT_")
 	if ht == nil {
 		t.Fatal("no HomogeneityTests capture")
 	}
+	iTest := ht.Index("Test")
+	iChi := ht.Index("ChiSq")
 	for _, r := range ht.Rows {
-		switch r[0].Str {
+		switch r[iTest].Str {
 		case "Log-Rank":
-			check(t, "log-rank", r[1].Num, 5.6485, 5e-5)
+			check(t, "log-rank", r[iChi].Num, 5.6485, 5e-5)
 		case "Wilcoxon":
-			check(t, "wilcoxon", r[1].Num, 5.0312, 5e-5)
+			check(t, "wilcoxon", r[iChi].Num, 5.0312, 5e-5)
 		case "-2Log(LR)":
-			check(t, "-2Log(LR)", r[1].Num, 0.1983, 5e-5)
+			check(t, "-2Log(LR)", r[iChi].Num, 0.1983, 5e-5)
 		}
 	}
 }
