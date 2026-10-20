@@ -589,7 +589,7 @@ func ltHomogeneity(s *Session, strVar string, rows []ltObs, strOrder []string) {
 					if gi == hj {
 						V[gi][hj] += w * w * float64(d) * float64(Y-d) * yk[gi] * (float64(Y) - yk[gi]) / (float64(Y) * float64(Y) * (float64(Y) - 1))
 					} else {
-						V[gi][hj] += w * w * float64(d) * float64(Y-d) * yk[gi] * yk[hj] / (float64(Y) * float64(Y) * (float64(Y) - 1))
+						V[gi][hj] -= w * w * float64(d) * float64(Y-d) * yk[gi] * yk[hj] / (float64(Y) * float64(Y) * (float64(Y) - 1))
 					}
 				}
 			}
