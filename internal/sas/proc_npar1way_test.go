@@ -509,14 +509,16 @@ proc npar1way data=doses dscf;
 		}
 	}
 	// R: A-B 4.582576 p 0.00655441; A-D 4.752708 p 0.00432534;
-	//     B-C 4.427189 p 0.00945263
-	check(t, "AB z", dt.Rows[0][1].Num, -3.240370, 2e-5)
-	check(t, "AB dscf", dt.Rows[0][2].Num, -4.582576, 2e-5)
-	check(t, "AB p", dt.Rows[0][3].Num, 0.00655441, 2e-6)
-	check(t, "AD dscf", dt.Rows[2][2].Num, -4.752708, 2e-5)
-	check(t, "AD p", dt.Rows[2][3].Num, 0.00432534, 2e-6)
-	check(t, "BC dscf", dt.Rows[3][2].Num, -4.427189, 2e-5)
-	check(t, "BC p", dt.Rows[3][3].Num, 0.00945263, 2e-6)
+	//     B-C 4.427189 p 0.00945263; ODS cols with _Proc_/_Run_ first:
+	//     Variable, Comparison, WilcoxonZ, DSCFValue, PValue
+	iZ, iD, iP := dt.Index("WilcoxonZ"), dt.Index("DSCFValue"), dt.Index("PValue")
+	check(t, "AB z", dt.Rows[0][iZ].Num, -3.240370, 2e-5)
+	check(t, "AB dscf", dt.Rows[0][iD].Num, 4.582576, 2e-5)
+	check(t, "AB p", dt.Rows[0][iP].Num, 0.00655441, 2e-6)
+	check(t, "AD dscf", dt.Rows[2][iD].Num, 4.752708, 2e-5)
+	check(t, "AD p", dt.Rows[2][iP].Num, 0.00432534, 2e-6)
+	check(t, "BC dscf", dt.Rows[3][iD].Num, 4.427189, 2e-5)
+	check(t, "BC p", dt.Rows[3][iP].Num, 0.00945263, 2e-6)
 }
 
 // TestNpExactWilcoxon pins the exact rank-sum permutation p-value with
@@ -544,10 +546,9 @@ run;`)
 	if wt == nil {
 		t.Fatal("no WilcoxonTest output")
 	}
-	cell := func(r int) float64 { return wt.Rows[r][1].Num }
-	uvClose(t, "S", cell(0), 80, 1e-12)
-	uvClose(t, "Z", cell(1), 2.7244660125909883, 1e-9)
-	uvClose(t, "normal one-sided", cell(2), 0.0032202779436714913, 1e-9)
-	uvClose(t, "exact one-sided", cell(7), 0.0018648018648018648, 1e-12)
-	uvClose(t, "exact two-sided", cell(8), 0.0037296037296037296, 1e-12)
+	uvClose(t, "S", wt.Rows[0][wt.Index("Statistic")].Num, 80, 1e-12)
+	uvClose(t, "Z", wt.Rows[0][wt.Index("Z")].Num, 2.7244660125909883, 1e-9)
+	uvClose(t, "normal one-sided", wt.Rows[0][wt.Index("Prob1")].Num, 0.0032202779436714913, 1e-9)
+	uvClose(t, "exact one-sided", wt.Rows[0][wt.Index("Prob1E")].Num, 0.0018648018648018648, 1e-12)
+	uvClose(t, "exact two-sided", wt.Rows[0][wt.Index("Prob2E")].Num, 0.0037296037296037296, 1e-12)
 }
