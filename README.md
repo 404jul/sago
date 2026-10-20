@@ -79,6 +79,10 @@ Run the whole suite:
 go test ./internal/sas
 ```
 
+Conformance against real SAS (DATA step semantics, log notes, proc
+defaults) is checked by [`sascheck/`](sascheck/README.md): programs are run
+once in SAS to record golden snapshots, and `go test` diffs sago against them.
+
 ## Examples
 
 Every file in [`examples/`](examples/) is a runnable program; each one
@@ -113,6 +117,7 @@ exercises a feature area and doubles as a regression test.
 cmd/sago          CLI
 internal/sas      the emulator (lexer, DATA step, procs, stats, HTML/SVG)
 examples/         runnable .sas programs (see table above)
+sascheck/         SAS conformance harness (capture script, probes, goldens)
 ```
 
 ## License

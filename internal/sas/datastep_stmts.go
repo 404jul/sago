@@ -189,6 +189,7 @@ func (p *dsParser) expr(toks []Token, line int) (*dsExpr, error) {
 	// compile-time type resolution for variables and functions
 	st := p.st
 	dsTypeExpr(st, e, line)
+	st.collectConv(e, line)
 	return &dsExpr{e: e, line: line}, nil
 }
 
@@ -531,6 +532,7 @@ func (p *dsParser) parseDo(s *Stmt) (dsNode, error) {
 		}
 		n.varv = p.st.variable(v)
 		p.st.numeric(n.varv, s.Line)
+		n.varv.assigned = true
 		items, err := p.parseDoItems(spec, s.Line)
 		if err != nil {
 			return nil, err
@@ -934,6 +936,13 @@ func (p *dsParser) parseAssign(s *Stmt) (dsNode, bool, error) {
 		v := p.st.variable(lhs[0].Text)
 		p.st.defineFromValue(v, e, s.Line)
 		v.assigned = true
+		if ec, _ := p.st.cType(e.e); ec != v.Char {
+			if v.Char {
+				p.st.convN2C = append(p.st.convN2C, s.Line)
+			} else {
+				p.st.convC2N = append(p.st.convC2N, s.Line)
+			}
+		}
 		return &dsAssignNode{v: v, expr: e, line: s.Line}, true, nil
 	}
 	// array element target: arr{expr}
@@ -1017,37 +1026,136 @@ func (p *dsParser) parseSubstrAssign(lhs []Token, e *dsExpr, s *Stmt) (dsNode, b
 	}}, true, nil
 }
 
+// defineFromValue fixes a variable's type and length from the expression
+// being assigned at its first reference (SAS sets character lengths at
+// compile time from the first assignment; LENGTH etc. have already won).
 func (st *dsStep) defineFromValue(v *dsVar, e *dsExpr, line int) {
 	if v.typed {
 		return
 	}
-	// char if the expression is a string literal or string function
-	char := false
-	switch n := e.e.(type) {
+	char, l := st.cType(e.e)
+	if char {
+		st.define(v, true, l, line)
+	} else {
+		st.numeric(v, line)
+	}
+}
+
+// cType is the compile-time type and length of an expression, following the
+// DATA step compiler: string literals keep their exact length (trailing
+// blanks included), || concatenates operand lengths (numeric operands
+// contribute the 12 characters of the automatic BEST12. conversion), most
+// string functions return their argument's length, the CAT* family and
+// friends default to 200, and a first reference to an unknown variable is
+// numeric.
+func (st *dsStep) cType(e Expr) (bool, int) {
+	switch n := e.(type) {
 	case *StrLit:
-		char = true
-		if !v.lenSet {
-			v.Len = len(n.S)
-			if v.Len == 0 {
-				v.Len = 1
+		return true, max(len(n.S), 1)
+	case *NumLit:
+		return false, 8
+	case *VarRef:
+		if v := st.lookup(n.Name); v != nil && v.Char {
+			return true, v.Len
+		}
+		return false, 8
+	case *Unary:
+		return false, 8
+	case *Binary:
+		if n.Op == "||" {
+			lc, ll := st.cType(n.L)
+			rc, lr := st.cType(n.R)
+			if !lc {
+				ll = 12
+			}
+			if !rc {
+				lr = 12
+			}
+			return true, min(ll+lr, 32767)
+		}
+		return false, 8
+	case *Call:
+		return st.callCType(n)
+	}
+	return false, 8
+}
+
+func (st *dsStep) callCType(n *Call) (bool, int) {
+	first := 8
+	if len(n.Args) > 0 {
+		if c, l := st.cType(n.Args[0]); c {
+			first = l
+		}
+	}
+	switch n.Name {
+	case "TRIM", "TRIMN", "LEFT", "RIGHT", "UPCASE", "LOWCASE", "PROPCASE",
+		"STRIP", "REVERSE", "COMPRESS", "TRANSLATE", "TRANSTRN", "SOUNDEX",
+		"SUBSTR", "QUOTE", "COALESCEC":
+		return true, first
+	case "CAT", "CATS", "CATT", "CATX", "CATQ", "SCAN", "TRANWRD", "REPEAT",
+		"SUBSTRN", "SYMGET", "RESOLVE", "IFC", "CHOOSEC", "PATHNAME":
+		return true, 200
+	case "BYTE":
+		return true, 1
+	case "PUT", "PUTN", "PUTC":
+		if len(n.Args) >= 2 {
+			if lit, ok := n.Args[1].(*StrLit); ok {
+				if f := ParseFormat(lit.S); f != nil && f.HasW {
+					return true, f.W
+				}
+			}
+		}
+		return true, 200
+	}
+	return false, 8
+}
+
+// collectConv records the conversion places a step reports at compile time:
+// numeric operands of || convert to character; the character side of an
+// arithmetic operation or mixed-type comparison converts to numeric; and an
+// assignment whose value type differs from the variable converts too.
+func (st *dsStep) collectConv(e Expr, line int) {
+	switch n := e.(type) {
+	case *Unary:
+		if n.Op == "-" || n.Op == "+" {
+			if c, _ := st.cType(n.X); c {
+				st.convC2N = append(st.convC2N, line)
+			}
+		}
+		st.collectConv(n.X, line)
+	case *Binary:
+		st.collectConv(n.L, line)
+		st.collectConv(n.R, line)
+		switch n.Op {
+		case "||":
+			if c, _ := st.cType(n.L); !c {
+				st.convN2C = append(st.convN2C, line)
+			}
+			if c, _ := st.cType(n.R); !c {
+				st.convN2C = append(st.convN2C, line)
+			}
+		case "=", "NE", "<", "<=", ">", ">=", "=:", "><", "<>",
+			"+", "-", "*", "/", "**", "MIN", "MAX":
+			lc, _ := st.cType(n.L)
+			rc, _ := st.cType(n.R)
+			if lc != rc {
+				st.convC2N = append(st.convC2N, line)
 			}
 		}
 	case *Call:
-		switch n.Name {
-		case "CAT", "CATS", "CATT", "CATX", "UPCASE", "LOWCASE", "PROPCASE", "TRIM",
-			"TRIMN", "STRIP", "LEFT", "RIGHT", "SUBSTR", "SUBSTRN", "SCAN", "COMPRESS",
-			"TRANWRD", "TRANSTRN", "TRANSLATE", "REVERSE", "REPEAT", "PUT", "PUTN",
-			"PUTC", "IFC", "BYTE", "COALESCEC", "SYMGET":
-			char = true
+		for _, a := range n.Args {
+			st.collectConv(a, line)
 		}
-	case *Binary:
-		if n.Op == "||" {
-			char = true
+	case *InExpr:
+		st.collectConv(n.X, line)
+		for _, v := range n.List {
+			st.collectConv(v, line)
 		}
-	}
-	if char {
-		st.define(v, true, 0, line)
-	} else {
-		st.numeric(v, line)
+	case *LikeExpr:
+		st.collectConv(n.X, line)
+		st.collectConv(n.Pat, line)
+	case *ContainsExpr:
+		st.collectConv(n.X, line)
+		st.collectConv(n.Y, line)
 	}
 }

@@ -1,0 +1,23 @@
+/* PUT statement formatting: explicit formats, attached formats, BEST12. */
+data _null_;
+  d = '01JAN1960'd;
+  put d date9.;
+  put d mmddyy10.;
+  put d= date9.;
+  f = '15MAR2021'd;
+  format f date9.;
+  put f=;
+  put f yymmdd10.;
+  b1 = 1/3;
+  b2 = 1e15;
+  b3 = 123456789012;
+  b4 = 1234567890123;
+  b5 = 0.1 + 0.2;
+  b6 = -0.000001234;
+  b7 = 2/3 * 1e-5;
+  put b1= b2= b3= b4= b5= b6= b7=;
+  x = 1234.5678;
+  put x 8.2 / x comma10.2 / x dollar12.2 / x e10.;
+  s = 'abc';
+  put s $quote10. '|' s $10. '|';
+run;

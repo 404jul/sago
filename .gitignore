@@ -9,3 +9,6 @@
 
 # editors
 *.swp
+
+# python
+__pycache__/

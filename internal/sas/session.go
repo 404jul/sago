@@ -620,6 +620,7 @@ func (s *Session) runProc(header *Stmt, name string, body []*Stmt) {
 		optToks = header.Toks[2:]
 	}
 	p := &ProcStep{Name: name, Header: header, Opts: ParseOpts(optToks), Body: body, Line: header.Line}
+	s.Out.proc = name
 	s.Out.BeginProc(procLabel(name))
 	err := f(s, p)
 	s.Out.EndProc()

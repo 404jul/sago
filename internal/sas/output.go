@@ -233,6 +233,11 @@ type Output struct {
 	pending    map[string]*Dataset
 	byVars     []*Var
 	byKeys     []Value
+	// OnTable, if set, receives every named table as its ODS OUTPUT data
+	// set (BY variables prepended), whether or not it is displayed or
+	// captured. proc is the running procedure; ds must not be retained.
+	OnTable func(proc, odsName string, ds *Dataset)
+	proc    string
 }
 
 func newOutput(s *Session) *Output {
@@ -266,6 +271,7 @@ func (o *Output) EndProc() {
 	}
 	o.pending = map[string]*Dataset{}
 	o.byVars, o.byKeys = nil, nil
+	o.proc = ""
 }
 
 func (o *Output) visible(odsName string) bool {
@@ -342,7 +348,7 @@ func (o *Output) capture(t *Table) {
 	}
 	key := strings.ToUpper(t.ODSName)
 	target, ok := o.ODSOutputs[key]
-	if !ok {
+	if !ok && o.OnTable == nil {
 		return
 	}
 	ds := t.ToDataset(target)
@@ -355,6 +361,12 @@ func (o *Output) capture(t *Table) {
 		for i, r := range ds.Rows {
 			ds.Rows[i] = append(append([]Value(nil), o.byKeys...), r...)
 		}
+	}
+	if o.OnTable != nil {
+		o.OnTable(o.proc, t.ODSName, ds)
+	}
+	if !ok {
+		return
 	}
 	if prev, ok := o.pending[key]; ok {
 		appendDataset(prev, ds)
