@@ -98,3 +98,8 @@ plain missing.
   are not.
 - A log line that is indented six or more spaces right after a NOTE is read
   as part of that NOTE.
+
+## Status
+
+Open conformance failures and harness caveats are listed in
+[BUGS.md](BUGS.md); session notes and recovery steps in [WORKLOG.md](WORKLOG.md).

@@ -95,3 +95,6 @@ row-capped dump harness existed; the capped harness should handle them).
 
 Recovery notes: SAS sessions die under load/idle; relaunch via the welcome
 tab, hook XHR, trigger one run to harvest SID+CSRF (documented above).
+
+Open bugs and remaining conformance failures are tracked in
+[sascheck/BUGS.md](BUGS.md) — keep it current as areas get fixed.
