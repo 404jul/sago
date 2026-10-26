@@ -98,3 +98,47 @@ tab, hook XHR, trigger one run to harvest SID+CSRF (documented above).
 
 Open bugs and remaining conformance failures are tracked in
 [sascheck/BUGS.md](BUGS.md) — keep it current as areas get fixed.
+
+## Session 2026-10-26 — linear models (REG/GLM/ANOVA) in the browser
+
+Scope: linear-model inference. SAS Studio session was dead (browser
+fresh, no cookies); sign-in modal left open in the browser pane —
+capture steps below assume the user has signed in and SAS Studio is
+launched from welcome.oda.sas.com.
+
+Fixed without new captures (goldens already in the repo):
+- GLM: CLDiffsInfo/MCLinesInfo cValue1 fixed w.d widths, CLDiffs
+  Significance numeric 0/1 (display via new SIG. format), MCLines
+  rebuilt to SAS's ODS shape (Line1/Mean/N/Level + hidden Eq1..Eqk
+  span indicators, continuation rows between levels, letter centered
+  on line i+j for a block spanning levels i..j), plain Means table
+  suppressed when mctest options present, Means columns named
+  "Mean <dep>"/"SD <dep>" with values only for one-effect models,
+  LSMeans column <dep>LSMean. twoway_test fully green; anova_test down
+  to the Tukey-q diffs.
+- REG (vs stale golden — tables still ground truth): lack of fit/pure
+  error rows back inside the ANOVA table (no separate LackFitANOVA),
+  CLB replaces Probt with LowerCL/UpperCL (VIF column sits between
+  tValue and LowerCL), TestANOVA = Model/Test(hidden)/Source/DF/MS/
+  FValue/ProbF/Control with the test label in Test, OUTPUT OUT=
+  canonical order P, LCLM, UCLM, LCL, UCL, R, ... with SAS's labels
+  ("Lower Bound of 95% C.I. for Mean" etc.). reg_test tables+data
+  match the stale golden 100%.
+- GLM general CONTRAST/ESTIMATE (commit 84bdd42) via f.testL over the
+  over-parameterized columns; ESTIMATE was silently ignored before.
+- QTUKEY data step function.
+
+Ground-truth finding: SAS's studentized-range quantile is NOT the
+exact distribution — 3.77288547881831 vs exact 3.772928965727 at
+(0.95,3,12); sago computes the exact value and needs SAS's algorithm.
+Grid queued in probes/lm_inference.sas.
+
+Capture steps when signed in (from the repo root):
+  python3 sascheck/browsecap.py pass1 examples/reg_test.sas > /tmp/reg_test.p1.sas
+  python3 sascheck/browsecap.py pass1 sascheck/probes/lm_inference.sas > /tmp/lm_inference.p1.sas
+  (submit each via the SAS Studio XHR bridge, save logs, then)
+  python3 sascheck/browsecap.py pass2 examples/reg_test.sas --p1log /tmp/reg_test.p1.log > /tmp/reg_test.p2.sas
+  ... run, then:
+  python3 sascheck/browsecap.py golden examples/reg_test.sas --p2log /tmp/reg_test.p2.log
+  python3 sascheck/browsecap.py golden sascheck/probes/lm_inference.sas --p2log /tmp/lm_inference.p2.log
+  mv golden/stale/examples__reg_test.json aside; re-capture overwrites golden/.
