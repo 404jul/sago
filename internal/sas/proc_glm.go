@@ -509,6 +509,12 @@ func (g *glCtx) means(st *Stmt) error {
 			cs = append(cs, c)
 		}
 		lvls := g.levelsOf(cs)
+		mctest := false
+		for _, k := range []string{"TUKEY", "BON", "SCHEFFE", "LSD", "T", "SIDAK", "DUNNETT", "DUNCAN", "SNK", "WALLER", "CLDIFF", "LINES"} {
+			if o.Has(k) {
+				mctest = true
+			}
+		}
 		// HOVTEST (one-way models only)
 		if op, ok := o.Get("HOVTEST"); ok && len(cs) == 1 {
 			method := "LEVENE"
@@ -543,23 +549,32 @@ func (g *glCtx) means(st *Stmt) error {
 				}
 			}
 		}
-		// Means table
+		// Means table: SAS emits the plain Means ODS object only when no
+		// multiple-comparison display was requested (the mctest output
+		// replaces it), and fills Mean/SD only for one-effect models.
+		if mctest {
+			continue
+		}
 		t := &Table{ODSName: "Means", RowHeader: len(cs)}
 		for _, c := range cs {
 			t.Cols = append(t.Cols, Col{Name: c.Name, Label: "Level of " + c.Name, Char: true})
 		}
-		t.Cols = append(t.Cols, Col{Name: "N", Label: "N"}, Col{Name: "Mean", Label: "Mean"}, Col{Name: "SD", Label: "Std Dev"})
+		t.Cols = append(t.Cols, Col{Name: "N", Label: "N"}, Col{Name: "Mean " + g.dep, Label: "Mean"}, Col{Name: "SD " + g.dep, Label: "Std Dev"})
 		t.Spans = []Span{{Label: g.dep, From: len(cs) + 1, To: len(cs) + 2}}
+		oneEffect := len(g.terms) == 1
 		for _, lv := range lvls {
 			row := []any{}
 			for _, k := range lv.keys {
 				row = append(row, k)
 			}
-			sd := math.NaN()
-			if lv.n > 1 {
-				sd = StdDev(lv.ys)
+			row = append(row, lv.n, nil, nil)
+			if oneEffect {
+				sd := math.NaN()
+				if lv.n > 1 {
+					sd = StdDev(lv.ys)
+				}
+				row[len(row)-2], row[len(row)-1] = lv.mean, sd
 			}
-			row = append(row, lv.n, lv.mean, sd)
 			t.AddRow(row...)
 		}
 		g.table(t)
@@ -825,18 +840,27 @@ func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64
 	if lines {
 		odsInfo = "MCLinesInfo"
 	}
+	// SAS formats the info cValue1 cells with fixed w.d fields (width 8,
+	// except the minimum significant difference at width 6)
+	fmtW := func(w, d int, v float64) string {
+		s := fmt.Sprintf("%.*f", d, v)
+		for len(s) < w {
+			s = " " + s
+		}
+		return s
+	}
 	info := &Table{ODSName: odsInfo, Caption: name, RowHeader: 1, Cols: []Col{{Name: "Label1", Char: true}, {Name: "cValue1", Char: true}, {Name: "nValue1", Hidden: true}}}
-	info.AddRow("Alpha", fmt.Sprintf("%g", alpha), alpha)
-	info.AddRow("Error Degrees of Freedom", fmt.Sprintf("%d", f.DFE), dfe)
-	info.AddRow("Error Mean Square", strings.TrimSpace(FormatByName(NumV(mse), "BEST8.")), mse)
-	info.AddRow(critLabel, fmt.Sprintf("%.5f", crit), crit)
+	info.AddRow("Alpha", fmtW(8, 2, alpha), alpha)
+	info.AddRow("Error Degrees of Freedom", fmtW(8, 0, dfe), dfe)
+	info.AddRow("Error Mean Square", fmtW(8, 6, mse), mse)
+	info.AddRow(critLabel, fmtW(8, 5, crit), crit)
 	if balanced {
 		msd := hw(lvls[0].n, lvls[0].n)
 		lbl := "Minimum Significant Difference"
 		if method == "LSD" || method == "T" {
 			lbl = "Least Significant Difference"
 		}
-		info.AddRow(lbl, strings.TrimSpace(FormatByName(NumV(msd), "BEST8.")), msd)
+		info.AddRow(lbl, fmtW(6, 4, msd), msd)
 	}
 	g.table(info)
 	sorted := append([]*glLevel(nil), lvls...)
@@ -848,7 +872,7 @@ func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64
 			simul = ""
 		}
 		t := &Table{ODSName: "CLDiffs", Caption: name, RowHeader: 1, Cols: []Col{{Name: "Comparison", Label: e.Name() + " Comparison", Char: true},
-			{Name: "Difference", Label: "Difference Between Means"}, {Name: "LowerCL", Label: "Lower"}, {Name: "UpperCL", Label: "Upper"}, {Name: "Significance", Label: "", Char: true}},
+			{Name: "Difference", Label: "Difference Between Means"}, {Name: "LowerCL", Label: "Lower"}, {Name: "UpperCL", Label: "Upper"}, {Name: "Significance", Label: "", Format: "SIG."}},
 			Spans: []Span{{Label: simul + pct + " Confidence Limits", From: 2, To: 3}}}
 		t.Notes = []string{fmt.Sprintf("Comparisons significant at the %g level are indicated by ***.", alpha)}
 		for _, a := range sorted {
@@ -861,9 +885,9 @@ func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64
 				}
 				diff := a.mean - b.mean
 				h := hw(a.n, b.n)
-				sig := ""
+				sig := 0.0
 				if diff-h > 0 || diff+h < 0 {
-					sig = "***"
+					sig = 1
 				}
 				t.AddRow(a.keys[0]+" - "+b.keys[0], diff, diff-h, diff+h, sig)
 			}
@@ -892,12 +916,51 @@ func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64
 				letters[x] = append(letters[x], l)
 			}
 		}
-		t := &Table{ODSName: "MCLines", Caption: name, RowHeader: 0, Cols: []Col{{Name: "Grouping", Label: method + " Grouping", Char: true},
+		// SAS MCLines ODS shape: one row per level (descending mean) plus a
+		// continuation row between consecutive levels; Eq1..Eqk (hidden)
+		// carry the letter block's level-span indicator, Eq1 indexing the
+		// lowest-mean level. A continuation row repeats the preceding
+		// level's indicator; Line1 carries the block letter vertically
+		// centered over its span (level j sits on line 2j, its
+		// continuation on 2j+1, so a block i..j centers on line i+j).
+		t := &Table{ODSName: "MCLines", Caption: name, RowHeader: 0, Cols: []Col{{Name: "Line1", Label: method + " Grouping", Char: true},
 			{Name: "Mean", Label: "Mean"}, {Name: "N", Label: "N"}, {Name: "Level", Label: e.Name(), Char: true}}}
+		for i := 0; i < k; i++ {
+			t.Cols = append(t.Cols, Col{Name: fmt.Sprintf("Eq%d", k-i), Hidden: true})
+		}
 		t.Cols[0].Label = map[string]string{"TUKEY": "Tukey", "BON": "Bon", "SCHEFFE": "Scheffe", "LSD": "t", "T": "t", "SIDAK": "Sidak"}[method] + " Grouping"
 		t.Notes = []string{"Means with the same letter are not significantly different."}
-		for i, lv := range sorted {
-			t.AddRow(strings.Join(letters[i], " "), lv.mean, lv.n, lv.keys[0])
+		blockOf := make([]int, k)
+		for ri, r := range rs {
+			for x := r.i; x <= r.j; x++ {
+				blockOf[x] = ri
+			}
+		}
+		center := map[int]string{}
+		for ri, r := range rs {
+			center[r.i+r.j] = string(rune('A' + ri%26))
+		}
+		eqCells := func(ri int) []any {
+			r := rs[ri]
+			cells := make([]any, k)
+			for i := range cells {
+				cells[i] = 0.0
+				if i >= r.i && i <= r.j {
+					cells[i] = 1.0
+				}
+			}
+			return cells
+		}
+		for j := 0; j < k; j++ {
+			ri := blockOf[j]
+			cells := []any{strings.Join(letters[j], " "), sorted[j].mean, sorted[j].n, sorted[j].keys[0]}
+			cells = append(cells, eqCells(ri)...)
+			t.AddRow(cells...)
+			if j < k-1 {
+				cont := []any{center[2*j+1], nil, nil, ""}
+				cont = append(cont, eqCells(ri)...)
+				t.AddRow(cont...)
+			}
 		}
 		g.table(t)
 	}
@@ -955,7 +1018,7 @@ func (g *glCtx) lsmeans(st *Stmt) {
 		for _, c := range cs {
 			t.Cols = append(t.Cols, Col{Name: c.Name, Label: c.Name, Char: true})
 		}
-		t.Cols = append(t.Cols, Col{Name: "LSMean", Label: g.dep + " LSMEAN"})
+		t.Cols = append(t.Cols, Col{Name: g.dep + "LSMean", Label: g.dep + " LSMEAN"})
 		stderr := o.Has("STDERR")
 		if stderr {
 			t.Cols = append(t.Cols, Col{Name: "StdErr", Label: "Standard Error"}, Col{Name: "Probt", Label: "Pr > |t|", Format: lmFmtP})

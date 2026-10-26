@@ -68,8 +68,8 @@ run;
 	if math.Abs(r[1].Num-d) > 1e-6 || math.Abs(r[2].Num-(d-h)) > 1e-6 || math.Abs(r[3].Num-(d+h)) > 1e-6 {
 		t.Errorf("B - A = [%v, %v, %v], want %.6f [%.6f, %.6f]", r[1].Num, r[2].Num, r[3].Num, d, d-h, d+h)
 	}
-	if r[4].Str != "***" {
-		t.Errorf("B - A should be significant, got %q", r[4].Str)
+	if r[4].Num != 1 {
+		t.Errorf("B - A should be significant, got %v", r[4].Num)
 	}
 	// A - D is not significant: statsmodels CI [-1.4929, 0.3739]
 	r = row("A - D")
@@ -81,8 +81,8 @@ run;
 	if math.Abs(r[1].Num-d) > 1e-6 || math.Abs(r[2].Num-(d-h)) > 1e-6 || math.Abs(r[3].Num-(d+h)) > 1e-6 {
 		t.Errorf("A - D = [%v, %v, %v], want %.6f [%.6f, %.6f]", r[1].Num, r[2].Num, r[3].Num, d, d-h, d+h)
 	}
-	if r[4].Str != "" {
-		t.Errorf("A - D should not be significant, got %q", r[4].Str)
+	if r[4].Num != 0 {
+		t.Errorf("A - D should not be significant, got %v", r[4].Num)
 	}
 	// 12 ordered pairwise comparisons total
 	if len(ds.Rows) != 12 {
@@ -130,7 +130,7 @@ run;`)
 	uvClose(t, "hi C", cd.Rows[0][3].Num, 7.0+2.5403496099416524*math.Sqrt(1.1729166666666662/3), 1e-9)
 	uvClose(t, "diff A", cd.Rows[1][1].Num, 4.35, 1e-12)
 	uvClose(t, "diff B", cd.Rows[2][1].Num, -0.46666666666666856, 1e-9)
-	if cd.Rows[0][4].Str != "***" || cd.Rows[1][4].Str != "***" || cd.Rows[2][4].Str == "***" {
+	if cd.Rows[0][4].Num != 1 || cd.Rows[1][4].Num != 1 || cd.Rows[2][4].Num != 0 {
 		t.Errorf("significance stars wrong: %v %v %v", cd.Rows[0][4], cd.Rows[1][4], cd.Rows[2][4])
 	}
 }

@@ -313,7 +313,7 @@ func (rc *rgCtx) run() error {
 	at.AddRow(rc.pre("Model", dfm, f.SSM, f.SSM/float64(dfm), F, lmFProb(F, dfm, dfe))...)
 	at.AddRow(rc.pre("Error", dfe, f.SSE, f.MSE, nil, nil)...)
 	if o.Has("LACKFIT") {
-		at.ODSName = "LackFitANOVA"
+		// SAS folds lack of fit / pure error into the ANOVA table itself
 		pe, dfpe := rc.pureError()
 		if dfpe > 0 && dfe-dfpe > 0 {
 			lof := f.SSE - pe
@@ -425,9 +425,12 @@ func (rc *rgCtx) paramTable() {
 		cols = append(cols, Col{Name: "Label", Label: "Label", Char: true})
 	}
 	cols = append(cols, Col{Name: "DF", Label: "DF"}, Col{Name: "Estimate", Label: "Parameter Estimate"}, Col{Name: "StdErr", Label: "Standard Error"},
-		Col{Name: "tValue", Label: "t Value", Format: lmFmtT}, Col{Name: "Probt", Label: "Pr > |t|", Format: lmFmtP})
-	t := &Table{ODSName: "ParameterEstimates", Caption: "Parameter Estimates", RowHeader: 3}
+		Col{Name: "tValue", Label: "t Value", Format: lmFmtT})
+	// with CLB the Pr > |t| column is replaced by the confidence limits
 	clb := o.Has("CLB")
+	if !clb {
+		cols = append(cols, Col{Name: "Probt", Label: "Pr > |t|", Format: lmFmtP})
+	}
 	pct := fmt.Sprintf("%g%%", 100*(1-rc.alpha))
 	if o.Has("SS1") {
 		cols = append(cols, Col{Name: "SS1", Label: "Type I SS"})
@@ -444,6 +447,7 @@ func (rc *rgCtx) paramTable() {
 	if o.Has("VIF") {
 		cols = append(cols, Col{Name: "VarianceInflation", Label: "Variance Inflation"})
 	}
+	t := &Table{ODSName: "ParameterEstimates", Caption: "Parameter Estimates", RowHeader: 3}
 	if clb {
 		from := len(cols) - 2
 		cols = append(cols, Col{Name: "LowerCL", Label: "Lower"}, Col{Name: "UpperCL", Label: "Upper"})
@@ -469,12 +473,18 @@ func (rc *rgCtx) paramTable() {
 		}
 		isInt := nm == "Intercept" && !rc.noint && j == 0
 		if f.Aliased[j] {
-			row = append(row, 0, 0, nil, nil, nil)
+			row = append(row, 0, 0, nil, nil)
+			if !clb {
+				row = append(row, nil)
+			}
 		} else {
 			b := f.Beta[j]
 			se := math.Sqrt(f.G[j][j] * f.MSE)
 			tv := b / se
-			row = append(row, 1, b, se, tv, TTwoSided(tv, float64(f.DFE)))
+			row = append(row, 1, b, se, tv)
+			if !clb {
+				row = append(row, TTwoSided(tv, float64(f.DFE)))
+			}
 		}
 		if o.Has("SS1") {
 			if isInt {
@@ -787,12 +797,12 @@ func (rc *rgCtx) test(st *Stmt, num int) error {
 		label = fmt.Sprintf("Test%d", num)
 	}
 	t := &Table{ODSName: "TestANOVA", Caption: fmt.Sprintf("Test %s Results for Dependent Variable %s", label, rc.dep), RowHeader: 4,
-		Cols: append(rc.hidden(), Col{Name: "Test", Char: true, Hidden: true}, Col{Name: "Source", Label: "Source", Char: true}, Col{Name: "DF", Label: "DF"},
-			Col{Name: "MS", Label: "Mean Square"}, Col{Name: "FValue", Label: "F Value", Format: lmFmtF}, Col{Name: "ProbF", Label: "Pr > F", Format: lmFmtP})}
+		Cols: append([]Col{{Name: "Model", Char: true, Hidden: true}}, Col{Name: "Test", Char: true, Hidden: true}, Col{Name: "Source", Label: "Source", Char: true}, Col{Name: "DF", Label: "DF"},
+			Col{Name: "MS", Label: "Mean Square"}, Col{Name: "FValue", Label: "F Value", Format: lmFmtF}, Col{Name: "ProbF", Label: "Pr > F", Format: lmFmtP}, Col{Name: "Control", Label: "", Char: true})}
 	ms := ss / float64(q)
 	F := ms / f.MSE
-	t.AddRow(rc.pre(label, "Numerator", q, ms, F, lmFProb(F, q, f.DFE))...)
-	t.AddRow(rc.pre(label, "Denominator", f.DFE, f.MSE, nil, nil)...)
+	t.AddRow(rc.m.Label, label, "Numerator", q, ms, F, lmFProb(F, q, f.DFE), "")
+	t.AddRow(rc.m.Label, label, "Denominator", f.DFE, f.MSE, nil, nil, "")
 	rc.table(t)
 	return nil
 }
@@ -907,12 +917,17 @@ func (rc *rgCtx) output(st *Stmt) (*Dataset, error) {
 		col int
 	}
 	var ovs []outVar
-	// SAS writes OUTPUT statistics in its canonical order (P, R, STUDENT,
-	// COOKD, H, PRESS, RSTUDENT, DFFITS, COVRATIO, DFBETAS), not statement
-	// order, and labels the columns.
-	rank := map[string]int{"P": 0, "R": 1, "STUDENT": 2, "COOKD": 3, "H": 4, "PRESS": 5, "RSTUDENT": 6, "DFFITS": 7, "COVRATIO": 8}
+	// SAS writes OUTPUT statistics in its canonical order (P, LCLM, UCLM,
+	// LCL, UCL, R, STUDENT, COOKD, H, PRESS, RSTUDENT, DFFITS, COVRATIO),
+	// not statement order, and labels the columns.
+	rank := map[string]int{"P": 0, "LCLM": 1, "UCLM": 2, "LCL": 3, "UCL": 4, "R": 5, "STUDENT": 6, "COOKD": 7, "H": 8, "PRESS": 9, "RSTUDENT": 10, "DFFITS": 11, "COVRATIO": 12}
+	clpct := fmt.Sprintf("%g%%", 100*(1-sp.Alpha))
 	labels := map[string]string{
 		"P":        "Predicted Value of " + rc.dep,
+		"LCLM":     "Lower Bound of " + clpct + " C.I. for Mean",
+		"UCLM":     "Upper Bound of " + clpct + " C.I. for Mean",
+		"LCL":      "Lower Bound of " + clpct + " C.I.(Individual Pred)",
+		"UCL":      "Upper Bound of " + clpct + " C.I.(Individual Pred)",
 		"R":        "Residual",
 		"STUDENT":  "Studentized Residual",
 		"COOKD":    "Cook's D Influence Statistic",

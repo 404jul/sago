@@ -145,6 +145,13 @@ func FormatValue(v Value, f *FormatSpec) string {
 		}
 		s := strconv.FormatFloat(x, 'f', d, 64)
 		return strings.TrimPrefix(s, "0")
+	case "SIG":
+		// the ODS templates show the numeric Significance column (1/0)
+		// as asterisks via a user-defined format
+		if x == 0 {
+			return ""
+		}
+		return "***"
 	case "E":
 		d := w - 7
 		if d < 1 {
