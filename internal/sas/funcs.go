@@ -565,6 +565,10 @@ func init() {
 	F["FINV"] = func(c *EvalCtx, call *Call, args []Value) Value {
 		return NumV(FInv(argNum(c, args, 0), argNum(c, args, 1), argNum(c, args, 2)))
 	}
+	F["QTUKEY"] = func(c *EvalCtx, call *Call, args []Value) Value {
+		// QTUKEY(p, nmeans, df): p quantile of the studentized range
+		return NumV(lmQTukey(argNum(c, args, 0), 1, argNum(c, args, 1), argNum(c, args, 2)))
+	}
 	F["BETAINV"] = func(c *EvalCtx, call *Call, args []Value) Value {
 		return NumV(BetaInv(argNum(c, args, 0), argNum(c, args, 1), argNum(c, args, 2)))
 	}

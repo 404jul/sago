@@ -34,6 +34,13 @@ func (c *Cursor) Next() Token {
 	return t
 }
 
+// Back moves the cursor back one token.
+func (c *Cursor) Back() {
+	if c.P > 0 {
+		c.P--
+	}
+}
+
 // AcceptKw consumes the identifier if it matches one of words.
 func (c *Cursor) AcceptKw(words ...string) bool {
 	if c.Peek().Is(words...) {

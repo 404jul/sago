@@ -280,6 +280,9 @@ func (g *glCtx) runDep(dep string) error {
 	if err := g.contrastTable(); err != nil {
 		return err
 	}
+	if err := g.estimateTable(); err != nil {
+		return err
+	}
 	if g.mopts.Has("SOLUTION") || (len(g.classes) == 0 && !g.anova) {
 		g.paramTable()
 	}
@@ -713,16 +716,15 @@ func (g *glCtx) welch(e lmTerm, lvls []*glLevel) {
 	g.table(t)
 }
 
-// contrastTable evaluates CONTRAST statements. Supported: a single
-// class effect with one coefficient per sorted level (the one-way
-// form SS = (sum c_i*ybar_i)^2 / sum c_i^2/n_i).
+// contrastTable evaluates CONTRAST statements: F tests of general
+// estimable functions L beta = 0. The L row is built in SAS's
+// over-parameterized space: user coefficients on the named effect's
+// columns, zeros everywhere else; f.testL handles rank/estimability
+// through the sweep generalized inverse.
 func (g *glCtx) contrastTable() error {
 	cts := g.p.Stmts("CONTRAST")
 	if len(cts) == 0 {
 		return nil
-	}
-	if len(g.terms) != 1 {
-		return fmt.Errorf("CONTRAST is supported for one-way models only.")
 	}
 	ct := &Table{ODSName: "Contrasts", RowHeader: 2, Cols: []Col{
 		{Name: "Dependent", Char: true, Hidden: true},
@@ -730,62 +732,175 @@ func (g *glCtx) contrastTable() error {
 		{Name: "SS", Label: "Contrast SS"}, {Name: "MS", Label: "Mean Square"},
 		{Name: "FValue", Label: "F Value", Format: lmFmtF}, {Name: "ProbF", Label: "Pr > F", Format: lmFmtP}}}
 	for _, st := range cts {
-		label, effect, coefs, err := glParseContrast(st.Args())
+		label, groups, err := glParseContrast(st.Args())
 		if err != nil {
 			return err
 		}
-		c, ok := g.des.Classes[strings.ToUpper(effect)]
-		if !ok {
-			return fmt.Errorf("Effects used in the CONTRAST statement must have appeared previously in the MODEL statement.")
+		L, err := g.glContrastRow(groups)
+		if err != nil {
+			return err
 		}
-		lvls := g.levelsOf([]*lmClass{c})
-		if len(coefs) != len(lvls) {
-			return fmt.Errorf("CONTRAST requires %d coefficients for %d levels of %s.", len(lvls), len(lvls), strings.ToUpper(effect))
+		ss, q := g.fit.testL([][]float64{L}, []float64{0})
+		F, p := math.NaN(), math.NaN()
+		if q > 0 {
+			F = ss / float64(q) / g.fit.MSE
+			p = lmFProb(F, q, g.fit.DFE)
 		}
-		lc, den := 0.0, 0.0
-		for i, lv := range lvls {
-			lc += coefs[i] * lv.mean
-			den += coefs[i] * coefs[i] / float64(lv.n)
-		}
-		ss := lc * lc / den
-		F := ss / g.fit.MSE
-		ct.AddRow(g.dep, label, 1, ss, ss, F, lmFProb(F, 1, g.fit.DFE))
+		ct.AddRow(g.dep, label, q, ss, ss/float64(q), F, p)
 	}
 	g.table(ct)
 	return nil
 }
 
-func glParseContrast(toks []Token) (string, string, []float64, error) {
+// estimateTable evaluates ESTIMATE statements (t tests of L beta).
+func (g *glCtx) estimateTable() error {
+	ets := g.p.Stmts("ESTIMATE")
+	if len(ets) == 0 {
+		return nil
+	}
+	t := &Table{ODSName: "Estimates", RowHeader: 2, Cols: []Col{
+		{Name: "Dependent", Char: true, Hidden: true},
+		{Name: "Parameter", Label: "Parameter", Char: true}, {Name: "Estimate", Label: "Estimate"},
+		{Name: "StdErr", Label: "Standard Error"}, {Name: "tValue", Label: "t Value", Format: lmFmtT},
+		{Name: "Probt", Label: "Pr > |t|", Format: lmFmtP}}}
+	for _, st := range ets {
+		label, groups, err := glParseContrast(st.Args())
+		if err != nil {
+			return err
+		}
+		L, err := g.glContrastRow(groups)
+		if err != nil {
+			return err
+		}
+		est := g.fit.predict(L)
+		se := math.Sqrt(g.fit.xGx(L) * g.fit.MSE)
+		tv := est / se
+		t.AddRow(g.dep, label, est, se, tv, TTwoSided(tv, float64(g.fit.DFE)))
+	}
+	g.table(t)
+	return nil
+}
+
+// glContrastGroup is one effect's coefficients in a CONTRAST/ESTIMATE.
+type glContrastGroup struct {
+	effect string
+	coefs  []float64
+}
+
+// glContrastRow expands the effect groups into one L row over the design
+// columns: coefficients on the named effect, zeros for all others (SAS's
+// convention for main-effect contrasts in higher-way models).
+func (g *glCtx) glContrastRow(groups []glContrastGroup) ([]float64, error) {
+	L := make([]float64, len(g.des.ColTerm))
+	for _, gr := range groups {
+		eff := strings.ToUpper(gr.effect)
+		c, isClass := g.des.Classes[eff]
+		_, isCont := g.des.cont[eff]
+		if !isClass && !isCont {
+			return nil, fmt.Errorf("Effects used in the CONTRAST statement must have appeared previously in the MODEL statement.")
+		}
+		var lvls []*glLevel
+		idxToPos := map[int]int{} // dummy index -> sorted coefficient position
+		if isClass {
+			lvls = g.levelsOf([]*lmClass{c})
+			for i, lv := range lvls {
+				idxToPos[c.pos[lv.keys[0]]] = i
+			}
+		}
+		placed := false
+		for col, ti := range g.des.ColTerm {
+			if ti < 0 {
+				continue
+			}
+			t := g.terms[ti]
+			tcs := g.des.termClasses(t)
+			key := g.des.colKey[col]
+			if len(tcs) == 0 {
+				// continuous term
+				if len(t.all()) == 1 && strings.ToUpper(t.all()[0]) == eff && len(gr.coefs) == 1 {
+					L[col] += gr.coefs[0]
+					placed = true
+				}
+				continue
+			}
+			if len(tcs) == 1 && tcs[0] == c {
+				if len(gr.coefs) != len(lvls) {
+					return nil, fmt.Errorf("CONTRAST requires %d coefficients for %d levels of %s.", len(lvls), len(lvls), strings.ToUpper(gr.effect))
+				}
+				L[col] += gr.coefs[idxToPos[key[0]]]
+				placed = true
+				continue
+			}
+			// interaction named as A*B: coefficients with the last
+			// class varying fastest
+			if len(tcs) > 1 && strings.EqualFold(t.Name(), gr.effect) {
+				need := 1
+				for _, tc := range tcs {
+					need *= len(tc.Levels)
+				}
+				if len(gr.coefs) != need {
+					return nil, fmt.Errorf("CONTRAST requires %d coefficients for %s.", need, strings.ToUpper(gr.effect))
+				}
+				ix := 0
+				for j := range tcs {
+					ix = ix*len(tcs[j].Levels) + idxToPos[key[j]]
+				}
+				L[col] += gr.coefs[ix]
+				placed = true
+			}
+		}
+		if !placed {
+			return nil, fmt.Errorf("%s is not an effect in the model.", strings.ToUpper(gr.effect))
+		}
+	}
+	return L, nil
+}
+
+func glParseContrast(toks []Token) (string, []glContrastGroup, error) {
 	c := NewCursor(toks)
 	if c.AtEnd() {
-		return "", "", nil, fmt.Errorf("CONTRAST requires a label and an effect.")
+		return "", nil, fmt.Errorf("CONTRAST requires a label and an effect.")
 	}
 	t := c.Next()
 	if t.Kind != TString && t.Kind != TIdent {
-		return "", "", nil, fmt.Errorf("CONTRAST label must be a string.")
+		return "", nil, fmt.Errorf("CONTRAST label must be a string.")
 	}
 	label := t.Text
-	if c.AtEnd() || c.Peek().Kind != TIdent {
-		return "", "", nil, fmt.Errorf("CONTRAST requires an effect after the label.")
-	}
-	effect := c.Next().Text
-	var coefs []float64
-	sign := 1.0
+	var groups []glContrastGroup
 	for !c.AtEnd() {
 		t := c.Next()
-		switch {
-		case t.IsOp("-"):
-			sign = -1
-		case t.IsOp("+"):
-			sign = 1
-		case t.Kind == TNumber:
-			coefs = append(coefs, sign*t.Num)
-			sign = 1
-		case t.Kind == TIdent:
-			return "", "", nil, fmt.Errorf("CONTRAST supports a single effect.")
+		if t.Kind != TIdent {
+			return "", nil, fmt.Errorf("CONTRAST requires an effect after the label.")
+		}
+		effect := t.Text
+		var coefs []float64
+		sign := 1.0
+		for !c.AtEnd() {
+			t := c.Next()
+			switch {
+			case t.IsOp("-"):
+				sign = -1
+				continue
+			case t.IsOp("+"):
+				sign = 1
+				continue
+			case t.Kind == TNumber:
+				coefs = append(coefs, sign*t.Num)
+				sign = 1
+				continue
+			}
+			c.Back()
+			break
+		}
+		groups = append(groups, glContrastGroup{effect, coefs})
+		if !c.AtEnd() && c.Peek().IsOp(",") {
+			c.Next()
 		}
 	}
-	return label, effect, coefs, nil
+	if len(groups) == 0 {
+		return "", nil, fmt.Errorf("CONTRAST requires an effect after the label.")
+	}
+	return label, groups, nil
 }
 
 func (g *glCtx) multComp(e lmTerm, lvls []*glLevel, method string, alpha float64, cldiff, lines bool, control string) {
