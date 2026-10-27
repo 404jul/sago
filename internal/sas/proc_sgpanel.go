@@ -110,14 +110,13 @@ func sgRunScatter(s *Session, p *ProcStep) error {
 	}
 	kw := st.Keyword()
 	before, after := SplitSlash(st.Args())
-	_ = before
 	o := ParseOpts(after)
 	marker := sgMarkerName(o)
 
 	var charts []*Chart
 	switch kw {
 	case "MATRIX":
-		names, err := ExpandVarList(d, st.Args())
+		names, err := ExpandVarList(d, before)
 		if err != nil {
 			return err
 		}
@@ -140,7 +139,7 @@ func sgRunScatter(s *Session, p *ProcStep) error {
 		s.Out.AddGraph(&Graph{ODSName: "SGScatterMatrix", SVG: lmPanel(charts, n, float64(1000/n+160), float64(1000/n+120))})
 	case "COMPARE":
 		// X=(...) Y=(...) overlaid in one chart per y
-		yLists, xLists, err := sgCompareLists(d, st.Args())
+		yLists, xLists, err := sgCompareLists(d, before)
 		if err != nil {
 			return err
 		}
@@ -163,7 +162,7 @@ func sgRunScatter(s *Session, p *ProcStep) error {
 		}
 		s.Out.AddGraph(&Graph{ODSName: "SGScatter", SVG: lmPanel(charts, len(charts), 480, 400)})
 	default: // PLOT (ys)*(xs) — one chart per pair
-		ys, xs, err := sgCrossLists(d, st.Args())
+		ys, xs, err := sgCrossLists(d, before)
 		if err != nil {
 			return err
 		}
@@ -176,9 +175,26 @@ func sgRunScatter(s *Session, p *ProcStep) error {
 				charts = append(charts, chart)
 			}
 		}
-		s.Out.AddGraph(&Graph{ODSName: "SGScatter", SVG: lmPanel(charts, len(xs), 480, 400)})
+		// SAS lays the cells out roughly square (4 -> 2x2, 7 -> 3x3);
+		// COLUMNS= overrides ROWS=.
+		cols := sgGridCols(len(charts))
+		if c := int(o.Num("COLUMNS", 0)); c > 0 {
+			cols = c
+		} else if r := int(o.Num("ROWS", 0)); r > 0 {
+			cols = (len(charts) + r - 1) / r
+		}
+		s.Out.AddGraph(&Graph{ODSName: "SGScatter", SVG: lmPanel(charts, cols, 480, 400)})
 	}
 	return nil
+}
+
+// sgGridCols is the SAS SGSCATTER default grid width: ceil(sqrt(n)) columns.
+func sgGridCols(n int) int {
+	c := 1
+	for c*c < n {
+		c++
+	}
+	return c
 }
 
 func isNumNaN(f float64) bool { return f != f }
@@ -357,54 +373,59 @@ func sgRunPlotProc(s *Session, p *ProcStep) error {
 	for _, st := range plots {
 		main, after := SplitSlash(st.Args())
 		o := ParseOpts(after)
+		// SAS: one plot per y*x pair. OVERLAY combines every request
+		// of the PLOT statement on one set of axes (PLOT and GPLOT).
+		overlay := o.Has("OVERLAY")
+		var pairs [][2]string
 		// requests separated by spaces at top level: y*x y2*x2, y*(x1 x2)
 		for _, req := range sgSplitRequests(main) {
 			ys, xs, err := sgCrossLists(d, req)
 			if err != nil {
 				return err
 			}
-			overlay := o.Has("OVERLAY") || (p.Name == "GPLOT" && len(ys)*len(xs) > 1 && !o.Has("NOOVERLAY"))
-			if overlay {
-				c := NewChart("")
-				nc := 0
-				for _, yp := range ys {
-					for _, xp := range xs {
-						yi, _, _ := sgVarRef(d, yp)
-						xi, xv, _ := sgVarRef(d, xp)
-						pts := &Scatter{Color: PaletteColor(nc), Marker: Markers[nc%len(Markers)]}
-						for _, row := range d.Rows {
-							a, b := row[xi].AsNum(), row[yi].AsNum()
-							if !isNumNaN(a) && !isNumNaN(b) {
-								pts.X = append(pts.X, a)
-								pts.Y = append(pts.Y, b)
-							}
-						}
-						c.Layers = append(c.Layers, pts)
-						c.Legend = append(c.Legend, LegendEntry{Label: yp + "*" + xp, Kind: "marker", Color: PaletteColor(nc), Marker: Markers[nc%len(Markers)]})
-						nc++
-						if c.XLabel == "" {
-							c.XLabel = xv.DisplayLabel()
-						}
-					}
-					if c.YLabel == "" {
-						if yi, yv, err := sgVarRef(d, yp); err == nil {
-							_ = yi
-							c.YLabel = yv.DisplayLabel()
-						}
-					}
-				}
-				charts = append(charts, c)
-				continue
-			}
 			for _, yp := range ys {
 				for _, xp := range xs {
-					chart, err := sgPairChart(s, d, yp, xp, o, "x", false)
-					if err != nil {
-						return err
-					}
-					charts = append(charts, chart)
+					pairs = append(pairs, [2]string{yp, xp})
 				}
 			}
+		}
+		if overlay {
+			c := NewChart("")
+			for nc, pr := range pairs {
+				yi, yv, err := sgVarRef(d, pr[0])
+				if err != nil {
+					return err
+				}
+				xi, xv, err := sgVarRef(d, pr[1])
+				if err != nil {
+					return err
+				}
+				pts := &Scatter{Color: PaletteColor(nc), Marker: Markers[nc%len(Markers)]}
+				for _, row := range d.Rows {
+					a, b := row[xi].AsNum(), row[yi].AsNum()
+					if !isNumNaN(a) && !isNumNaN(b) {
+						pts.X = append(pts.X, a)
+						pts.Y = append(pts.Y, b)
+					}
+				}
+				c.Layers = append(c.Layers, pts)
+				c.Legend = append(c.Legend, LegendEntry{Label: pr[0] + "*" + pr[1], Kind: "marker", Color: PaletteColor(nc), Marker: Markers[nc%len(Markers)]})
+				if c.XLabel == "" {
+					c.XLabel = xv.DisplayLabel()
+				}
+				if c.YLabel == "" {
+					c.YLabel = yv.DisplayLabel()
+				}
+			}
+			charts = append(charts, c)
+			continue
+		}
+		for _, pr := range pairs {
+			chart, err := sgPairChart(s, d, pr[0], pr[1], o, "x", false)
+			if err != nil {
+				return err
+			}
+			charts = append(charts, chart)
 		}
 	}
 	for _, c := range charts {

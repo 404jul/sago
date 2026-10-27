@@ -166,4 +166,8 @@ golden is re-captured).
   pointer-variable INPUT is rejected; SURVEYSELECT OUTHITS+SRS should
   error ("The OUTHITS option may not be specified with METHOD=SRS") and
   PRINT of an empty data set should note "No variables in data set X"
-  (both appear in the rng golden once re-captured).
+  (both appear in the rng golden once re-captured); SGSCATTER COMPARE
+  should be a shared-axis MxN cross (one cell per y*x pair, row/column
+  axis ranges shared — no COLUMNS=/ROWS= options in SAS), not the
+  per-y overlay sago renders now (grid default for PLOT fixed
+  2026-10-26: ceil(sqrt(n)) columns, COLUMNS= overrides ROWS=).
