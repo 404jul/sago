@@ -161,18 +161,20 @@ func sgRunScatter(s *Session, p *ProcStep) error {
 			charts = append(charts, c)
 		}
 		s.Out.AddGraph(&Graph{ODSName: "SGScatter", SVG: lmPanel(charts, len(charts), 480, 400)})
-	default: // PLOT (ys)*(xs) — one chart per pair
-		ys, xs, err := sgCrossLists(d, before)
-		if err != nil {
-			return err
-		}
-		for _, yp := range ys {
-			for _, xp := range xs {
-				chart, err := sgPairChart(s, d, yp, xp, o, marker, false)
-				if err != nil {
-					return err
+	default: // PLOT y*x (ys)*(xs) ... — one chart per pair, requests in order
+		for _, req := range sgSplitRequests(before) {
+			ys, xs, err := sgCrossLists(d, req)
+			if err != nil {
+				return err
+			}
+			for _, yp := range ys {
+				for _, xp := range xs {
+					chart, err := sgPairChart(s, d, yp, xp, o, marker, false)
+					if err != nil {
+						return err
+					}
+					charts = append(charts, chart)
 				}
-				charts = append(charts, chart)
 			}
 		}
 		// SAS lays the cells out roughly square (4 -> 2x2, 7 -> 3x3);
@@ -434,7 +436,8 @@ func sgRunPlotProc(s *Session, p *ProcStep) error {
 	return nil
 }
 
-// sgSplitRequests splits "y*x z*w 'sym'" style requests at top level.
+// sgSplitRequests splits "y*x z*w 'sym'" and "(a b)*c (d e)*f" style
+// requests at top level.
 func sgSplitRequests(toks []Token) [][]Token {
 	var out [][]Token
 	depth := 0
@@ -442,6 +445,10 @@ func sgSplitRequests(toks []Token) [][]Token {
 	for _, t := range toks {
 		switch {
 		case t.IsOp("("):
+			if depth == 0 && len(cur) > 0 && !wasStarOrEq(cur) {
+				out = append(out, cur)
+				cur = []Token{}
+			}
 			depth++
 			cur = append(cur, t)
 		case t.IsOp(")"):
